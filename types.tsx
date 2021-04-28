@@ -4,7 +4,10 @@
  */
 
 export type RootStackParamList = {
-  Root: undefined;
+  // Root: undefined;
+  PublicFeed: undefined;
+  CreatePlan: undefined;
+  ViewPlans: undefined;
   NotFound: undefined;
 };
 
