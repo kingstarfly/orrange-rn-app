@@ -11,7 +11,9 @@ const PublicFeed = ({
   return (
     <Container>
       <Box flex={1} justifyContent="center" alignItems="center">
-        <Text color="textdark">Public Feed</Text>
+        <Text color="textdark" fontFamily="poppins-regular">
+          Public Feed
+        </Text>
 
         <BottomNavBar>
           <Button
