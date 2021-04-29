@@ -11,8 +11,8 @@ const BottomNavBar = ({ children }) => {
       position="absolute"
       bottom={0}
       w={width}
-      h={50}
-      bg="red300"
+      h={60}
+      bg="primary400"
       row
       justifyContent="space-around"
     >

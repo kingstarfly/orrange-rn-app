@@ -8,6 +8,7 @@ export type RootStackParamList = {
   PublicFeed: undefined;
   CreatePlan: undefined;
   ViewPlans: undefined;
+  PickTime: undefined;
   NotFound: undefined;
 };
 

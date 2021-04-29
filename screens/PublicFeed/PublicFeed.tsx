@@ -11,18 +11,22 @@ const PublicFeed = ({
   return (
     <Container>
       <Box flex={1} justifyContent="center" alignItems="center">
-        <Text>Public Feed</Text>
+        <Text color="textdark">Public Feed</Text>
 
         <BottomNavBar>
           <Button
             onPress={() => navigation.push("ViewPlans")}
-            alignSelf="stretch"
+            bg="backgroundlight"
+            alignSelf="center"
+            color="textdark"
           >
             View Plans
           </Button>
           <Button
             onPress={() => navigation.push("CreatePlan")}
-            alignSelf="stretch"
+            bg="backgroundlight"
+            alignSelf="center"
+            color="textdark"
           >
             Create Plan
           </Button>

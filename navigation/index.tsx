@@ -14,11 +14,13 @@ import { ColorSchemeName } from "react-native";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
 import CreatePlan from "../screens/CreatePlan";
+import PickTime from "../screens/PickTime";
+import ViewPlans from "../screens/ViewPlans";
 import PublicFeed from "../screens/PublicFeed";
+
 import { RootStackParamList } from "../types";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
-import ViewPlans from "../screens/ViewPlans";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Navigation({
@@ -57,6 +59,12 @@ function RootNavigator() {
         name="CreatePlan"
         component={CreatePlan}
         options={{ title: "Create Plan" }}
+      />
+
+      <Stack.Screen
+        name="PickTime"
+        component={PickTime}
+        options={{ title: "Pick Time" }}
       />
 
       <Stack.Screen

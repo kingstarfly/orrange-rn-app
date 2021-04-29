@@ -6,9 +6,9 @@ import BottomNavBar from "../../components/BottomNavBar";
 import Container from "../../components/Container";
 import { RootStackParamList } from "../../types";
 
-const CreatePlan = ({
+const PickTime = ({
   navigation,
-}: StackScreenProps<RootStackParamList, "CreatePlan">) => {
+}: StackScreenProps<RootStackParamList, "PickTime">) => {
   const { width, height } = useWindowDimensions();
   return (
     <Container>
@@ -18,13 +18,21 @@ const CreatePlan = ({
         textAlign="center"
         fontSize="5xl"
       >
-        Which days do you wish to meet on?
+        What are your free time slots?
       </Text>
       <Box flex={1} alignItems="center">
-        <Text>Date Picker Component</Text>
+        <Text>Time Picker Component</Text>
       </Box>
 
       <BottomNavBar>
+        <Button
+          onPress={() => navigation.goBack()}
+          bg="backgroundlight"
+          alignSelf="center"
+          color="textdark"
+        >
+          Back
+        </Button>
         <Button
           onPress={() => navigation.push("PickTime")}
           bg="backgroundlight"
@@ -38,4 +46,4 @@ const CreatePlan = ({
   );
 };
 
-export default CreatePlan;
+export default PickTime;
