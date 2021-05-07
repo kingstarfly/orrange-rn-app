@@ -1,8 +1,8 @@
 export const meetData = {
   id: "1",
   title: "the old bois",
-  start_time: "20210221T133000+0800",
-  end_time: "20210221T153000+0800",
+  start_time: "2021-02-21T13:30:00+0800",
+  end_time: "2021-02-21T15:30:00+0800",
   activity: "Dim sum @ Swee Choon :D",
   organiser: {
     id: "1",

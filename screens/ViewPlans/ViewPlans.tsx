@@ -13,7 +13,7 @@ const ViewPlans = ({
   return (
     <Container>
       <Box flex={1} justifyContent="center" alignItems="center">
-        <Text>View Plans</Text>
+        {/* <Text>View Plans</Text> */}
         <MeetingCard details={meetData} />
       </Box>
       {/* Scroll View of each month */}

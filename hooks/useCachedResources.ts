@@ -21,6 +21,7 @@ export default function useCachedResources() {
           "poppins-medium": require("../assets/fonts/Poppins-Medium.ttf"),
           "poppins-semibold": require("../assets/fonts/Poppins-SemiBold.ttf"),
           "poppins-bold": require("../assets/fonts/Poppins-Bold.ttf"),
+          "poppins-lightitalic": require("../assets/fonts/Poppins-LightItalic.ttf"),
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
