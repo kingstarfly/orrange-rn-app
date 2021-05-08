@@ -1,10 +1,9 @@
 import { StackScreenProps } from "@react-navigation/stack";
-import MonthSection from "components/ViewPlans/MonthSection";
 import React from "react";
 import { Box, Button, Text } from "react-native-magnus";
 import BottomNavBar from "components/BottomNavBar";
 import Container from "components/Container";
-import MeetingCard from "components/ViewPlans/MeetingCard";
+import MeetingCard from "components/MeetingCard";
 import { meetDataOne, meetingsData } from "constants/mockdata";
 import { RootStackParamList } from "types";
 import { SectionList } from "react-native";

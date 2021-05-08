@@ -1,4 +1,5 @@
 import { StackScreenProps } from "@react-navigation/stack";
+import DatePicker from "components/DatePicker";
 import React from "react";
 import { useWindowDimensions } from "react-native";
 import { Box, Button, Text } from "react-native-magnus";
@@ -21,7 +22,7 @@ const CreatePlan = ({
         Which days do you wish to meet on?
       </Text>
       <Box flex={1} alignItems="center">
-        <Text>Date Picker Component</Text>
+        <DatePicker />
       </Box>
 
       <BottomNavBar>
