@@ -1,52 +1,42 @@
 import { format, parseISO } from "date-fns";
 import React from "react";
 import { ImageSourcePropType } from "react-native";
-import { Text, Box, Image } from "react-native-magnus";
+import { Text, Box, Image, WINDOW_WIDTH } from "react-native-magnus";
+import { MeetingProps, participantProps } from "types";
 
-type MeetingCardProps = {
-  details: {
-    id: string;
-    title: string;
-    start_time: string;
-    end_time: string;
-    activity: string;
-    organiser: participantProps;
-    participants: participantProps[];
-  };
-};
-
-type participantProps = {
-  id: string;
-  display_name: string;
-  avatar: ImageSourcePropType;
-  responded: boolean;
-  confirmed: boolean;
-};
-
-const MeetingCard = ({ details }: MeetingCardProps) => {
-  const NUM_PROFILES = 3;
+const MeetingCard = ({ meeting }: MeetingProps) => {
+  const NUM_PROFILES = 2;
   let firstParticipants: participantProps[] | undefined;
   let leftovers: participantProps[] | undefined;
-  if (details.participants.length <= NUM_PROFILES) {
-    firstParticipants = details.participants;
+  if (meeting.participants.length <= NUM_PROFILES) {
+    firstParticipants = meeting.participants;
   } else {
-    firstParticipants = details.participants.slice(0, NUM_PROFILES);
-    leftovers = details.participants.slice(NUM_PROFILES);
+    firstParticipants = meeting.participants.slice(0, NUM_PROFILES);
+    leftovers = meeting.participants.slice(NUM_PROFILES);
   }
 
   // obtain the date of meeting 21st Feb 2021
-  let date_string = format(parseISO(details.start_time), "do MMM YYY");
+  let date_string = format(parseISO(meeting.start_time), "do MMM yyyy");
   // obtain start time and end time formatted
-  let start_string = format(parseISO(details.start_time), "h:mm a");
-  let end_string = format(parseISO(details.end_time), "h:mm a");
+  let start_string = format(parseISO(meeting.start_time), "h:mm a");
+  let end_string = format(parseISO(meeting.end_time), "h:mm a");
 
   let participants_string = firstParticipants
     .map((part) => part.display_name)
     .join(", ");
 
   return (
-    <Box row alignItems="center">
-      <Box row ml={8}>
+    <Box row alignItems="center" alignSelf="stretch" my={8}>
+      <Box row>
+        <Image
+          h={50}
+          w={50}
+          rounded="circle"
+          borderWidth={2}
+          borderColor="white"
+          source={meeting.organiser.avatar}
+          zIndex={2}
+        />
         {firstParticipants.map((part, index) => (
           <Image
             key={index}
@@ -56,7 +46,7 @@ const MeetingCard = ({ details }: MeetingCardProps) => {
             borderWidth={2}
             borderColor="white"
             source={part.avatar}
-            ml={index > 0 ? -14 : 0}
+            ml={-14}
             zIndex={-index}
           />
         ))}
@@ -69,8 +59,10 @@ const MeetingCard = ({ details }: MeetingCardProps) => {
           fontFamily="poppins-medium"
           textTransform="uppercase"
           fontSize={18}
+          numberOfLines={1}
+          maxW={WINDOW_WIDTH * 0.55}
         >
-          {details.title}
+          {meeting.title}
         </Text>
         <Box row>
           <Text fontSize={12}>{date_string}</Text>
@@ -79,7 +71,7 @@ const MeetingCard = ({ details }: MeetingCardProps) => {
           </Text>
         </Box>
 
-        <Text fontSize={12}>{details.activity}</Text>
+        <Text fontSize={12}>{meeting.activity}</Text>
         <Box row>
           <Text fontSize={12} fontFamily="poppins-lightitalic">
             {participants_string}

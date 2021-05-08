@@ -3,8 +3,10 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
-    "paths": {
-      "assets": ["assets/*"],
-    }
+    // "paths": {
+    //   "@assets/*": ["assets/*"],
+    //   "@components/*": ["components/*"],
+    //   "@screens/*": ["screens/*"]
+    // }
   }
 }

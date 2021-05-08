@@ -1,21 +1,42 @@
 import { StackScreenProps } from "@react-navigation/stack";
+import MonthSection from "components/ViewPlans/MonthSection";
 import React from "react";
 import { Box, Button, Text } from "react-native-magnus";
-import BottomNavBar from "../../components/BottomNavBar";
-import Container from "../../components/Container";
-import MeetingCard from "../../components/ViewPlans/MeetingCard";
-import { meetData } from "../../constants/mockdata";
-import { RootStackParamList } from "../../types";
+import BottomNavBar from "components/BottomNavBar";
+import Container from "components/Container";
+import MeetingCard from "components/ViewPlans/MeetingCard";
+import { meetDataOne, meetingsData } from "constants/mockdata";
+import { RootStackParamList } from "types";
+import { SectionList } from "react-native";
+import { styles } from "./styles";
 
 const ViewPlans = ({
   navigation,
 }: StackScreenProps<RootStackParamList, "ViewPlans">) => {
   return (
     <Container>
-      <Box flex={1} justifyContent="center" alignItems="center">
-        {/* <Text>View Plans</Text> */}
-        <MeetingCard details={meetData} />
-      </Box>
+      {/* <Box flex={1} justifyContent="flex-start" alignItems="stretch">
+        <Text>View Plans</Text>
+        <MonthSection meetings={meetingsData} />
+        <MeetingCard meeting={meetDataOne} />
+      </Box> */}
+
+      <SectionList
+        style={styles.scrollViewContainer}
+        sections={meetingsData}
+        keyExtractor={(item, index) => item.id}
+        renderItem={({ item }) => <MeetingCard meeting={item} />}
+        renderSectionHeader={({ section: { title } }) => (
+          <Text
+            mt={30}
+            textTransform="uppercase"
+            fontSize={24}
+            fontFamily="poppins-regular"
+          >
+            {title}
+          </Text>
+        )}
+      />
       {/* Scroll View of each month */}
       {/* Within each month, there are cards for each meeting */}
 
