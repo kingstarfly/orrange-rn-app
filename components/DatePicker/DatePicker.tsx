@@ -14,6 +14,51 @@ import { AntDesign } from "@expo/vector-icons";
 import { theme } from "constants/theme";
 import { TapGestureHandler } from "react-native-gesture-handler";
 
+import { LocaleConfig } from "react-native-calendars";
+
+LocaleConfig.locales["en"] = {
+  monthNames: [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ],
+  monthNamesShort: [
+    "Jan.",
+    "Feb.",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul.",
+    "Aug",
+    "Sep.",
+    "Oct.",
+    "Nov.",
+    "Dec.",
+  ],
+  dayNames: [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursdya",
+    "Friday",
+    "Sunday",
+  ],
+  dayNamesShort: ["S", "M", "T", "W", "T", "F", "S"],
+  today: "Today",
+};
+LocaleConfig.defaultLocale = "en";
+
 type MarkedDate = {
   [date: string]: PeriodMarking | DotMarking;
 };
@@ -100,10 +145,25 @@ const DatePicker = () => {
   };
 
   return (
-    <Box alignSelf="stretch">
+    <Box alignSelf="stretch" px={16}>
       <Calendar
         theme={{
           calendarBackground: theme.colors.backgroundlight,
+          "stylesheet.calendar.header": {
+            monthText: {
+              fontSize: 18,
+              fontFamily: "poppins-bold",
+              color: theme.colors.textdark,
+              margin: 10,
+            },
+            dayHeader: {
+              marginTop: 24,
+              marginBottom: 8,
+              fontSize: 15,
+              fontFamily: "poppins-regular",
+              color: theme.colors.primary600,
+            },
+          },
         }}
         markingType={"period"}
         markedDates={selected}
