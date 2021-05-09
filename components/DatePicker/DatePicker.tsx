@@ -1,4 +1,4 @@
-import { format, parseISO } from "date-fns";
+import { addDays, format, parse, parseISO, subDays } from "date-fns";
 import React, { useState } from "react";
 import { Text, Box, Image } from "react-native-magnus";
 import {
@@ -12,6 +12,7 @@ import {
 
 import { AntDesign } from "@expo/vector-icons";
 import { theme } from "constants/theme";
+import { TapGestureHandler } from "react-native-gesture-handler";
 
 type MarkedDate = {
   [date: string]: PeriodMarking | DotMarking;
@@ -21,13 +22,80 @@ const DatePicker = () => {
   const [selected, setSelected] = useState<MarkedDate>({});
 
   const handleOnDayPress = (day: DateObject) => {
+    const DATE_FORMAT = "yyyy-MM-dd";
+    let d = parse(day.dateString, DATE_FORMAT, new Date());
+    let ytd = format(subDays(d, 1), DATE_FORMAT);
+    let tmr = format(addDays(d, 1), DATE_FORMAT);
+
     if (day.dateString in selected) {
-      const { [day.dateString]: tmp, ...rest } = selected;
-      setSelected(rest);
+      let { [day.dateString]: tmp, ...new_selected } = selected;
+      if (ytd in selected) {
+        // make ytd's endingDay false
+        const { [ytd]: tmp, ...rest } = new_selected;
+        new_selected = {
+          ...rest,
+          [ytd]: {
+            ...tmp,
+            endingDay: true,
+          },
+        };
+      }
+
+      if (tmr in selected) {
+        // make tmr's startingDay true
+        const { [tmr]: tmp, ...rest } = new_selected;
+        new_selected = {
+          ...rest,
+          [tmr]: {
+            ...tmp,
+            startingDay: true,
+          },
+        };
+      }
+      setSelected(new_selected);
     } else {
-      setSelected((prev) => {
-        return { ...prev, [day.dateString]: { marked: true } };
-      });
+      let new_selected = { ...selected };
+
+      let props = {
+        startingDay: true,
+        endingDay: true,
+        selected: true,
+        color: theme.colors.primary400,
+      };
+
+      // 3. Check for either presence
+      if (ytd in selected) {
+        // make ytd's endingDay false, and today's startingDay false
+        const { [ytd]: tmp, ...rest } = new_selected;
+        new_selected = {
+          ...rest,
+          [ytd]: {
+            ...tmp,
+            endingDay: false,
+          },
+        };
+
+        props.startingDay = false;
+      }
+
+      if (tmr in selected) {
+        // make tmr's startingDay false, and today's endingDay true
+        let { [tmr]: tmp, ...rest } = new_selected;
+        new_selected = {
+          ...rest,
+          [tmr]: {
+            ...tmp,
+            startingDay: false,
+          },
+        };
+
+        props.endingDay = false;
+      }
+
+      new_selected = { ...new_selected, [day.dateString]: props };
+      console.log("NEW");
+      console.log(new_selected);
+      setSelected(new_selected);
     }
   };
 
