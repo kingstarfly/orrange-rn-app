@@ -4,6 +4,7 @@ import { Text, useWindowDimensions } from "react-native";
 import { Box, Button } from "react-native-magnus";
 
 const BottomNavBar = ({ children }) => {
+  // TODO to change to confirm buttons and top left back button instead
   const { height, width } = useWindowDimensions();
   const navigation = useNavigation();
   return (

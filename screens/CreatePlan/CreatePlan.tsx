@@ -25,7 +25,7 @@ const CreatePlan = ({
         <DatePicker />
       </Box>
 
-      <BottomNavBar>
+      {/* <BottomNavBar>
         <Button
           onPress={() => navigation.push("PickTime")}
           bg="backgroundlight"
@@ -34,7 +34,7 @@ const CreatePlan = ({
         >
           Onwards!
         </Button>
-      </BottomNavBar>
+      </BottomNavBar> */}
     </Container>
   );
 };

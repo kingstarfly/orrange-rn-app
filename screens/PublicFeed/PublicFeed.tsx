@@ -1,9 +1,9 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import React from "react";
-import { Box, Button, Text } from "react-native-magnus";
-import BottomNavBar from "../../components/BottomNavBar";
+import { Box, Button, Icon, Text } from "react-native-magnus";
 import Container from "../../components/Container";
 import { RootStackParamList } from "../../types";
+import AddButton from "components/AddButton";
 
 const PublicFeed = ({
   navigation,
@@ -12,10 +12,10 @@ const PublicFeed = ({
     <Container>
       <Box flex={1} justifyContent="center" alignItems="center">
         <Text color="textdark" fontFamily="poppins-regular">
-          Public Feed
+          Public Feeds
         </Text>
 
-        <BottomNavBar>
+        {/* <BottomNavBar>
           <Button
             onPress={() => navigation.push("ViewPlans")}
             bg="backgroundlight"
@@ -32,7 +32,8 @@ const PublicFeed = ({
           >
             Create Plan
           </Button>
-        </BottomNavBar>
+        </BottomNavBar> */}
+        <AddButton to="CreatePlan" />
       </Box>
     </Container>
   );

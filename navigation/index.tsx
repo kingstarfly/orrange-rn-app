@@ -8,7 +8,10 @@ import {
   DefaultTheme,
   DarkTheme,
 } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  createStackNavigator,
+  HeaderBackButton,
+} from "@react-navigation/stack";
 import * as React from "react";
 import { ColorSchemeName } from "react-native";
 
@@ -19,9 +22,8 @@ import ViewPlans from "../screens/ViewPlans";
 import PublicFeed from "../screens/PublicFeed";
 
 import { RootStackParamList } from "../types";
-import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { theme } from "constants/theme";
 
 export default function Navigation({
   colorScheme,
@@ -44,7 +46,30 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.backgroundlight,
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+
+        headerLeftContainerStyle: {
+          paddingHorizontal: 8,
+        },
+
+        headerTintColor: theme.colors.textdark,
+        headerTitleStyle: {
+          fontFamily: "poppins-regular",
+          textAlignVertical: "center",
+          marginHorizontal: 0,
+        },
+        headerTransparent: true,
+        headerBackTitleVisible: true,
+        headerTitle: "",
+        headerBackAllowFontScaling: true,
+      }}
+    >
       {/* <Stack.Screen name="Root" component={BottomTabNavigator} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
        */}
@@ -58,7 +83,7 @@ function RootNavigator() {
       <Stack.Screen
         name="CreatePlan"
         component={CreatePlan}
-        options={{ title: "Create Plan" }}
+        options={{ title: "Pick Date" }}
       />
 
       <Stack.Screen
