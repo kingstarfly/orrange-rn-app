@@ -1,13 +1,24 @@
 import { StackScreenProps } from "@react-navigation/stack";
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Icon, Text } from "react-native-magnus";
 import Container from "../../components/Container";
 import { RootStackParamList } from "../../types";
 import AddButton from "components/AddButton";
 
+import { addDays } from "date-fns";
+import GridCell from "components/TimeGridSelector/GridCell";
+import Day from "components/TimeGridSelector/Day";
+
 const PublicFeed = ({
   navigation,
 }: StackScreenProps<RootStackParamList, "PublicFeed">) => {
+  const [] = useState([]);
+
+  const handleChange = (e) => {
+    console.log("Hi");
+    console.log(e);
+  };
+
   return (
     <Container>
       <Box flex={1} justifyContent="center" alignItems="center">
@@ -15,24 +26,7 @@ const PublicFeed = ({
           Public Feeds
         </Text>
 
-        {/* <BottomNavBar>
-          <Button
-            onPress={() => navigation.push("ViewPlans")}
-            bg="backgroundlight"
-            alignSelf="center"
-            color="textdark"
-          >
-            View Plans
-          </Button>
-          <Button
-            onPress={() => navigation.push("CreatePlan")}
-            bg="backgroundlight"
-            alignSelf="center"
-            color="textdark"
-          >
-            Create Plan
-          </Button>
-        </BottomNavBar> */}
+        <Day date={new Date()} startTime={8} endTime={22} />
         <AddButton to="CreatePlan" />
       </Box>
     </Container>

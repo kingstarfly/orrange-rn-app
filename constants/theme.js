@@ -5,5 +5,7 @@ export const theme = {
     primary600: "#F6933C",
     textdark: "#121113",
     backgroundlight: "#F9F9F9",
+    linegray: "#B6B6B6",
+    textgray: "#666666",
   },
 };
