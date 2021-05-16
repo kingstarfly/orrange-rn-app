@@ -1,5 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack";
+import { DATE_FORMAT } from "components/DatePicker";
 import Day from "components/TimeGridSelector/Day";
+import { compareAsc, compareDesc, parse } from "date-fns";
 import React from "react";
 import { useWindowDimensions } from "react-native";
 import { Box, Button, Text } from "react-native-magnus";
@@ -15,6 +17,14 @@ const PickTime = ({
 
   const selected = useAppSelector((state) => state.DatePicker.selected);
 
+  const dateStrings = Object.keys(selected);
+  dateStrings.sort((a, b) =>
+    compareDesc(
+      parse(a, DATE_FORMAT, new Date()),
+      parse(b, DATE_FORMAT, new Date())
+    )
+  );
+
   return (
     <Container>
       <Text
@@ -25,11 +35,17 @@ const PickTime = ({
       >
         What are your free time slots?
       </Text>
-      {Object.entries(selected).map(([key, value], index) => {
-        return <Text key={index}>{key}</Text>;
-      })}
-      <Box flex={1} alignItems="center">
-        <Day date={new Date()} startTime={8} endTime={22} />
+      <Box flex={1} alignItems="center" row>
+        {dateStrings.map((dateString, index) => {
+          return (
+            <Day
+              key={index}
+              date={parse(dateString, DATE_FORMAT, new Date())}
+              startTime={8}
+              endTime={22}
+            />
+          );
+        })}
       </Box>
     </Container>
   );

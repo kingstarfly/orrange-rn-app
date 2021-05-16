@@ -54,12 +54,13 @@ LocaleConfig.locales["en"] = {
 };
 LocaleConfig.defaultLocale = "en";
 
+export const DATE_FORMAT = "yyyy-MM-dd";
+
 const DatePicker = () => {
   const selected = useAppSelector((state) => state.DatePicker.selected);
   const dispatch = useAppDispatch();
 
   const handleOnDayPress = (day: DateObject) => {
-    const DATE_FORMAT = "yyyy-MM-dd";
     let d = parse(day.dateString, DATE_FORMAT, new Date());
     let ytd = format(subDays(d, 1), DATE_FORMAT);
     let tmr = format(addDays(d, 1), DATE_FORMAT);
