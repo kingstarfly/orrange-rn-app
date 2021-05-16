@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import { Text, Box, Image } from "react-native-magnus";
 import {
   Calendar,
-  CalendarList,
-  Agenda,
   DateObject,
   PeriodMarking,
   DotMarking,
@@ -12,7 +10,6 @@ import {
 
 import { AntDesign } from "@expo/vector-icons";
 import { theme } from "constants/theme";
-import { TapGestureHandler } from "react-native-gesture-handler";
 
 import { LocaleConfig } from "react-native-calendars";
 
@@ -50,7 +47,7 @@ LocaleConfig.locales["en"] = {
     "Monday",
     "Tuesday",
     "Wednesday",
-    "Thursdya",
+    "Thursday",
     "Friday",
     "Sunday",
   ],
@@ -139,7 +136,6 @@ const DatePicker = () => {
 
       new_selected = { ...new_selected, [day.dateString]: props };
       console.log("NEW");
-      console.log(new_selected);
       setSelected(new_selected);
     }
   };

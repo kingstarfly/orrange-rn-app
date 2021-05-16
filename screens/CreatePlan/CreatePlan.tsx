@@ -1,5 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import DatePicker from "components/DatePicker";
+import { theme } from "constants/theme";
 import React from "react";
 import { useWindowDimensions } from "react-native";
 import { Box, Button, Text } from "react-native-magnus";
@@ -25,16 +26,19 @@ const CreatePlan = ({
         <DatePicker />
       </Box>
 
-      {/* <BottomNavBar>
-        <Button
-          onPress={() => navigation.push("PickTime")}
-          bg="backgroundlight"
-          alignSelf="center"
-          color="textdark"
-        >
-          Onwards!
-        </Button>
-      </BottomNavBar> */}
+      <Button
+        onPress={() => navigation.push("PickTime")}
+        bg={theme.colors.primary400}
+        alignSelf="center"
+        color="textdark"
+        rounded={100}
+        w={100}
+        h={30}
+        position="absolute"
+        bottom={25}
+      >
+        Confirm
+      </Button>
     </Container>
   );
 };

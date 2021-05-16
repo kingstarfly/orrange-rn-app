@@ -1,4 +1,5 @@
 import { StackScreenProps } from "@react-navigation/stack";
+import Day from "components/TimeGridSelector/Day";
 import React from "react";
 import { useWindowDimensions } from "react-native";
 import { Box, Button, Text } from "react-native-magnus";
@@ -21,27 +22,8 @@ const PickTime = ({
         What are your free time slots?
       </Text>
       <Box flex={1} alignItems="center">
-        <Text>Time Picker Component</Text>
+        <Day date={new Date()} startTime={8} endTime={22} />
       </Box>
-
-      <BottomNavBar>
-        <Button
-          onPress={() => navigation.goBack()}
-          bg="backgroundlight"
-          alignSelf="center"
-          color="textdark"
-        >
-          Back
-        </Button>
-        <Button
-          onPress={() => navigation.push("PickTime")}
-          bg="backgroundlight"
-          alignSelf="center"
-          color="textdark"
-        >
-          Onwards!
-        </Button>
-      </BottomNavBar>
     </Container>
   );
 };

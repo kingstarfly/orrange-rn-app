@@ -26,7 +26,6 @@ const PublicFeed = ({
           Public Feeds
         </Text>
 
-        <Day date={new Date()} startTime={8} endTime={22} />
         <AddButton to="CreatePlan" />
       </Box>
     </Container>
