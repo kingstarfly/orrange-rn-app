@@ -1,11 +1,18 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { DATE_FORMAT } from "components/DatePicker";
 import Day from "components/TimeGridSelector/Day";
-import { compareAsc, compareDesc, parse } from "date-fns";
+import { compareAsc, parse } from "date-fns";
 import React from "react";
-import { useWindowDimensions } from "react-native";
+import {
+  useWindowDimensions,
+  FlatList,
+  ScrollView,
+  ViewStyle,
+  StyleSheet,
+} from "react-native";
 import { Box, Button, Text } from "react-native-magnus";
 import { useAppSelector } from "redux/hooks";
+import { styles } from "screens/ViewPlans/styles";
 import BottomNavBar from "../../components/BottomNavBar";
 import Container from "../../components/Container";
 import { RootStackParamList } from "../../types";
@@ -19,10 +26,18 @@ const PickTime = ({
 
   const dateStrings = Object.keys(selected);
   dateStrings.sort((a, b) =>
-    compareDesc(
+    compareAsc(
       parse(a, DATE_FORMAT, new Date()),
       parse(b, DATE_FORMAT, new Date())
     )
+  );
+
+  const renderDateString = ({ item: dateString }) => (
+    <Day
+      date={parse(dateString, DATE_FORMAT, new Date())}
+      startTime={8}
+      endTime={22}
+    />
   );
 
   return (
@@ -35,18 +50,20 @@ const PickTime = ({
       >
         What are your free time slots?
       </Text>
-      <Box flex={1} alignItems="center" row>
-        {dateStrings.map((dateString, index) => {
-          return (
-            <Day
-              key={index}
-              date={parse(dateString, DATE_FORMAT, new Date())}
-              startTime={8}
-              endTime={22}
-            />
-          );
-        })}
-      </Box>
+      <ScrollView style={styles.scrollViewContainer}>
+        <ScrollView horizontal>
+          {dateStrings.map((dateString, index) => {
+            return (
+              <Day
+                key={index}
+                date={parse(dateString, DATE_FORMAT, new Date())}
+                startTime={8}
+                endTime={22}
+              />
+            );
+          })}
+        </ScrollView>
+      </ScrollView>
     </Container>
   );
 };

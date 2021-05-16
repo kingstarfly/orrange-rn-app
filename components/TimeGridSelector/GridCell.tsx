@@ -10,7 +10,7 @@ const GridHalfCell = ({ start }: cellProps) => {
     <Box
       bg={theme.colors.backgroundlight}
       h={20}
-      w={200}
+      w={80}
       onStartShouldSetResponder={(evt) => {
         // console.log("onStartShouldSetResponder fired");
         // console.log(evt.nativeEvent.target);
@@ -35,7 +35,7 @@ const GridHalfCell = ({ start }: cellProps) => {
       }}
       onResponderTerminationRequest={(evt) => true}
     >
-      <Text>{startTime}</Text>
+      {/* <Text>{startTime}</Text> */}
     </Box>
   );
 };
