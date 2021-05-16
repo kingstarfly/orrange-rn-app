@@ -50,3 +50,7 @@ export type participantProps = {
   responded: boolean;
   confirmed: boolean;
 };
+
+export type cellProps = {
+  start: Date;
+};

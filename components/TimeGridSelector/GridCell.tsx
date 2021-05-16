@@ -1,11 +1,8 @@
+import React from "react";
 import { theme } from "constants/theme";
 import { add, format } from "date-fns";
-import React from "react";
-import { Box, Button, Icon, Text } from "react-native-magnus";
-
-type cellProps = {
-  start: Date;
-};
+import { Box, Text } from "react-native-magnus";
+import { cellProps } from "types";
 
 const GridHalfCell = ({ start }: cellProps) => {
   let startTime = format(start, "HH:mm dd-MMM-yyyy");
@@ -16,26 +13,27 @@ const GridHalfCell = ({ start }: cellProps) => {
       w={200}
       onStartShouldSetResponder={(evt) => {
         // console.log("onStartShouldSetResponder fired");
-        // console.log(evt.nativeEvent);
+        // console.log(evt.nativeEvent.target);
         return true;
       }}
       onMoveShouldSetResponder={(evt) => {
         // console.log("onMoveShouldSetResponder fired");
-        // console.log(evt);
+        // console.log(evt.nativeEvent.target);
         return true;
       }}
       onResponderGrant={(evt) => {
-        console.log("onResponderGrant fired");
-        // console.log(evt);
+        // console.log("onResponderGrant fired");
+        console.log(evt.nativeEvent.pageY);
       }}
       onResponderMove={(evt) => {
-        console.log("onResponderMove fired");
-        console.log(evt.nativeEvent.target);
+        // console.log("onResponderMove fired");
+        // console.log(evt.nativeEvent.touches[0].touches[0]);
       }}
       onResponderRelease={(evt) => {
-        console.log("onResponderRelease fired");
+        // console.log("onResponderRelease fired");
         console.log(evt.nativeEvent.target);
       }}
+      onResponderTerminationRequest={(evt) => true}
     >
       <Text>{startTime}</Text>
     </Box>
