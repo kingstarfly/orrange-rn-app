@@ -12,6 +12,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { theme } from "constants/theme";
 
 import { LocaleConfig } from "react-native-calendars";
+import { useDispatch, useSelector } from "react-redux";
+import { increment } from "./DatePickerSlice";
 
 LocaleConfig.locales["en"] = {
   monthNames: [
@@ -62,8 +64,11 @@ type MarkedDate = {
 
 const DatePicker = () => {
   const [selected, setSelected] = useState<MarkedDate>({});
+  const count = useSelector((state) => state.DatePicker.value);
+  const dispatch = useDispatch();
 
   const handleOnDayPress = (day: DateObject) => {
+    dispatch(increment());
     const DATE_FORMAT = "yyyy-MM-dd";
     let d = parse(day.dateString, DATE_FORMAT, new Date());
     let ytd = format(subDays(d, 1), DATE_FORMAT);
