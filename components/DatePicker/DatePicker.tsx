@@ -1,19 +1,15 @@
 import { addDays, format, parse, parseISO, subDays } from "date-fns";
 import React, { useState } from "react";
 import { Text, Box, Image } from "react-native-magnus";
-import {
-  Calendar,
-  DateObject,
-  PeriodMarking,
-  DotMarking,
-} from "react-native-calendars";
+import { Calendar, DateObject } from "react-native-calendars";
 
 import { AntDesign } from "@expo/vector-icons";
 import { theme } from "constants/theme";
 
 import { LocaleConfig } from "react-native-calendars";
 import { useDispatch, useSelector } from "react-redux";
-import { increment } from "./DatePickerSlice";
+import { setSelected } from "./DatePickerSlice";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
 
 LocaleConfig.locales["en"] = {
   monthNames: [
@@ -58,17 +54,11 @@ LocaleConfig.locales["en"] = {
 };
 LocaleConfig.defaultLocale = "en";
 
-type MarkedDate = {
-  [date: string]: PeriodMarking | DotMarking;
-};
-
 const DatePicker = () => {
-  const [selected, setSelected] = useState<MarkedDate>({});
-  const count = useSelector((state) => state.DatePicker.value);
-  const dispatch = useDispatch();
+  const selected = useAppSelector((state) => state.DatePicker.selected);
+  const dispatch = useAppDispatch();
 
   const handleOnDayPress = (day: DateObject) => {
-    dispatch(increment());
     const DATE_FORMAT = "yyyy-MM-dd";
     let d = parse(day.dateString, DATE_FORMAT, new Date());
     let ytd = format(subDays(d, 1), DATE_FORMAT);
@@ -99,7 +89,8 @@ const DatePicker = () => {
           },
         };
       }
-      setSelected(new_selected);
+      dispatch(setSelected(new_selected));
+      // setSelected(new_selected); // changing to use redux
     } else {
       let new_selected = { ...selected };
 
@@ -140,8 +131,8 @@ const DatePicker = () => {
       }
 
       new_selected = { ...new_selected, [day.dateString]: props };
-      console.log("NEW");
-      setSelected(new_selected);
+      dispatch(setSelected(new_selected)); // changing to use redux
+      // setSelected(new_selected);
     }
   };
 

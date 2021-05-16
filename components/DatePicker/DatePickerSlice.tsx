@@ -1,31 +1,32 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "redux/store";
+import { MarkedDates } from "types";
+
+// Define a type for the slice state
+interface DatePickerState {
+  selected: MarkedDates;
+}
+
+// Define the initial state using that type
+const initialState: DatePickerState = {
+  selected: {},
+};
 
 export const DatePickerSlice = createSlice({
   name: "DatePicker",
-  initialState: {
-    value: 0,
-  },
+  initialState,
   reducers: {
-    increment: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      console.log("increment fired");
-      state.value += 1;
-    },
-    decrement: (state) => {
-      state.value -= 1;
-    },
-    incrementByAmount: (state, action) => {
-      state.value += action.payload;
+    setSelected: (state, action: PayloadAction<MarkedDates>) => {
+      state.selected = action.payload;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } =
-  DatePickerSlice.actions;
+export const { setSelected } = DatePickerSlice.actions;
+
+// Other code such as selectors can use the imported `RootState` type
+export const selectedDates = (state: RootState) => state.DatePicker.selected;
 
 const DatePickerReducer = DatePickerSlice.reducer;
 export default DatePickerReducer;

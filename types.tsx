@@ -4,6 +4,7 @@
  */
 
 import { ImageSourcePropType } from "react-native";
+import { DotMarking, PeriodMarking } from "react-native-calendars";
 
 export type RootStackParamList = {
   // Root: undefined;
@@ -53,4 +54,8 @@ export type participantProps = {
 
 export type cellProps = {
   start: Date;
+};
+
+export type MarkedDates = {
+  [date: string]: PeriodMarking | DotMarking;
 };
