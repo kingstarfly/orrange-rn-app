@@ -1,6 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { DATE_FORMAT } from "components/DatePicker";
 import Day from "components/TimeGridSelector/Day";
+import TimeLabels from "components/TimeGridSelector/TimeLabels";
 import { compareAsc, parse } from "date-fns";
 import React from "react";
 import {
@@ -17,6 +18,10 @@ import BottomNavBar from "../../components/BottomNavBar";
 import Container from "../../components/Container";
 import { RootStackParamList } from "../../types";
 
+// !! default start and end time, subject to change
+export const START_TIME = 8;
+export const END_TIME = 22;
+
 const PickTime = ({
   navigation,
 }: StackScreenProps<RootStackParamList, "PickTime">) => {
@@ -32,18 +37,11 @@ const PickTime = ({
     )
   );
 
-  const renderDateString = ({ item: dateString }) => (
-    <Day
-      date={parse(dateString, DATE_FORMAT, new Date())}
-      startTime={8}
-      endTime={22}
-    />
-  );
-
   return (
     <Container>
       <Text
-        mt={height * 0.1}
+        mt={height * 0.08}
+        mb={height * 0.02}
         px={width * 0.2}
         textAlign="center"
         fontSize="5xl"
@@ -52,13 +50,15 @@ const PickTime = ({
       </Text>
       <ScrollView style={styles.scrollViewContainer}>
         <ScrollView horizontal>
+          {/* <Text>Timings</Text> */}
+          <TimeLabels startTime={START_TIME} endTime={END_TIME} />
           {dateStrings.map((dateString, index) => {
             return (
               <Day
                 key={index}
                 date={parse(dateString, DATE_FORMAT, new Date())}
-                startTime={8}
-                endTime={22}
+                startTime={START_TIME}
+                endTime={END_TIME}
               />
             );
           })}
