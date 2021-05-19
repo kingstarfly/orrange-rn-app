@@ -10,7 +10,11 @@ interface ContainerProps {
 const Container: React.FC<ContainerProps> = ({ bg, children }) => {
   return (
     <SafeAreaView
-      style={{ backgroundColor: bg || theme.colors.backgroundlight, flex: 1 }}
+      style={{
+        backgroundColor: bg || theme.colors.backgroundlight,
+        flex: 1,
+        paddingTop: 80,
+      }}
     >
       {children}
     </SafeAreaView>
