@@ -12,6 +12,7 @@ export type RootStackParamList = {
   CreatePlan: undefined;
   ViewPlans: undefined;
   PickTime: undefined;
+  MeetupDetails: undefined;
   NotFound: undefined;
 };
 
