@@ -1,7 +1,9 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { DATE_FORMAT } from "components/DatePicker";
+import StyledButton from "components/StyledButton";
 import Day from "components/TimeGridSelector/Day";
 import TimeLabels from "components/TimeGridSelector/TimeLabels";
+import { theme } from "constants/theme";
 import { compareAsc, parse } from "date-fns";
 import React from "react";
 import {
@@ -64,6 +66,27 @@ const PickTime = ({
           })}
         </ScrollView>
       </ScrollView>
+      <Box
+        position="absolute"
+        bottom={25}
+        justifyContent="space-around"
+        flexDir="row"
+        w="100%"
+      >
+        <StyledButton
+          onPress={() => navigation.push("MeetupDetails")}
+          bg={theme.colors.gray5}
+        >
+          Skip for now
+        </StyledButton>
+
+        <StyledButton
+          onPress={() => navigation.push("MeetupDetails")}
+          bg={theme.colors.primary400}
+        >
+          Confirm
+        </StyledButton>
+      </Box>
     </Container>
   );
 };
