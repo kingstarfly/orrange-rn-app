@@ -32,9 +32,10 @@ const TimeLabels = ({ startTime, endTime }: timeProps) => {
         <Box
           key={index}
           bg={theme.colors.backgroundlight}
+          // bg={"red200"}
           h={41}
           w={60}
-          px={11}
+          pr={10}
         >
           <Text
             fontFamily="poppins-regular"

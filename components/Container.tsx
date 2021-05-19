@@ -14,6 +14,7 @@ const Container: React.FC<ContainerProps> = ({ bg, children }) => {
         backgroundColor: bg || theme.colors.backgroundlight,
         flex: 1,
         paddingTop: 80,
+        paddingHorizontal: 16,
       }}
     >
       {children}

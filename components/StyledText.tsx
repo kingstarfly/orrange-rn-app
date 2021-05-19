@@ -41,3 +41,11 @@ export const SubBodyMediumText: React.FC<TextProps> = ({
     </Text>
   );
 };
+
+export const Header3: React.FC<TextProps> = ({ children, ...rest }) => {
+  return (
+    <Text {...rest} style={{ fontFamily: "poppins-medium", fontSize: 18 }}>
+      {children}
+    </Text>
+  );
+};

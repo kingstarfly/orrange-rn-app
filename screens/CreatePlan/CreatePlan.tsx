@@ -17,7 +17,7 @@ const CreatePlan = ({
     <Container>
       <Text
         mt={height * 0.1}
-        px={width * 0.2}
+        px={width * 0.1}
         textAlign="center"
         fontSize="5xl"
       >

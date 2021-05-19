@@ -6,7 +6,8 @@ export const theme = {
     textdark: "#121113",
     backgroundlight: "#F9F9F9",
     linegray: "#B6B6B6",
-    textgray: "#666666",
+    textgray200: "#B8B8B8",
+    textgray400: "#666666",
     gray5: "#E0E0E0",
   },
 };
