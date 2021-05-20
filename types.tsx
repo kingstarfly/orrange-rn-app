@@ -3,6 +3,7 @@
  * https://reactnavigation.org/docs/typescript/
  */
 
+import { MutableRefObject } from "react";
 import { ImageSourcePropType } from "react-native";
 import { DotMarking, PeriodMarking } from "react-native-calendars";
 
@@ -55,6 +56,9 @@ export type participantProps = {
 
 export type cellProps = {
   start: Date;
+  ref?: MutableRefObject<any>;
+  isBottomMostCell?: boolean;
+  isRightMostCell?: boolean;
 };
 
 export type MarkedDates = {

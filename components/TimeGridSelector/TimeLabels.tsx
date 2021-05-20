@@ -16,7 +16,7 @@ const TimeLabels = ({ startTime, endTime }: timeProps) => {
       suffix = "NN";
     } else if (x === 24) {
       suffix = "MN";
-      time = 0;
+      time = 12;
     } else if (x < 12) {
       suffix = "AM";
     } else {

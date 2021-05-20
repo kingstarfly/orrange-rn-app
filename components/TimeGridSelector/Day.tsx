@@ -8,9 +8,10 @@ type dayProps = {
   date: Date;
   startTime: number;
   endTime: number;
+  isRightMostDay?: boolean;
 };
 
-const Day = ({ date, startTime, endTime }: dayProps) => {
+const Day = ({ date, startTime, endTime, isRightMostDay }: dayProps) => {
   // Get all periods by hour from startTime to endTime
 
   const dateStart = startOfDay(date);
@@ -39,7 +40,12 @@ const Day = ({ date, startTime, endTime }: dayProps) => {
 
       <Box>
         {allStartTimes.map((start, index) => (
-          <GridCell key={index} start={start} />
+          <GridCell
+            key={index}
+            start={start}
+            isRightMostCell={isRightMostDay}
+            isBottomMostCell={index === allStartTimes.length - 1}
+          />
         ))}
       </Box>
     </Box>
