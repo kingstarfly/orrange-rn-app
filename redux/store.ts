@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import DatePickerReducer from "components/DatePicker/DatePickerSlice";
+import DatePickerReducer from "redux/DatePickerSlice";
+import GridInfoReducer from "./GridInfoSlice";
 
 const store = configureStore({
   reducer: {
     DatePicker: DatePickerReducer,
+    GridInfo: GridInfoReducer,
   },
 });
 

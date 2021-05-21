@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 import { theme } from "constants/theme";
 import { add, format } from "date-fns";
 import { Box, Text } from "react-native-magnus";
@@ -46,11 +47,29 @@ const GridHalfCell = ({ start }: cellProps) => {
   );
 };
 
-const GridCell = ({ start, isRightMostCell, isBottomMostCell }: cellProps) => {
+const GridCell = ({
+  start,
+  isRightMostCell,
+  isBottomMostCell,
+  x,
+}: cellProps) => {
   let middle = add(start, { minutes: 30 });
 
+  // useEffect(() => {
+  //   if (gridRef.current) {
+  //     gridRef.current.measureInWindow((res) => {
+  //       console.log(res);
+  //     });
+  //   }
+  // }, [measure]);
   let startRef = useRef(start.toISOString());
   let middleRef = useRef(middle.toISOString());
+  console.log(`${start.toISOString()} - ${x}`);
+
+  const handlePressOut = (e) => {
+    // Create 2 hour period draggable - create a new component that takes in which start period it is
+    console.log(start.toISOString());
+  };
   return (
     <Box
       borderColor={theme.colors.linegray}
@@ -58,8 +77,11 @@ const GridCell = ({ start, isRightMostCell, isBottomMostCell }: cellProps) => {
       borderLeftWidth={1}
       borderRightWidth={isRightMostCell ? 1.5 : 0}
       borderBottomWidth={isBottomMostCell ? 1 : 0}
+      onTouchEnd={handlePressOut}
+      // onLayout={(e) => console.log(e.nativeEvent.layout)}
     >
       <GridHalfCell start={start} />
+
       <GridHalfCell start={middle} />
     </Box>
   );

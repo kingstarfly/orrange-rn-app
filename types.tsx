@@ -59,6 +59,7 @@ export type cellProps = {
   ref?: MutableRefObject<any>;
   isBottomMostCell?: boolean;
   isRightMostCell?: boolean;
+  x?: number;
 };
 
 export type MarkedDates = {
