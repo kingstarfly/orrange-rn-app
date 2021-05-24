@@ -67,6 +67,7 @@ function RootNavigator() {
         headerTitle: "",
         headerBackAllowFontScaling: true,
       }}
+      initialRouteName="ViewPlans"
     >
       <Stack.Screen
         name="PublicFeed"

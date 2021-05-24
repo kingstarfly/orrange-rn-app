@@ -8,6 +8,7 @@ import { meetDataOne, meetingsData } from "constants/mockdata";
 import { RootStackParamList } from "types/types";
 import { SectionList } from "react-native";
 import { styles } from "./styles";
+import AddButton from "components/AddButton";
 
 const ViewPlans = ({
   navigation,
@@ -39,24 +40,7 @@ const ViewPlans = ({
       {/* Scroll View of each month */}
       {/* Within each month, there are cards for each meeting */}
 
-      <BottomNavBar>
-        <Button
-          onPress={() => navigation.goBack()}
-          bg="backgroundlight"
-          alignSelf="center"
-          color="textdark"
-        >
-          Back
-        </Button>
-        <Button
-          onPress={() => navigation.push("SelectDates")}
-          bg="backgroundlight"
-          alignSelf="center"
-          color="textdark"
-        >
-          Create Plan
-        </Button>
-      </BottomNavBar>
+      <AddButton to="SelectDates" />
     </Container>
   );
 };

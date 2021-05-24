@@ -4,7 +4,7 @@ import { theme } from "constants/theme";
 import React from "react";
 import { Box, Button, Icon } from "react-native-magnus";
 
-const AddButton = ({ to }: { to: string }) => {
+const CreateButton = ({ to }: { to: string }) => {
   const navigation = useNavigation<StackNavigationProp<any>>();
   return (
     <Box position="absolute" bottom={24} right={24} zIndex={2}>
@@ -29,4 +29,4 @@ const AddButton = ({ to }: { to: string }) => {
   );
 };
 
-export default AddButton;
+export default CreateButton;

@@ -8,13 +8,6 @@ import AddButton from "components/AddButton";
 const PublicFeed = ({
   navigation,
 }: StackScreenProps<RootStackParamList, "PublicFeed">) => {
-  const [] = useState([]);
-
-  const handleChange = (e) => {
-    console.log("Hi");
-    console.log(e);
-  };
-
   return (
     <Container>
       <Box flex={1} justifyContent="center" alignItems="center">
