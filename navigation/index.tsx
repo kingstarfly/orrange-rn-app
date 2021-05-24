@@ -8,23 +8,20 @@ import {
   DefaultTheme,
   DarkTheme,
 } from "@react-navigation/native";
-import {
-  createStackNavigator,
-  HeaderBackButton,
-} from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 import { ColorSchemeName } from "react-native";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
-import CreatePlan from "../screens/CreatePlan";
-import PickTime from "../screens/PickTime";
-import ViewPlans from "../screens/ViewPlans";
-import PublicFeed from "../screens/PublicFeed";
+import SelectDates from "screens/Create/SelectDates";
+import SelectTime from "screens/Create/SelectTime";
+import ViewPlans from "screens/ViewPlans";
+import PublicFeed from "screens/PublicFeed";
 
-import { RootStackParamList } from "../types";
+import { RootStackParamList } from "../types/types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { theme } from "constants/theme";
-import MeetupDetails from "screens/MeetupDetails";
+import MeetupDetails from "screens/Create/MeetupDetails";
 
 export default function Navigation({
   colorScheme,
@@ -78,14 +75,14 @@ function RootNavigator() {
       />
 
       <Stack.Screen
-        name="CreatePlan"
-        component={CreatePlan}
+        name="SelectDates"
+        component={SelectDates}
         options={{ title: "Pick Date" }}
       />
 
       <Stack.Screen
-        name="PickTime"
-        component={PickTime}
+        name="SelectTime"
+        component={SelectTime}
         options={{ title: "Pick Time" }}
       />
 

@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { theme } from "constants/theme";
 import { add, format } from "date-fns";
 import { Box, Text } from "react-native-magnus";
-import { cellProps } from "types";
+import { cellProps } from "types/types";
 
 const GridHalfCell = ({ start }: cellProps) => {
   let startTime = format(start, "HH:mm dd-MMM-yyyy");

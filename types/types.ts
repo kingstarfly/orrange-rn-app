@@ -10,9 +10,9 @@ import { DotMarking, PeriodMarking } from "react-native-calendars";
 export type RootStackParamList = {
   // Root: undefined;
   PublicFeed: undefined;
-  CreatePlan: undefined;
+  SelectDates: undefined;
   ViewPlans: undefined;
-  PickTime: undefined;
+  SelectTime: undefined;
   MeetupDetails: undefined;
   NotFound: undefined;
 };

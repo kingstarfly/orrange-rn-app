@@ -2,7 +2,7 @@ import { format, parseISO } from "date-fns";
 import React from "react";
 import { ImageSourcePropType } from "react-native";
 import { Text, Box, Image, WINDOW_WIDTH } from "react-native-magnus";
-import { MeetingProps, participantProps } from "types";
+import { MeetingProps, participantProps } from "types/types";
 
 const MeetingCard = ({ meeting }: MeetingProps) => {
   const NUM_PROFILES = 2;

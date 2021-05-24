@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "redux/store";
-import { MarkedDates } from "types";
+import { MarkedDates } from "types/types";
 
 // Define a type for the slice state
 interface DatePickerState {

@@ -5,13 +5,13 @@ import { theme } from "constants/theme";
 import React from "react";
 import { useWindowDimensions } from "react-native";
 import { Box, Button, Text } from "react-native-magnus";
-import BottomNavBar from "../../components/BottomNavBar";
-import Container from "../../components/Container";
-import { RootStackParamList } from "../../types";
+import BottomNavBar from "components/BottomNavBar";
+import Container from "components/Container";
+import { RootStackParamList } from "types/types";
 
-const CreatePlan = ({
+const SelectDates = ({
   navigation,
-}: StackScreenProps<RootStackParamList, "CreatePlan">) => {
+}: StackScreenProps<RootStackParamList, "SelectDates">) => {
   const { width, height } = useWindowDimensions();
   return (
     <Container>
@@ -28,7 +28,7 @@ const CreatePlan = ({
       </Box>
 
       <StyledButton
-        onPress={() => navigation.push("PickTime")}
+        onPress={() => navigation.push("SelectTime")}
         bg={theme.colors.primary400}
         position="absolute"
         bottom={25}
@@ -39,4 +39,4 @@ const CreatePlan = ({
   );
 };
 
-export default CreatePlan;
+export default SelectDates;

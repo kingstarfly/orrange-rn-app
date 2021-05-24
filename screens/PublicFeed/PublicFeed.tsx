@@ -2,12 +2,8 @@ import { StackScreenProps } from "@react-navigation/stack";
 import React, { useState } from "react";
 import { Box, Button, Icon, Text } from "react-native-magnus";
 import Container from "../../components/Container";
-import { RootStackParamList } from "../../types";
+import { RootStackParamList } from "../../types/types";
 import AddButton from "components/AddButton";
-
-import { addDays } from "date-fns";
-import GridCell from "components/TimeGridSelector/GridCell";
-import Day from "components/TimeGridSelector/Day";
 
 const PublicFeed = ({
   navigation,
@@ -26,7 +22,7 @@ const PublicFeed = ({
           Public Feeds
         </Text>
 
-        <AddButton to="CreatePlan" />
+        <AddButton to="SelectDates" />
       </Box>
     </Container>
   );

@@ -5,7 +5,7 @@ import BottomNavBar from "components/BottomNavBar";
 import Container from "components/Container";
 import MeetingCard from "components/MeetingCard";
 import { meetDataOne, meetingsData } from "constants/mockdata";
-import { RootStackParamList } from "types";
+import { RootStackParamList } from "types/types";
 import { SectionList } from "react-native";
 import { styles } from "./styles";
 
@@ -49,7 +49,7 @@ const ViewPlans = ({
           Back
         </Button>
         <Button
-          onPress={() => navigation.push("CreatePlan")}
+          onPress={() => navigation.push("SelectDates")}
           bg="backgroundlight"
           alignSelf="center"
           color="textdark"

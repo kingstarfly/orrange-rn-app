@@ -3,10 +3,11 @@
   "compilerOptions": {
     // "strict": true,
     "baseUrl": ".",
-    // "paths": {
-    //   "@assets/*": ["assets/*"],
-    //   "@components/*": ["components/*"],
-    //   "@screens/*": ["screens/*"]
-    // }
+    "paths": {
+      // "@assets/*": ["assets/*"],
+      // "@components/*": ["components/*"],
+      // "@screens/*": ["screens/*"],
+      // "@types/*": ["types/*"]
+    }
   }
 }

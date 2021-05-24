@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Box, Button, Icon, Input, Text } from "react-native-magnus";
-import { RootStackParamList } from "types";
+import { RootStackParamList } from "types/types";
 import Container from "components/Container";
 import { theme } from "constants/theme";
 import StyledButton from "components/StyledButton";
@@ -37,7 +37,7 @@ const MeetupDetails = ({
       </Box>
 
       <StyledButton
-        onPress={() => navigation.push("PickTime")}
+        onPress={() => navigation.push("SelectTime")}
         bg={theme.colors.primary400}
         position="absolute"
         bottom={25}
