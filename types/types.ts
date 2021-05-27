@@ -15,6 +15,7 @@ export type RootStackParamList = {
   SelectTime: undefined;
   MeetupDetails: undefined;
   NotFound: undefined;
+  TestScreen: undefined;
 };
 
 export type BottomTabParamList = {

@@ -22,6 +22,7 @@ import { RootStackParamList } from "../types/types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { theme } from "constants/theme";
 import MeetupDetails from "screens/Create/MeetupDetails";
+import TestScreen from "screens/TestScreen";
 
 export default function Navigation({
   colorScheme,
@@ -67,7 +68,7 @@ function RootNavigator() {
         headerTitle: "",
         headerBackAllowFontScaling: true,
       }}
-      initialRouteName="ViewPlans"
+      initialRouteName="TestScreen" //!! to change
     >
       <Stack.Screen
         name="PublicFeed"
@@ -103,6 +104,12 @@ function RootNavigator() {
         name="NotFound"
         component={NotFoundScreen}
         options={{ title: "Oops!" }}
+      />
+
+      <Stack.Screen
+        name="TestScreen"
+        component={TestScreen}
+        options={{ title: "" }}
       />
     </Stack.Navigator>
   );
