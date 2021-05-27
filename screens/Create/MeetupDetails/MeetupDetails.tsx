@@ -26,18 +26,13 @@ const MeetupDetails = ({
         </Box>
 
         <Box mb={height * 0.1}>
-          <Header3>Initial ideas?</Header3>
-          <StyledInput placeholder="..." value={idea} onChangeText={setIdea} />
-        </Box>
-
-        <Box mb={height * 0.1}>
-          <Header3>Invite your pals!</Header3>
+          <Header3>Add your pals!</Header3>
           <Text>Friend invite component TODO</Text>
         </Box>
       </Box>
 
       <StyledButton
-        onPress={() => navigation.push("SelectTime")}
+        onPress={() => navigation.push("SelectDates")}
         bg={theme.colors.primary400}
         position="absolute"
         bottom={25}

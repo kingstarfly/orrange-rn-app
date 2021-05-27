@@ -40,7 +40,7 @@ const ViewPlans = ({
       {/* Scroll View of each month */}
       {/* Within each month, there are cards for each meeting */}
 
-      <AddButton to="SelectDates" />
+      <AddButton to="MeetupDetails" />
     </Container>
   );
 };
