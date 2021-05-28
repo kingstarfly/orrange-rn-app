@@ -14,6 +14,7 @@ export type RootStackParamList = {
   ViewPlans: undefined;
   SelectTime: undefined;
   MeetupDetails: undefined;
+  AddFriends: undefined;
   NotFound: undefined;
   TestScreen: undefined;
 };
@@ -65,3 +66,10 @@ export type cellProps = {
 export type MarkedDates = {
   [date: string]: PeriodMarking | DotMarking;
 };
+
+export interface ContactDetails {
+  id: string;
+  name: string;
+  thumbnail: string;
+  selected: boolean;
+}

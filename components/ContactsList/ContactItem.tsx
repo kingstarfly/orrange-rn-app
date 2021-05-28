@@ -4,7 +4,7 @@ import React from "react";
 import { Pressable } from "react-native";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import { Avatar, Box, Button, Icon, Text } from "react-native-magnus";
-import { ContactDetails } from "./ContactList";
+import { ContactDetails } from "types/types";
 
 interface ContactItemProps {
   item: ContactDetails;

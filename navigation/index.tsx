@@ -23,6 +23,7 @@ import LinkingConfiguration from "./LinkingConfiguration";
 import { theme } from "constants/theme";
 import MeetupDetails from "screens/Create/MeetupDetails";
 import TestScreen from "screens/TestScreen";
+import AddFriends from "screens/Create/AddFriends";
 
 export default function Navigation({
   colorScheme,
@@ -68,7 +69,7 @@ function RootNavigator() {
         headerTitle: "",
         headerBackAllowFontScaling: true,
       }}
-      initialRouteName="TestScreen" //!! to change
+      initialRouteName="AddFriends" //!! to change
     >
       <Stack.Screen
         name="PublicFeed"
@@ -98,6 +99,12 @@ function RootNavigator() {
         name="MeetupDetails"
         component={MeetupDetails}
         options={{ title: "Meetup Details" }}
+      />
+
+      <Stack.Screen
+        name="AddFriends"
+        component={AddFriends}
+        options={{ title: "Add Your Pals" }}
       />
 
       <Stack.Screen

@@ -8,7 +8,7 @@ const TestScreen = () => {
   return (
     <Container>
       <Box flex={1} alignItems="center">
-        <ContactList></ContactList>
+        {/* <ContactList></ContactList> */}
       </Box>
     </Container>
   );
