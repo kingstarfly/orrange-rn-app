@@ -1,7 +1,7 @@
 import { theme } from "constants/theme";
 import React, { useState } from "react";
 import { FlatList } from "react-native";
-import { Box, Icon, Input, Text } from "react-native-magnus";
+import { Box, Icon, Input } from "react-native-magnus";
 import ContactItem from "./ContactItem";
 
 const MOCK_DATA = [
@@ -50,29 +50,42 @@ const ContactList = () => {
     <ContactItem item={item} handleSelectContact={handleSelectContact} />
   );
 
+  const listHeader = (
+    <Input
+      placeholder="Add your pals..."
+      py="sm"
+      mb="sm"
+      focusBorderColor="blue700"
+      prefix={<Icon name="search" color="gray900" fontFamily="Feather" />}
+      borderColor={theme.colors.linegray}
+      borderWidth={2}
+    />
+  );
+
   return (
-    <Box>
+    <Box w="95%">
       <Input
         placeholder="Add your pals..."
         py="sm"
+        mb="sm"
         focusBorderColor="blue700"
         prefix={<Icon name="search" color="gray900" fontFamily="Feather" />}
-        w="95%"
-        mb="lg"
         borderColor={theme.colors.linegray}
-        borderWidth={0.8}
+        borderWidth={2}
       />
-
       <FlatList
         data={data}
-        renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        style={{
-          paddingHorizontal: 18,
-          borderWidth: 0.8,
-          borderTopWidth: 0,
-          borderColor: theme.colors.linegray,
-        }}
+        renderItem={renderItem}
+        style={
+          {
+            // borderWidth: 0.8,
+            // borderTopWidth: 0,
+            // borderColor: theme.colors.linegray,
+            // borderRadius: 15,
+          }
+        }
+        // ListHeaderComponent={listHeader}
       />
     </Box>
   );

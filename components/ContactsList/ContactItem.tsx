@@ -2,6 +2,7 @@ import { BodyText } from "components/StyledText";
 import { theme } from "constants/theme";
 import React from "react";
 import { Pressable } from "react-native";
+import { TouchableHighlight } from "react-native-gesture-handler";
 import { Avatar, Box, Button, Icon, Text } from "react-native-magnus";
 import { ContactDetails } from "./ContactList";
 
@@ -21,23 +22,28 @@ const ContactItem = ({ item, handleSelectContact }: ContactItemProps) => {
     return initials.length > 2 ? initials.slice(0, 2) : initials;
   };
   return (
-    <Box flexDir="row" my="sm" justifyContent="space-between">
-      <Box justifyContent="center" mr="lg">
-        <Avatar
-          bg={theme.colors.primary400}
-          size={40}
-          color={theme.colors.textdark}
-        >
-          <BodyText>{getInitials(item.name)}</BodyText>
-        </Avatar>
-      </Box>
+    <TouchableHighlight
+      activeOpacity={0.85}
+      underlayColor="#E5E5E5"
+      onPress={() => handleSelectContact(item)}
+      style={{ borderRadius: 8 }}
+    >
+      <Box flexDir="row" my="sm" justifyContent="space-between" px="xl">
+        <Box justifyContent="center" mr="lg">
+          <Avatar
+            bg={theme.colors.primary400}
+            size={40}
+            color={theme.colors.textdark}
+          >
+            <BodyText>{getInitials(item.name)}</BodyText>
+          </Avatar>
+        </Box>
 
-      <Box flex={1} justifyContent="center">
-        <BodyText textAlign="left">{item.name}</BodyText>
-      </Box>
+        <Box flex={1} justifyContent="center">
+          <BodyText textAlign="left">{item.name}</BodyText>
+        </Box>
 
-      <Box justifyContent="center" alignItems="center">
-        <Pressable onPress={() => handleSelectContact(item)}>
+        <Box justifyContent="center" alignItems="center">
           <Icon
             name={
               item.selected ? "check-circle" : "checkbox-blank-circle-outline"
@@ -48,9 +54,9 @@ const ContactItem = ({ item, handleSelectContact }: ContactItemProps) => {
             fontFamily="MaterialCommunityIcons"
             fontSize="4xl"
           />
-        </Pressable>
+        </Box>
       </Box>
-    </Box>
+    </TouchableHighlight>
   );
 };
 
