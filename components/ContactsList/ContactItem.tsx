@@ -6,16 +6,11 @@ import { Avatar, Box, Button, Icon, Text } from "react-native-magnus";
 import { ContactDetails } from "./ContactList";
 
 interface ContactItemProps {
-  name: string;
+  item: ContactDetails;
   handleSelectContact: (contact: ContactDetails) => void;
-  isSelected: boolean;
 }
 
-const ContactItem = ({
-  name,
-  handleSelectContact,
-  isSelected,
-}: ContactItemProps) => {
+const ContactItem = ({ item, handleSelectContact }: ContactItemProps) => {
   const getInitials = (name: string) => {
     const initials = name
       .split(" ")
@@ -28,20 +23,28 @@ const ContactItem = ({
   return (
     <Box flexDir="row" my="sm" justifyContent="space-between">
       <Box justifyContent="center" mr="lg">
-        <Avatar bg={theme.colors.primary400} size={40} color="red800">
-          {getInitials(name)}
+        <Avatar
+          bg={theme.colors.primary400}
+          size={40}
+          color={theme.colors.textdark}
+        >
+          <BodyText>{getInitials(item.name)}</BodyText>
         </Avatar>
       </Box>
 
       <Box flex={1} justifyContent="center">
-        <BodyText textAlign="left">{name}</BodyText>
+        <BodyText textAlign="left">{item.name}</BodyText>
       </Box>
 
       <Box justifyContent="center" alignItems="center">
-        <Pressable onPress={() => console.log("tick pressed")}>
+        <Pressable onPress={() => handleSelectContact(item)}>
           <Icon
-            name={isSelected ? "check-circle" : "checkbox-blank-circle-outline"}
-            color={theme.colors.primary500}
+            name={
+              item.selected ? "check-circle" : "checkbox-blank-circle-outline"
+            }
+            color={
+              item.selected ? theme.colors.primary500 : theme.colors.linegray
+            }
             fontFamily="MaterialCommunityIcons"
             fontSize="4xl"
           />

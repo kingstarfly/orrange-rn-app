@@ -16,12 +16,11 @@ export default function useCachedResources() {
         await Font.loadAsync({
           ...Ionicons.font,
           "space-mono": require("../assets/fonts/SpaceMono-Regular.ttf"),
-          "poppins-regular": require("../assets/fonts/Poppins-Regular.ttf"),
-          "poppins-light": require("../assets/fonts/Poppins-Light.ttf"),
-          "poppins-medium": require("../assets/fonts/Poppins-Medium.ttf"),
-          "poppins-semibold": require("../assets/fonts/Poppins-SemiBold.ttf"),
-          "poppins-bold": require("../assets/fonts/Poppins-Bold.ttf"),
-          "poppins-lightitalic": require("../assets/fonts/Poppins-LightItalic.ttf"),
+          "inter-regular": require("../assets/fonts/Inter-Regular.ttf"),
+          "inter-light": require("../assets/fonts/Inter-Light.ttf"),
+          "inter-medium": require("../assets/fonts/Inter-Medium.ttf"),
+          "inter-semibold": require("../assets/fonts/Inter-SemiBold.ttf"),
+          "inter-bold": require("../assets/fonts/Inter-Bold.ttf"),
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service

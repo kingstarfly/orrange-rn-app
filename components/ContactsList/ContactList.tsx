@@ -33,19 +33,21 @@ const ContactList = () => {
 
   const handleSelectContact = (contact: ContactDetails) => {
     setData((prevArr) => {
+      let toChangeIndex = prevArr.findIndex((old) => old.id === contact.id);
+      let toChange = prevArr[toChangeIndex];
+      let newContact = {
+        ...toChange,
+        selected: !toChange.selected,
+      };
       return [
-        ...prevArr.filter((old) => old.id !== contact.id),
-        { ...contact, selected: !contact.selected },
+        ...prevArr.slice(0, toChangeIndex),
+        newContact,
+        ...prevArr.slice(toChangeIndex + 1),
       ];
     });
-    // change the selected field in data to selected
   };
-  const renderItem = ({ item }: ContactDetails) => (
-    <ContactItem
-      name={item.name}
-      handleSelectContact={handleSelectContact}
-      isSelected={item.selected}
-    />
+  const renderItem = ({ item }: { item: ContactDetails }) => (
+    <ContactItem item={item} handleSelectContact={handleSelectContact} />
   );
 
   return (

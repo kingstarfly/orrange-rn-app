@@ -56,7 +56,7 @@ const MeetingCard = ({ meeting }: MeetingProps) => {
       </Box>
       <Box mx={8}>
         <Text
-          fontFamily="poppins-medium"
+          fontFamily="inter-medium"
           textTransform="uppercase"
           fontSize={18}
           numberOfLines={1}
@@ -73,10 +73,10 @@ const MeetingCard = ({ meeting }: MeetingProps) => {
 
         <Text fontSize={12}>{meeting.activity}</Text>
         <Box row>
-          <Text fontSize={12} fontFamily="poppins-lightitalic">
+          <Text fontSize={12} fontFamily="inter-lightitalic">
             {participants_string}
           </Text>
-          <Text fontSize={12} fontFamily="poppins-lightitalic">
+          <Text fontSize={12} fontFamily="inter-lightitalic">
             {leftovers && ` and ${leftovers.length} others`}
           </Text>
         </Box>

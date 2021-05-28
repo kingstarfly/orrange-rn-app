@@ -15,7 +15,7 @@ export const StyledInput = (props: TextInputProps) => {
       {...props}
       color="#000"
       fontSize={14}
-      fontFamily="poppins-regular"
+      fontFamily="inter-regular"
     />
   );
 };

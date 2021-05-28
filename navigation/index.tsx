@@ -59,7 +59,7 @@ function RootNavigator() {
 
         headerTintColor: theme.colors.textdark,
         headerTitleStyle: {
-          fontFamily: "poppins-regular",
+          fontFamily: "inter-regular",
           textAlignVertical: "center",
           marginHorizontal: 0,
         },

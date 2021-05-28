@@ -31,7 +31,7 @@ const ViewPlans = ({
             mt={30}
             textTransform="uppercase"
             fontSize={24}
-            fontFamily="poppins-regular"
+            fontFamily="inter-regular"
           >
             {title}
           </Text>

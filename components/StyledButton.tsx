@@ -11,7 +11,7 @@ const StyledButton: React.FC<ButtonProps> = ({ children, ...rest }) => {
       h={30}
       {...rest}
     >
-      <Text fontFamily="poppins-regular" fontSize={14}>
+      <Text fontFamily="inter-regular" fontSize={14}>
         {children}
       </Text>
     </Button>

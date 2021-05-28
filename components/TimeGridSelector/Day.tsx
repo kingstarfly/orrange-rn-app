@@ -24,14 +24,14 @@ const Day = ({ date, startTime, endTime, isRightMostDay }: dayProps) => {
   return (
     <Box alignItems="center">
       <Text
-        fontFamily="poppins-regular"
+        fontFamily="inter-regular"
         color={theme.colors.textgray}
         fontSize={14}
       >
         {format(date, "EEE")}
       </Text>
       <Text
-        fontFamily="poppins-regular"
+        fontFamily="inter-regular"
         color={theme.colors.textgray}
         fontSize={14}
       >

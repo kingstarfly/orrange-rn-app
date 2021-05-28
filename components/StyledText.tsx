@@ -4,7 +4,7 @@ import { Text, TextProps } from "react-native-magnus";
 
 export const BodyText: React.FC<TextProps> = ({ children, ...rest }) => {
   return (
-    <Text {...rest} style={{ fontFamily: "poppins-regular", fontSize: 14 }}>
+    <Text {...rest} style={{ fontFamily: "inter-regular", fontSize: 14 }}>
       {children}
     </Text>
   );
@@ -14,7 +14,7 @@ export const SubBodyNormalText: React.FC<TextProps> = ({
   ...rest
 }) => {
   return (
-    <Text {...rest} style={{ fontFamily: "poppins-regular", fontSize: 12 }}>
+    <Text {...rest} style={{ fontFamily: "inter-regular", fontSize: 12 }}>
       {children}
     </Text>
   );
@@ -25,7 +25,7 @@ export const SubBodyLightText: React.FC<TextProps> = ({
   ...rest
 }) => {
   return (
-    <Text {...rest} style={{ fontFamily: "poppins-light", fontSize: 12 }}>
+    <Text {...rest} style={{ fontFamily: "inter-light", fontSize: 12 }}>
       {children}
     </Text>
   );
@@ -36,7 +36,7 @@ export const SubBodyMediumText: React.FC<TextProps> = ({
   ...rest
 }) => {
   return (
-    <Text {...rest} style={{ fontFamily: "poppins-medium", fontSize: 12 }}>
+    <Text {...rest} style={{ fontFamily: "inter-medium", fontSize: 12 }}>
       {children}
     </Text>
   );
@@ -44,7 +44,7 @@ export const SubBodyMediumText: React.FC<TextProps> = ({
 
 export const Header3: React.FC<TextProps> = ({ children, ...rest }) => {
   return (
-    <Text {...rest} style={{ fontFamily: "poppins-medium", fontSize: 18 }}>
+    <Text {...rest} style={{ fontFamily: "inter-medium", fontSize: 18 }}>
       {children}
     </Text>
   );

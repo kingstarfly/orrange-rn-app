@@ -145,7 +145,7 @@ const DatePicker = () => {
           "stylesheet.calendar.header": {
             monthText: {
               fontSize: 18,
-              fontFamily: "poppins-bold",
+              fontFamily: "inter-bold",
               color: theme.colors.textdark,
               margin: 10,
             },
@@ -153,7 +153,7 @@ const DatePicker = () => {
               marginTop: 24,
               marginBottom: 8,
               fontSize: 15,
-              fontFamily: "poppins-regular",
+              fontFamily: "inter-regular",
               color: theme.colors.primary600,
             },
           },

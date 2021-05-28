@@ -38,7 +38,7 @@ const TimeLabels = ({ startTime, endTime }: timeProps) => {
           pr={10}
         >
           <Text
-            fontFamily="poppins-regular"
+            fontFamily="inter-regular"
             textAlign="right"
             color={theme.colors.textgray}
             fontSize={12}
