@@ -3,7 +3,7 @@ import React from "react";
 import { Box, Button, Text } from "react-native-magnus";
 import BottomNavBar from "components/BottomNavBar";
 import Container from "components/Container";
-import MeetingCard from "components/MeetingCard";
+import MeetingCard from "screens/ViewPlans/MeetingCard";
 import { meetDataOne, meetingsData } from "constants/mockdata";
 import { RootStackParamList } from "types/types";
 import { SectionList } from "react-native";

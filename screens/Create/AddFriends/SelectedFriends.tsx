@@ -1,14 +1,14 @@
-import PalAvatar from "components/TimeGridSelector/PalAvatar";
 import React from "react";
-import { View } from "react-native";
+import PalAvatar from "screens/Create/SelectTime/TimeGridSelector/PalAvatar";
 import { FlatList } from "react-native-gesture-handler";
-import { Box, Text } from "react-native-magnus";
 import { ContactDetails } from "types/types";
+import { useAppSelector } from "redux/hooks";
 
-interface SelectedFriendsProp {
-  selectedContacts: ContactDetails[];
-}
-const SelectedFriends = ({ selectedContacts }: SelectedFriendsProp) => {
+const SelectedFriends = () => {
+  const selectedContacts = useAppSelector(
+    (state) => state.Friends.selectedFriends
+  );
+
   const renderItem = ({ item }: { item: ContactDetails }) => (
     <PalAvatar contact={item} />
   );
