@@ -11,9 +11,10 @@ import { ContactDetails } from "types/types";
 
 interface ContactItemProps {
   item: ContactDetails;
+  clearSearchQuery: () => void;
 }
 
-const ContactItem = ({ item }: ContactItemProps) => {
+const ContactItem = ({ item, clearSearchQuery }: ContactItemProps) => {
   const getInitials = (name: string) => {
     const initials = name
       .split(" ")
@@ -27,6 +28,7 @@ const ContactItem = ({ item }: ContactItemProps) => {
   const handleSelectContact = (contact: ContactDetails) => {
     dispatch(toggleSelectedState(contact));
     dispatch(onSelectFriend(contact));
+    clearSearchQuery();
   };
   return (
     <TouchableHighlight
@@ -48,11 +50,6 @@ const ContactItem = ({ item }: ContactItemProps) => {
 
         <Box flex={1} justifyContent="center">
           <BodyText textAlign="left">{item.name}</BodyText>
-        </Box>
-        <Box flex={1} justifyContent="center">
-          <BodyText textAlign="left">
-            {item.selected ? "true" : "false"}
-          </BodyText>
         </Box>
 
         <Box justifyContent="center" alignItems="center">

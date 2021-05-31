@@ -1,5 +1,5 @@
 import { theme } from "constants/theme";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { Box, Icon, Input, Text } from "react-native-magnus";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
@@ -14,28 +14,14 @@ interface ContactsSearchableList {
 
 const ContactsSearchableList = (props: ContactsSearchableList) => {
   const { isLoading } = props;
-  const contacts = useAppSelector((state) => state.AllFriends.allFriends);
-  const [filteredContacts, setFilteredContacts] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  useEffect(() => {
-    let filtered = contacts.filter((contact) => {
-      return (
-        !searchQuery ||
-        contact.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    });
-    console.log(filtered);
-    setFilteredContacts(filtered);
-  }, [searchQuery, contacts]);
-
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
 
-  const renderItem = ({ item }: { item: ContactDetails }) => (
-    <ContactItem item={item} />
-  );
+  const contacts = useAppSelector((state) => state.AllFriends.allFriends);
+  const [filteredContacts, setFilteredContacts] = useState(contacts);
+  const [searchQuery, setSearchQuery] = useState("");
+  const actualQueryRef = useRef("");
 
   const debounce = (func) => {
     let timer;
@@ -45,12 +31,37 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
       timer = setTimeout(() => {
         timer = null;
         func.apply(context, args);
-      }, 100);
+      }, 0);
     };
   };
-  const handleSearchInput = debounce((query: string) => {
-    setSearchQuery(query);
-  });
+  const getFilteredResults = (
+    contacts: ContactDetails[],
+    searchQuery: string
+  ) => {
+    let filtered = contacts.filter((contact) => {
+      return (
+        !searchQuery ||
+        contact.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    });
+    setFilteredContacts(filtered);
+  };
+
+  useEffect(() => {
+    getFilteredResults(contacts, searchQuery);
+  }, [searchQuery, contacts]);
+
+  const clearSearchQuery = () => {
+    setSearchQuery("");
+  };
+
+  const renderItem = ({ item }: { item: ContactDetails }) => (
+    <ContactItem item={item} clearSearchQuery={clearSearchQuery} />
+  );
+
+  // const handleSearchInput = debounce((query: string) => {
+  //   setSearchQuery(query);
+  // });
 
   return (
     <Box h="100%" w="100%">
@@ -62,11 +73,12 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
         prefix={<Icon name="search" color="gray900" fontFamily="Feather" />}
         borderColor={theme.colors.linegray}
         borderWidth={2}
-        onChangeText={handleSearchInput}
+        onChangeText={setSearchQuery}
+        value={searchQuery}
       />
 
       <FlatList
-        data={filteredContacts.length ? filteredContacts : contacts}
+        data={filteredContacts}
         extraData={filteredContacts}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
