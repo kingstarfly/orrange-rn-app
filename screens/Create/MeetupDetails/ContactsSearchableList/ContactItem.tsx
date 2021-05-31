@@ -4,14 +4,16 @@ import React from "react";
 import { Pressable } from "react-native";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import { Avatar, Box, Button, Icon, Text } from "react-native-magnus";
+import { useAppDispatch } from "redux/hooks";
+import { toggleSelectedState } from "screens/Create/AddFriends/AllFriendsSlice";
+import { onSelectFriend } from "screens/Create/AddFriends/SelectedFriendsSlice";
 import { ContactDetails } from "types/types";
 
 interface ContactItemProps {
   item: ContactDetails;
-  handleSelectContact: (contact: ContactDetails) => void;
 }
 
-const ContactItem = ({ item, handleSelectContact }: ContactItemProps) => {
+const ContactItem = ({ item }: ContactItemProps) => {
   const getInitials = (name: string) => {
     const initials = name
       .split(" ")
@@ -20,6 +22,11 @@ const ContactItem = ({ item, handleSelectContact }: ContactItemProps) => {
 
     // return maximum first two only
     return initials.length > 2 ? initials.slice(0, 2) : initials;
+  };
+  const dispatch = useAppDispatch();
+  const handleSelectContact = (contact: ContactDetails) => {
+    dispatch(toggleSelectedState(contact));
+    dispatch(onSelectFriend(contact));
   };
   return (
     <TouchableHighlight
@@ -41,6 +48,11 @@ const ContactItem = ({ item, handleSelectContact }: ContactItemProps) => {
 
         <Box flex={1} justifyContent="center">
           <BodyText textAlign="left">{item.name}</BodyText>
+        </Box>
+        <Box flex={1} justifyContent="center">
+          <BodyText textAlign="left">
+            {item.selected ? "true" : "false"}
+          </BodyText>
         </Box>
 
         <Box justifyContent="center" alignItems="center">

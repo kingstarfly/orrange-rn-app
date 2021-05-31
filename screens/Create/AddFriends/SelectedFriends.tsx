@@ -6,7 +6,7 @@ import { useAppSelector } from "redux/hooks";
 
 const SelectedFriends = () => {
   const selectedContacts = useAppSelector(
-    (state) => state.Friends.selectedFriends
+    (state) => state.SelectedFriends.selectedFriends
   );
 
   const renderItem = ({ item }: { item: ContactDetails }) => (

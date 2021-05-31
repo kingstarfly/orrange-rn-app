@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Box, Text } from "react-native-magnus";
-import ContactList from "screens/Create/MeetupDetails/ContactsList/ContactList";
+import ContactsSearchableList from "screens/Create/MeetupDetails/ContactsSearchableList";
 import Container from "components/Container";
-import { ContactDetails } from "types/types";
 import SelectedFriends from "./SelectedFriends";
 import { getMockUsers } from "mockapi";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
-import { setAllFriends } from "./FriendsSlice";
+import { setAllFriends } from "./AllFriendsSlice";
 
 const AddFriends = () => {
-  // todo obtain contacts from user first and put into state
-  const contacts = useAppSelector((state) => state.Friends.allFriends);
   const dispatch = useAppDispatch();
+  const contacts = useAppSelector((state) => state.AllFriends.allFriends);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // todo obtain contacts from user first and put into state, account for loading time
   useEffect(() => {
     const getContact = async () => {
       const initialContacts = await getMockUsers();
       dispatch(setAllFriends(initialContacts));
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     };
     getContact();
   }, []);
@@ -29,7 +32,7 @@ const AddFriends = () => {
         </Box>
 
         <Box w="100%" h="93%">
-          <ContactList contacts={contacts} />
+          <ContactsSearchableList isLoading={isLoading} />
         </Box>
       </Box>
     </Container>
