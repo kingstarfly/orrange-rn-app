@@ -25,6 +25,8 @@ import MeetupDetails from "screens/Create/MeetupDetails";
 import TestScreen from "screens/TestScreen";
 import AddFriends from "screens/Create/AddFriends";
 
+import Login from "screens/Authentication/Login";
+
 export default function Navigation({
   colorScheme,
 }: {
@@ -69,8 +71,13 @@ function RootNavigator() {
         headerTitle: "",
         headerBackAllowFontScaling: true,
       }}
-      initialRouteName="AddFriends" //!! to change
+      initialRouteName="Login" //!! to change
     >
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{ title: "Login" }}
+      />
       <Stack.Screen
         name="PublicFeed"
         component={PublicFeed}
