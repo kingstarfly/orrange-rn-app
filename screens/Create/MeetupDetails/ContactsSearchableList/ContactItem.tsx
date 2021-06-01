@@ -5,8 +5,8 @@ import { Pressable } from "react-native";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import { Avatar, Box, Button, Icon, Text } from "react-native-magnus";
 import { useAppDispatch } from "redux/hooks";
-import { toggleSelectedState } from "screens/Create/AddFriends/AllFriendsSlice";
-import { onSelectFriend } from "screens/Create/AddFriends/SelectedFriendsSlice";
+import { toggleSelectedState } from "screens/Create/MeetupDetails/AddFriends/AllFriendsSlice";
+import { onSelectFriend } from "screens/Create/MeetupDetails/AddFriends/SelectedFriendsSlice";
 import { ContactDetails } from "types/types";
 
 interface ContactItemProps {
@@ -37,7 +37,7 @@ const ContactItem = ({ item, clearSearchQuery }: ContactItemProps) => {
       onPress={() => handleSelectContact(item)}
       style={{ borderRadius: 8 }}
     >
-      <Box flexDir="row" my="sm" justifyContent="space-between" px="xl">
+      <Box flexDir="row" my="sm" justifyContent="space-between" px="md">
         <Box justifyContent="center" mr="lg">
           <Avatar
             bg={theme.colors.primary400}

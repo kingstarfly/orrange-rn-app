@@ -12,6 +12,7 @@ const Container: React.FC<ContainerProps> = ({ bg, children }) => {
   return (
     <SafeAreaView
       style={{
+        flex: 1,
         backgroundColor: bg || theme.colors.backgroundlight,
         paddingHorizontal: 16,
       }}

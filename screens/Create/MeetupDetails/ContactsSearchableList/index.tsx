@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { Box, Icon, Input, Text } from "react-native-magnus";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
-import { toggleSelectedState } from "screens/Create/AddFriends/AllFriendsSlice";
+import { toggleSelectedState } from "screens/Create/MeetupDetails/AddFriends/AllFriendsSlice";
 import { ContactDetails } from "types/types";
 import ContactItem from "./ContactItem";
 
@@ -21,7 +21,6 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
   const contacts = useAppSelector((state) => state.AllFriends.allFriends);
   const [filteredContacts, setFilteredContacts] = useState(contacts);
   const [searchQuery, setSearchQuery] = useState("");
-  const actualQueryRef = useRef("");
 
   const debounce = (func) => {
     let timer;
@@ -64,17 +63,23 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
   // });
 
   return (
-    <Box h="100%" w="100%">
+    <Box
+      justifyContent="flex-end"
+      // borderColor="green500"
+      // borderWidth={5}
+    >
       <Input
         placeholder="Add your pals..."
-        py="sm"
-        mb="sm"
+        py="lg"
+        mb="md"
         focusBorderColor="blue700"
         prefix={<Icon name="search" color="gray900" fontFamily="Feather" />}
         borderColor={theme.colors.linegray}
         borderWidth={2}
         onChangeText={setSearchQuery}
         value={searchQuery}
+        fontFamily="inter-regular"
+        fontSize={16}
       />
 
       <FlatList
