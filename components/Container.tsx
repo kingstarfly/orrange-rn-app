@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { ColorValue } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -18,7 +17,6 @@ const Container: React.FC<ContainerProps> = ({ bg, children }) => {
       }}
     >
       {children}
-      <StatusBar style="dark" />
     </SafeAreaView>
   );
 };

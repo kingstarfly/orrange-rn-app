@@ -9,10 +9,17 @@ import { RootStackParamList } from "types/types";
 import { SectionList } from "react-native";
 import { styles } from "./styles";
 import AddButton from "components/AddButton";
+import { theme } from "constants/theme";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Header2 } from "components/StyledText";
 
-const ViewPlans = ({
+const ConfirmedViewPlans = ({
   navigation,
 }: StackScreenProps<RootStackParamList, "ViewPlans">) => {
+  const renderItem = ({ item }) => {
+    return <MeetingCard meeting={item} leftBorder />;
+  };
   return (
     <Container>
       {/* <Box flex={1} justifyContent="flex-start" alignItems="stretch">
@@ -25,16 +32,11 @@ const ViewPlans = ({
         style={styles.scrollViewContainer}
         sections={meetingsData}
         keyExtractor={(item, index) => item.id}
-        renderItem={({ item }) => <MeetingCard meeting={item} />}
+        renderItem={renderItem}
         renderSectionHeader={({ section: { title } }) => (
-          <Text
-            mt={30}
-            textTransform="uppercase"
-            fontSize={24}
-            fontFamily="inter-regular"
-          >
+          <Header2 textTransform="uppercase" mt={30}>
             {title}
-          </Text>
+          </Header2>
         )}
       />
       {/* Scroll View of each month */}
@@ -45,4 +47,4 @@ const ViewPlans = ({
   );
 };
 
-export default ViewPlans;
+export default ConfirmedViewPlans;

@@ -15,14 +15,15 @@ import { ColorSchemeName } from "react-native";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import SelectDates from "screens/Create/SelectDates";
 import SelectTime from "screens/Create/SelectTime";
-import ViewPlans from "screens/ViewPlans";
 import PublicFeed from "screens/PublicFeed";
+import ViewPlansTopTabNavigator from "./ViewPlansTopTabNavigator";
 
 import { RootStackParamList } from "../types/types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { theme } from "constants/theme";
 import MeetupDetails from "screens/Create/MeetupDetails";
 import TestScreen from "screens/TestScreen";
+import { Text } from "react-native-magnus";
 
 export default function Navigation({
   colorScheme,
@@ -39,8 +40,6 @@ export default function Navigation({
   );
 }
 
-// A root stack navigator is often used for displaying modals on top of all other content
-// Read more here: https://reactnavigation.org/docs/modal
 const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
@@ -68,7 +67,7 @@ function RootNavigator() {
         headerTitle: "",
         headerBackAllowFontScaling: true,
       }}
-      initialRouteName="MeetupDetails" //!! to change
+      initialRouteName="ViewPlans" //!! to change
     >
       <Stack.Screen
         name="PublicFeed"
@@ -90,8 +89,10 @@ function RootNavigator() {
 
       <Stack.Screen
         name="ViewPlans"
-        component={ViewPlans}
-        options={{ title: "View Plans" }}
+        component={ViewPlansTopTabNavigator}
+        options={{
+          title: "View Plans",
+        }}
       />
 
       <Stack.Screen

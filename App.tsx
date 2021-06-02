@@ -18,14 +18,14 @@ export default function App() {
     return null;
   } else {
     return (
-      <SafeAreaProvider>
-        <ThemeProvider theme={theme}>
-          <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Provider store={store}>
+          <SafeAreaProvider>
             <Navigation colorScheme={colorScheme} />
-            <StatusBar />
-          </Provider>
-        </ThemeProvider>
-      </SafeAreaProvider>
+            <StatusBar style="dark" backgroundColor={theme.colors.primary600} />
+          </SafeAreaProvider>
+        </Provider>
+      </ThemeProvider>
     );
   }
 }
