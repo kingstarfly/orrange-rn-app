@@ -16,7 +16,6 @@ function ViewPlansTopTabNavigator() {
       initialRouteName="Confirmed"
       tabBarOptions={{
         style: {
-          // backgroundColor: "red",
           backgroundColor: theme.colors.backgroundlight,
           elevation: 0,
           marginTop: insets.top,
