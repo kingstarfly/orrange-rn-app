@@ -14,6 +14,7 @@ export type RootStackParamList = {
   SelectTime: undefined;
   MeetupDetails: undefined;
   AddFriends: undefined;
+  Pals: undefined;
   NotFound: undefined;
   TestScreen: undefined;
 };
@@ -21,6 +22,11 @@ export type RootStackParamList = {
 export type ViewPlansTabParamList = {
   Confirmed: undefined;
   InProgress: undefined;
+};
+
+export type PalsTabParamList = {
+  ViewPals: undefined;
+  AddPals: undefined;
 };
 
 export type BottomTabParamList = {

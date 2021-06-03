@@ -24,6 +24,7 @@ import { theme } from "constants/theme";
 import MeetupDetails from "screens/Create/MeetupDetails";
 import TestScreen from "screens/TestScreen";
 import { Text } from "react-native-magnus";
+import PalsTopTabvNavigator from "./PalsTopTabvNavigator";
 
 export default function Navigation({
   colorScheme,
@@ -67,7 +68,7 @@ function RootNavigator() {
         headerTitle: "",
         headerBackAllowFontScaling: true,
       }}
-      initialRouteName="ViewPlans" //!! to change
+      initialRouteName="Pals" //!! to change
     >
       <Stack.Screen
         name="PublicFeed"
@@ -99,6 +100,12 @@ function RootNavigator() {
         name="MeetupDetails"
         component={MeetupDetails}
         options={{ title: "Meetup Details" }}
+      />
+
+      <Stack.Screen
+        name="Pals"
+        component={PalsTopTabvNavigator}
+        options={{ title: "Pals" }}
       />
 
       <Stack.Screen
