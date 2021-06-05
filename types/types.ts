@@ -16,6 +16,7 @@ export type RootStackParamList = {
   AddFriends: undefined;
   NotFound: undefined;
   TestScreen: undefined;
+  Login: undefined;
 };
 
 export type ViewPlansTabParamList = {

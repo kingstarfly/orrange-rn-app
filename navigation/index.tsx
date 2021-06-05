@@ -25,6 +25,8 @@ import MeetupDetails from "screens/Create/MeetupDetails";
 import TestScreen from "screens/TestScreen";
 import { Text } from "react-native-magnus";
 
+import Login from "screens/Authentication/Login";
+
 export default function Navigation({
   colorScheme,
 }: {
@@ -69,6 +71,11 @@ function RootNavigator() {
       }}
       initialRouteName="ViewPlans" //!! to change
     >
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{ title: "Login" }}
+      />
       <Stack.Screen
         name="PublicFeed"
         component={PublicFeed}
