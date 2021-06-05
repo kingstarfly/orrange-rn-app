@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextInput, StyleSheet } from 'react-native'
+import { auth } from "firebase.js";
 
 import Container from "components/Container";
 
@@ -10,6 +10,19 @@ const Login = () => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+    const login = () => {
+        auth.signInAnonymously()
+  .then(() => {
+    // Signed in..
+    console.log('signed in!');
+  })
+  .catch((error) => {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    console.log('not signed in', errorMessage);
+  });
+    }
 
     return (
         <Container>
@@ -43,7 +56,7 @@ const Login = () => {
                 onChangeText={setPassword}
                 value={password}
             />
-            <Button bg="#F78826" px="3xl" my="3xl" alignSelf="center">
+            <Button bg="#F78826" px="3xl" my="3xl" alignSelf="center" onPress={login}>
                 <Text fontSize="6xl">
                     Login
                 </Text>
