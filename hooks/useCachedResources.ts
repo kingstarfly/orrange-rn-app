@@ -21,6 +21,7 @@ export default function useCachedResources() {
           "inter-medium": require("../assets/fonts/Inter-Medium.ttf"),
           "inter-semibold": require("../assets/fonts/Inter-SemiBold.ttf"),
           "inter-bold": require("../assets/fonts/Inter-Bold.ttf"),
+          Phosphor: require("../assets/fonts/Phosphor.ttf"),
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
