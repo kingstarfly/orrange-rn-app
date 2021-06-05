@@ -69,7 +69,7 @@ function RootNavigator() {
         headerTitle: "",
         headerBackAllowFontScaling: true,
       }}
-      initialRouteName="ViewPlans" //!! to change
+      initialRouteName="Login" //!! to change
     >
       <Stack.Screen
         name="Login"
