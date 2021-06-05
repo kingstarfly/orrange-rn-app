@@ -4,12 +4,12 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { Box, Icon, Input, Text } from "react-native-magnus";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
-import { toggleSelectedState } from "screens/Create/MeetupDetails/AddFriends/AllFriendsSlice";
-import { ContactDetails } from "types/types";
+import { toggleSelectedState } from "redux/slices/AllFriendsSlice";
+import { PalDetails } from "types/types";
 import ContactItem from "./ContactItem";
 
 interface ContactsSearchableList {
-  // contacts: ContactDetails[];
+  // contacts: PalDetails[];
   isLoading: boolean;
 }
 
@@ -23,10 +23,7 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
   const [filteredContacts, setFilteredContacts] = useState(contacts);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const getFilteredResults = (
-    contacts: ContactDetails[],
-    searchQuery: string
-  ) => {
+  const getFilteredResults = (contacts: PalDetails[], searchQuery: string) => {
     let filtered = contacts.filter((contact) => {
       return (
         !searchQuery ||
@@ -44,7 +41,7 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
     setSearchQuery("");
   };
 
-  const renderItem = ({ item }: { item: ContactDetails }) => (
+  const renderItem = ({ item }: { item: PalDetails }) => (
     <ContactItem item={item} clearSearchQuery={clearSearchQuery} />
   );
 

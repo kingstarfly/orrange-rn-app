@@ -77,9 +77,22 @@ export type MarkedDates = {
   [date: string]: PeriodMarking | DotMarking;
 };
 
-export interface ContactDetails {
+export interface PalDetails {
   id: string;
   name: string;
   thumbnail: string;
   selected: boolean;
+}
+
+export enum USER_STATUS {
+  notPal, // not pals, no request sent yet. This can be after person has accepted invite to join the app, but not yet pals.
+  palRequestSent, // already on app, sent a friend request
+  // isPal, // is pal (note: this should not be here i guess?)
+  notOnApp, // not on app, have not invited
+  inviteSent, // not on app, invitation to join app sent
+}
+export interface NonPalContactDetails {
+  name: string;
+  palStatus: USER_STATUS;
+  thumbnail?: string;
 }

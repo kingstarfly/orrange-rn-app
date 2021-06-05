@@ -1,20 +1,21 @@
 import UserRow from "components/UserRow";
 import { theme } from "constants/theme";
 import React from "react";
+import { TouchableHighlight } from "react-native";
 import { Icon } from "react-native-magnus";
 import { useAppDispatch } from "redux/hooks";
-import { toggleSelectedState } from "screens/Create/MeetupDetails/AddFriends/AllFriendsSlice";
-import { onSelectFriend } from "screens/Create/MeetupDetails/AddFriends/SelectedFriendsSlice";
-import { ContactDetails } from "types/types";
+import { toggleSelectedState } from "redux/slices/AllFriendsSlice";
+import { onSelectFriend } from "redux/slices/SelectedFriendsSlice";
+import { PalDetails } from "types/types";
 
 interface ContactItemProps {
-  item: ContactDetails;
+  item: PalDetails;
   clearSearchQuery: () => void;
 }
 
 const ContactItem = ({ item, clearSearchQuery }: ContactItemProps) => {
   const dispatch = useAppDispatch();
-  const handleSelectContact = (contact: ContactDetails) => {
+  const handleSelectContact = (contact: PalDetails) => {
     dispatch(toggleSelectedState(contact));
     dispatch(onSelectFriend(contact));
     clearSearchQuery();
@@ -39,12 +40,17 @@ const ContactItem = ({ item, clearSearchQuery }: ContactItemProps) => {
   );
 
   return (
-    <UserRow
-      item={item}
-      handleSelectUser={handleSelectContact}
-      selectedIcon={selectedIcon}
-      unselectedIcon={unselectedIcon}
-    />
+    <TouchableHighlight
+      activeOpacity={0.85}
+      underlayColor="#E5E5E5"
+      onPress={() => handleSelectContact(item)}
+      style={{ borderRadius: 8 }}
+    >
+      <UserRow
+        item={item}
+        rightIcon={item.selected ? selectedIcon : unselectedIcon}
+      />
+    </TouchableHighlight>
   );
 };
 

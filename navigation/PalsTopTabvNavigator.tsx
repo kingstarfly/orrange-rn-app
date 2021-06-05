@@ -1,13 +1,11 @@
 import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import ConfirmedViewPlans from "screens/ViewPlans/Confirmed";
-import InProgressViewPlans from "screens/ViewPlans/InProgress/InProgressViewPlans";
 import { PalsTabParamList } from "types/types";
-import { Text } from "react-native-magnus";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { theme } from "constants/theme";
 import ViewPals from "screens/Pals/ViewPals";
 import AddPals from "screens/Pals/AddPals";
+import { Box, Text } from "react-native-magnus";
 
 const Tab = createMaterialTopTabNavigator<PalsTabParamList>();
 
@@ -19,7 +17,8 @@ function PalsTopTabvNavigator() {
       tabBarOptions={{
         style: {
           backgroundColor: theme.colors.backgroundlight,
-          elevation: 0,
+          // backgroundColor: "red",
+          elevation: 1,
           marginTop: insets.top,
         },
         labelStyle: {
@@ -27,6 +26,9 @@ function PalsTopTabvNavigator() {
         },
         inactiveTintColor: "black",
         activeTintColor: "black",
+        tabStyle: {
+          flex: 1,
+        },
         indicatorStyle: {
           backgroundColor: theme.colors.primary600,
           height: 4,
@@ -36,7 +38,13 @@ function PalsTopTabvNavigator() {
       <Tab.Screen
         name="ViewPals"
         component={ViewPals}
-        options={{ tabBarLabel: "Pals" }}
+        options={{
+          tabBarLabel: () => (
+            <Box>
+              <Text>Pals</Text>
+            </Box>
+          ),
+        }}
       />
       <Tab.Screen
         name="AddPals"
