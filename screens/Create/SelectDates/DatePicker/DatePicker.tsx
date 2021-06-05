@@ -8,7 +8,7 @@ import { theme } from "constants/theme";
 
 import { LocaleConfig } from "react-native-calendars";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelected } from "./DatePickerSlice";
+import { setSelectedDates } from "./DatePickerSlice";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
 
 LocaleConfig.locales["en"] = {
@@ -90,8 +90,7 @@ const DatePicker = () => {
           },
         };
       }
-      dispatch(setSelected(new_selected));
-      // setSelected(new_selected); // changing to use redux
+      dispatch(setSelectedDates(new_selected));
     } else {
       let new_selected = { ...selected };
 
@@ -132,8 +131,7 @@ const DatePicker = () => {
       }
 
       new_selected = { ...new_selected, [day.dateString]: props };
-      dispatch(setSelected(new_selected)); // changing to use redux
-      // setSelected(new_selected);
+      dispatch(setSelectedDates(new_selected)); // changing to use redux
     }
   };
 

@@ -1,5 +1,5 @@
 import { StackScreenProps } from "@react-navigation/stack";
-import DatePicker from "components/DatePicker";
+import DatePicker from "screens/Create/SelectDates/DatePicker";
 import StyledButton from "components/StyledButton";
 import { theme } from "constants/theme";
 import React from "react";

@@ -1,10 +1,16 @@
+import { Header3 } from "components/StyledText";
+import { theme } from "constants/theme";
 import { format, parseISO } from "date-fns";
 import React from "react";
 import { ImageSourcePropType } from "react-native";
 import { Text, Box, Image, WINDOW_WIDTH } from "react-native-magnus";
 import { MeetingProps, participantProps } from "types/types";
 
-const MeetingCard = ({ meeting }: MeetingProps) => {
+interface MeetingCardProps extends MeetingProps {
+  leftBorder?: boolean;
+}
+
+const MeetingCard = ({ meeting, leftBorder }: MeetingCardProps) => {
   const NUM_PROFILES = 2;
   let firstParticipants: participantProps[] | undefined;
   let leftovers: participantProps[] | undefined;
@@ -26,7 +32,40 @@ const MeetingCard = ({ meeting }: MeetingProps) => {
     .join(", ");
 
   return (
-    <Box row alignItems="center" alignSelf="stretch" my={8}>
+    <Box
+      row
+      alignItems="center"
+      alignSelf="stretch"
+      my={8}
+      borderColor={theme.colors.primary700}
+      borderLeftWidth={leftBorder ? 3 : 0}
+    >
+      <Box mx={8}>
+        <Header3
+          textTransform="uppercase"
+          numberOfLines={1}
+          w={WINDOW_WIDTH * 0.55}
+        >
+          {meeting.title}
+        </Header3>
+
+        <Box row>
+          <Text fontSize={12}>{date_string}</Text>
+          <Text ml={24} fontSize={12}>
+            {start_string} - {end_string}
+          </Text>
+        </Box>
+
+        <Text fontSize={12}>{meeting.activity}</Text>
+        <Box row>
+          <Text fontSize={12} fontFamily="inter-light" fontStyle="italic">
+            {participants_string}
+          </Text>
+          <Text fontSize={12} fontFamily="inter-light" fontStyle="italic">
+            {leftovers && ` and ${leftovers.length} others`}
+          </Text>
+        </Box>
+      </Box>
       <Box row>
         <Image
           h={50}
@@ -53,33 +92,6 @@ const MeetingCard = ({ meeting }: MeetingProps) => {
         <Text textAlign="center" w={24}>
           {leftovers ? `+ ${leftovers?.length}` : ""}
         </Text>
-      </Box>
-      <Box mx={8}>
-        <Text
-          fontFamily="inter-medium"
-          textTransform="uppercase"
-          fontSize={18}
-          numberOfLines={1}
-          maxW={WINDOW_WIDTH * 0.55}
-        >
-          {meeting.title}
-        </Text>
-        <Box row>
-          <Text fontSize={12}>{date_string}</Text>
-          <Text ml={24} fontSize={12}>
-            {start_string} - {end_string}
-          </Text>
-        </Box>
-
-        <Text fontSize={12}>{meeting.activity}</Text>
-        <Box row>
-          <Text fontSize={12} fontFamily="inter-lightitalic">
-            {participants_string}
-          </Text>
-          <Text fontSize={12} fontFamily="inter-lightitalic">
-            {leftovers && ` and ${leftovers.length} others`}
-          </Text>
-        </Box>
       </Box>
     </Box>
   );

@@ -42,6 +42,14 @@ export const SubBodyMediumText: React.FC<TextProps> = ({
   );
 };
 
+export const Header2: React.FC<TextProps> = ({ children, ...rest }) => {
+  return (
+    <Text {...rest} style={{ fontFamily: "inter-medium", fontSize: 24 }}>
+      {children}
+    </Text>
+  );
+};
+
 export const Header3: React.FC<TextProps> = ({ children, ...rest }) => {
   return (
     <Text {...rest} style={{ fontFamily: "inter-medium", fontSize: 18 }}>

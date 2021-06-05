@@ -1,4 +1,4 @@
-import { DATE_FORMAT } from "components/DatePicker";
+import { DATE_FORMAT } from "screens/Create/SelectDates/DatePicker";
 import { compareAsc, parse } from "date-fns";
 import React from "react";
 import { StyleSheet } from "react-native";

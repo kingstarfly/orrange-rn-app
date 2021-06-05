@@ -8,7 +8,6 @@ import { ImageSourcePropType } from "react-native";
 import { DotMarking, PeriodMarking } from "react-native-calendars";
 
 export type RootStackParamList = {
-  // Root: undefined;
   PublicFeed: undefined;
   SelectDates: undefined;
   ViewPlans: undefined;
@@ -18,6 +17,11 @@ export type RootStackParamList = {
   NotFound: undefined;
   TestScreen: undefined;
   Login: undefined;
+};
+
+export type ViewPlansTabParamList = {
+  Confirmed: undefined;
+  InProgress: undefined;
 };
 
 export type BottomTabParamList = {

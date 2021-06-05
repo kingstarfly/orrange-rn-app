@@ -2,7 +2,7 @@ import React from "react";
 import { useWindowDimensions } from "react-native";
 import { Box, Text } from "react-native-magnus";
 import Container from "components/Container";
-import MainTimeGridSelector from "components/TimeGridSelector/MainTimeGridSelector";
+import MainTimeGridSelector from "screens/Create/SelectTime/TimeGridSelector/MainTimeGridSelector";
 import StyledButton from "components/StyledButton";
 
 import { theme } from "constants/theme";
