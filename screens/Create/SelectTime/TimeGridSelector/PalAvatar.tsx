@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { Avatar } from "react-native-magnus";
-import { PalDetails } from "types/types";
+import { TootleUser } from "types/types";
 
 interface PalAvatarProps {
-  contact: PalDetails;
+  contact: TootleUser;
 }
 
 const PalAvatar = ({ contact }: PalAvatarProps) => {

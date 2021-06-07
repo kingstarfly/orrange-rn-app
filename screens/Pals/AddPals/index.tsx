@@ -1,21 +1,19 @@
 import Container from "components/Container";
 import SearchableList from "components/SearchableList";
-import { BodyText, SubBodyNormalText } from "components/StyledText";
 import UserRow from "components/UserRow";
-import { PhosphorIcon } from "constants/Icons";
 import { theme } from "constants/theme";
-import { getMockAddPals, getMockUsers } from "mockapi";
+import { addPal, inviteContactToapp } from "lib/api/pals";
+import { getMockAddPals } from "mockapi";
 import React, { useEffect, useState } from "react";
-import { TouchableHighlight } from "react-native";
-import { Box, Icon, Text } from "react-native-magnus";
-import { NonPalContactDetails, PalDetails, USER_STATUS } from "types/types";
+import { Box, Button, Icon, Text } from "react-native-magnus";
+import { NonTootleUser, TootleUser, USER_STATUS, Person } from "types/types";
 import AddPalButton from "./Buttons/AddPalButton";
 import InviteSentButton from "./Buttons/InviteSentButton";
 import InviteTootleButton from "./Buttons/InviteTootleButton";
 import RequestedPalButton from "./Buttons/RequestedPalButton";
 
 const AddPals = () => {
-  const [pals, setPals] = useState<NonPalContactDetails[]>([]);
+  const [pals, setPals] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const getContact = async () => {
@@ -29,24 +27,46 @@ const AddPals = () => {
     getContact();
   }, []);
 
-  const renderItem = ({ item }: { item: NonPalContactDetails }) => {
-    const { palStatus } = item;
+  const renderItem = ({ item }: { item: Person }) => {
+    const { status } = item;
     let rightComponent: JSX.Element;
 
-    switch (palStatus) {
+    switch (status) {
       case USER_STATUS.notOnApp:
         rightComponent = (
-          <TouchableHighlight onPress={() => console.log(item.name)}>
-            {/* todo add press functionalities */}
+          <Button
+            p="none"
+            bg={theme.colors.primary400}
+            underlayColor={theme.colors.primary200}
+            onPress={() => inviteContactToapp(item as NonTootleUser)}
+          >
             <InviteTootleButton />
-          </TouchableHighlight>
+          </Button>
         );
         break;
       case USER_STATUS.inviteSent:
         rightComponent = <InviteSentButton />;
         break;
       case USER_STATUS.notPal:
-        rightComponent = <AddPalButton />;
+        rightComponent = (
+          <Button
+            p="none"
+            bg={theme.colors.primary400}
+            underlayColor={theme.colors.primary200}
+            onPress={() =>
+              addPal(
+                {
+                  id: "123",
+                  name: "test_current_user",
+                  contactNumber: "123123",
+                },
+                item as TootleUser
+              )
+            }
+          >
+            <AddPalButton />
+          </Button>
+        );
         break;
       case USER_STATUS.palRequestSent:
         rightComponent = <RequestedPalButton />;

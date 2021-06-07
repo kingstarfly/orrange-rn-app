@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { PalDetails } from "types/types";
+import { TootleUser } from "types/types";
 
 // Define a type for the slice state
 interface StateProps {
-  selectedFriends: PalDetails[];
+  selectedFriends: TootleUser[];
 }
 
 // Define the initial state using that type
@@ -15,7 +15,7 @@ export const SelectedFriendsSlice = createSlice({
   name: "SelectedFriends",
   initialState,
   reducers: {
-    onSelectFriend: (state, action: PayloadAction<PalDetails>) => {
+    onSelectFriend: (state, action: PayloadAction<TootleUser>) => {
       // Modify the selectedFriends array by deleting if already existing, or pushing if not exist.
       let index = state.selectedFriends.findIndex(
         (elt) => elt.id === action.payload.id

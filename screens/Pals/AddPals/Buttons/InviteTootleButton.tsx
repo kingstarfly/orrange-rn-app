@@ -10,7 +10,7 @@ const InviteTootleButton = () => {
     <Box
       p={6}
       rounded={4}
-      bg={theme.colors.primary400}
+      // bg={theme.colors.primary400}
       flexDir="row"
       justifyContent="center"
       alignItems="center"

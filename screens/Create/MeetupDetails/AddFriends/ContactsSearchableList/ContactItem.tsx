@@ -6,16 +6,16 @@ import { Icon } from "react-native-magnus";
 import { useAppDispatch } from "redux/hooks";
 import { toggleSelectedState } from "redux/slices/AllFriendsSlice";
 import { onSelectFriend } from "redux/slices/SelectedFriendsSlice";
-import { PalDetails } from "types/types";
+import { TootleUser } from "types/types";
 
 interface ContactItemProps {
-  item: PalDetails;
+  item: TootleUser;
   clearSearchQuery: () => void;
 }
 
 const ContactItem = ({ item, clearSearchQuery }: ContactItemProps) => {
   const dispatch = useAppDispatch();
-  const handleSelectContact = (contact: PalDetails) => {
+  const handleSelectContact = (contact: TootleUser) => {
     dispatch(toggleSelectedState(contact));
     dispatch(onSelectFriend(contact));
     clearSearchQuery();

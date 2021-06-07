@@ -3,10 +3,10 @@ import SearchableList from "components/SearchableList";
 import UserRow from "components/UserRow";
 import { getMockUsers } from "mockapi";
 import React, { useEffect, useState } from "react";
-import { PalDetails } from "types/types";
+import { TootleUser } from "types/types";
 
 const ViewPals = () => {
-  const [pals, setPals] = useState<PalDetails[]>([]);
+  const [pals, setPals] = useState<TootleUser[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const getContact = async () => {
@@ -20,7 +20,7 @@ const ViewPals = () => {
     getContact();
   }, []);
 
-  const renderItem = ({ item }: { item: PalDetails }) => {
+  const renderItem = ({ item }: { item: TootleUser }) => {
     return <UserRow item={item} />;
   };
 

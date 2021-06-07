@@ -2,11 +2,11 @@ import { BodyText } from "components/StyledText";
 import { theme } from "constants/theme";
 import React from "react";
 import { Avatar, Box, Button, Icon, Text } from "react-native-magnus";
-import { AddPalContactDetails, PalDetails } from "types/types";
+import { AddPalContactDetails, TootleUser } from "types/types";
 
 interface UserRowProps {
-  item: PalDetails | AddPalContactDetails; // todo add possible item combis in future. PalDetails | XXXDetials | YYYDetails
-  // handleSelectUser: (item: PalDetails) => void;
+  item: TootleUser | AddPalContactDetails; // todo add possible item combis in future. TootleUser | XXXDetials | YYYDetails
+  // handleSelectUser: (item: TootleUser) => void;
   rightIcon?: JSX.Element;
 }
 /**

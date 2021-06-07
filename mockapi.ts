@@ -1,6 +1,6 @@
-import { PalDetails, NonPalContactDetails, USER_STATUS } from "types/types";
+import { TootleUser, NonTootleUser, USER_STATUS, Person } from "types/types";
 
-export const getMockUsers = async (): Promise<PalDetails[]> => {
+export const getMockUsers = async (): Promise<TootleUser[]> => {
   const res = await (
     await fetch(`https://randomuser.me/api/?seed=foobar&results=20&`, {
       headers: {
@@ -9,19 +9,19 @@ export const getMockUsers = async (): Promise<PalDetails[]> => {
     })
   ).json();
   const results = res.results;
-  const contacts: PalDetails[] = results.map((person) => {
+  const contacts: TootleUser[] = results.map((person) => {
     return {
       id: person.login.uuid,
       name: person.name.first + " " + person.name.last,
       thumbnail: person.picture.thumbnail,
       selected: false,
-    } as PalDetails;
+    } as TootleUser;
   });
 
   return contacts;
 };
 
-export const getMockAddPals = async (): Promise<NonPalContactDetails[]> => {
+export const getMockAddPals = async (): Promise<Person[]> => {
   const res = await (
     await fetch(`https://randomuser.me/api/?seed=pals&results=20&`, {
       headers: {
@@ -30,12 +30,13 @@ export const getMockAddPals = async (): Promise<NonPalContactDetails[]> => {
     })
   ).json();
   const results: any[] = res.results;
-  const pals: NonPalContactDetails[] = results.map((person, index) => {
+  const pals: Person[] = results.map((person, index) => {
     return {
+      status: USER_STATUS.notOnApp,
       id: index.toString(), // using index of map, since there should not be any ID returned from user's local contacts
+      contactNumber: person.phone,
       name: person.name.first + " " + person.name.last,
-      palStatus: USER_STATUS.notOnApp,
-    } as NonPalContactDetails;
+    } as Person;
   });
 
   return pals;

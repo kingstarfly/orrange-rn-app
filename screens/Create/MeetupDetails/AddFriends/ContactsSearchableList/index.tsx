@@ -5,11 +5,11 @@ import { FlatList } from "react-native";
 import { Box, Icon, Input, Text } from "react-native-magnus";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { toggleSelectedState } from "redux/slices/AllFriendsSlice";
-import { PalDetails } from "types/types";
+import { TootleUser } from "types/types";
 import ContactItem from "./ContactItem";
 
 interface ContactsSearchableList {
-  // contacts: PalDetails[];
+  // contacts: TootleUser[];
   isLoading: boolean;
 }
 
@@ -23,7 +23,7 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
   const [filteredContacts, setFilteredContacts] = useState(contacts);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const getFilteredResults = (contacts: PalDetails[], searchQuery: string) => {
+  const getFilteredResults = (contacts: TootleUser[], searchQuery: string) => {
     let filtered = contacts.filter((contact) => {
       return (
         !searchQuery ||
@@ -41,7 +41,7 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
     setSearchQuery("");
   };
 
-  const renderItem = ({ item }: { item: PalDetails }) => (
+  const renderItem = ({ item }: { item: TootleUser }) => (
     <ContactItem item={item} clearSearchQuery={clearSearchQuery} />
   );
 
