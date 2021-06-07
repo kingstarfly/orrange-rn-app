@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import AllFriendsReducer from "screens/Create/MeetupDetails/AddFriends/AllFriendsSlice";
-import SelectedFriendsReducer from "screens/Create/MeetupDetails/AddFriends/SelectedFriendsSlice";
-import DatePickerReducer from "screens/Create/SelectDates/DatePicker/DatePickerSlice";
+import AllFriendsReducer from "redux/slices/AllFriendsSlice";
+import SelectedFriendsReducer from "redux/slices/SelectedFriendsSlice";
+import DatePickerReducer from "redux/slices/DatePickerSlice";
 
 const store = configureStore({
   reducer: {

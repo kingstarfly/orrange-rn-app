@@ -14,6 +14,7 @@ export type RootStackParamList = {
   SelectTime: undefined;
   MeetupDetails: undefined;
   AddFriends: undefined;
+  Pals: undefined;
   NotFound: undefined;
   TestScreen: undefined;
   Login: undefined;
@@ -22,6 +23,11 @@ export type RootStackParamList = {
 export type ViewPlansTabParamList = {
   Confirmed: undefined;
   InProgress: undefined;
+};
+
+export type PalsTabParamList = {
+  ViewPals: undefined;
+  AddPals: undefined;
 };
 
 export type BottomTabParamList = {
@@ -72,9 +78,34 @@ export type MarkedDates = {
   [date: string]: PeriodMarking | DotMarking;
 };
 
-export interface ContactDetails {
+export enum USER_STATUS {
+  notPal, // not pals, no request sent yet. This can be after person has accepted invite to join the app, but not yet pals.
+  palRequestSent, // already on app, sent a friend request
+  isPal, // is pal (note: this should not be here i guess?)
+  notOnApp, // not on app, have not invited
+  inviteSent, // not on app, invitation to join app sent
+}
+
+export interface CurrentUser {
   id: string;
   name: string;
-  thumbnail: string;
-  selected: boolean;
+  contactNumber: string;
+  thumbnail?: string;
+}
+
+export interface Person {
+  status: USER_STATUS;
+  id: string;
+  name: string;
+  contactNumber: string;
+  thumbnail?: string;
+  selected?: boolean;
+}
+
+export interface TootleUser extends Person {
+  status: USER_STATUS.palRequestSent | USER_STATUS.notPal | USER_STATUS.isPal;
+}
+
+export interface NonTootleUser extends Person {
+  status: USER_STATUS.notOnApp | USER_STATUS.inviteSent;
 }

@@ -4,7 +4,7 @@ import ContactsSearchableList from "screens/Create/MeetupDetails/AddFriends/Cont
 import SelectedFriends from "./SelectedFriends";
 import { getMockUsers } from "mockapi";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
-import { setAllFriends } from "./AllFriendsSlice";
+import { setAllFriends } from "../../../../redux/slices/AllFriendsSlice";
 import { useWindowDimensions } from "react-native";
 
 const AddFriends = (props: DivProps) => {

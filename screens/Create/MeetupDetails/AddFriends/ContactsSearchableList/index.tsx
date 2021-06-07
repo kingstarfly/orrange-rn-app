@@ -1,14 +1,15 @@
+import SearchableList from "components/SearchableList";
 import { theme } from "constants/theme";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { Box, Icon, Input, Text } from "react-native-magnus";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
-import { toggleSelectedState } from "screens/Create/MeetupDetails/AddFriends/AllFriendsSlice";
-import { ContactDetails } from "types/types";
+import { toggleSelectedState } from "redux/slices/AllFriendsSlice";
+import { TootleUser } from "types/types";
 import ContactItem from "./ContactItem";
 
 interface ContactsSearchableList {
-  // contacts: ContactDetails[];
+  // contacts: TootleUser[];
   isLoading: boolean;
 }
 
@@ -22,21 +23,7 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
   const [filteredContacts, setFilteredContacts] = useState(contacts);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const debounce = (func) => {
-    let timer;
-    return function (...args) {
-      const context = this;
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => {
-        timer = null;
-        func.apply(context, args);
-      }, 0);
-    };
-  };
-  const getFilteredResults = (
-    contacts: ContactDetails[],
-    searchQuery: string
-  ) => {
+  const getFilteredResults = (contacts: TootleUser[], searchQuery: string) => {
     let filtered = contacts.filter((contact) => {
       return (
         !searchQuery ||
@@ -54,7 +41,7 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
     setSearchQuery("");
   };
 
-  const renderItem = ({ item }: { item: ContactDetails }) => (
+  const renderItem = ({ item }: { item: TootleUser }) => (
     <ContactItem item={item} clearSearchQuery={clearSearchQuery} />
   );
 
@@ -63,32 +50,12 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
   // });
 
   return (
-    <Box
-      justifyContent="flex-end"
-      // borderColor="green500"
-      // borderWidth={5}
-    >
-      <Input
-        placeholder="Add your pals..."
-        py="lg"
-        mb="md"
-        focusBorderColor="blue700"
-        prefix={<Icon name="search" color="gray900" fontFamily="Feather" />}
-        borderColor={theme.colors.linegray}
-        borderWidth={2}
-        onChangeText={setSearchQuery}
-        value={searchQuery}
-        fontFamily="inter-regular"
-        fontSize={16}
-      />
-
-      <FlatList
-        data={filteredContacts}
-        extraData={filteredContacts}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-      />
-    </Box>
+    <SearchableList
+      data={filteredContacts}
+      isLoading={isLoading}
+      renderItem={renderItem}
+      inputPlaceholder="Add your pals..."
+    />
   );
 };
 

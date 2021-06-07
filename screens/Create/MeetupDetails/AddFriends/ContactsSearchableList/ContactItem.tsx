@@ -1,35 +1,44 @@
-import { BodyText } from "components/StyledText";
+import UserRow from "components/UserRow";
 import { theme } from "constants/theme";
 import React from "react";
-import { Pressable } from "react-native";
-import { TouchableHighlight } from "react-native-gesture-handler";
-import { Avatar, Box, Button, Icon, Text } from "react-native-magnus";
+import { TouchableHighlight } from "react-native";
+import { Icon } from "react-native-magnus";
 import { useAppDispatch } from "redux/hooks";
-import { toggleSelectedState } from "screens/Create/MeetupDetails/AddFriends/AllFriendsSlice";
-import { onSelectFriend } from "screens/Create/MeetupDetails/AddFriends/SelectedFriendsSlice";
-import { ContactDetails } from "types/types";
+import { toggleSelectedState } from "redux/slices/AllFriendsSlice";
+import { onSelectFriend } from "redux/slices/SelectedFriendsSlice";
+import { TootleUser } from "types/types";
 
 interface ContactItemProps {
-  item: ContactDetails;
+  item: TootleUser;
   clearSearchQuery: () => void;
 }
 
 const ContactItem = ({ item, clearSearchQuery }: ContactItemProps) => {
-  const getInitials = (name: string) => {
-    const initials = name
-      .split(" ")
-      .map((str) => str[0])
-      .join("");
-
-    // return maximum first two only
-    return initials.length > 2 ? initials.slice(0, 2) : initials;
-  };
   const dispatch = useAppDispatch();
-  const handleSelectContact = (contact: ContactDetails) => {
+  const handleSelectContact = (contact: TootleUser) => {
     dispatch(toggleSelectedState(contact));
     dispatch(onSelectFriend(contact));
     clearSearchQuery();
   };
+
+  const selectedIcon = (
+    <Icon
+      name={"check-circle"}
+      color={theme.colors.primary500}
+      fontFamily="MaterialCommunityIcons"
+      fontSize="4xl"
+    />
+  );
+
+  const unselectedIcon = (
+    <Icon
+      name={"checkbox-blank-circle-outline"}
+      color={theme.colors.linegray}
+      fontFamily="MaterialCommunityIcons"
+      fontSize="4xl"
+    />
+  );
+
   return (
     <TouchableHighlight
       activeOpacity={0.85}
@@ -37,34 +46,10 @@ const ContactItem = ({ item, clearSearchQuery }: ContactItemProps) => {
       onPress={() => handleSelectContact(item)}
       style={{ borderRadius: 8 }}
     >
-      <Box flexDir="row" my="sm" justifyContent="space-between" px="md">
-        <Box justifyContent="center" mr="lg">
-          <Avatar
-            bg={theme.colors.primary400}
-            size={40}
-            color={theme.colors.textdark}
-          >
-            <BodyText>{getInitials(item.name)}</BodyText>
-          </Avatar>
-        </Box>
-
-        <Box flex={1} justifyContent="center">
-          <BodyText textAlign="left">{item.name}</BodyText>
-        </Box>
-
-        <Box justifyContent="center" alignItems="center">
-          <Icon
-            name={
-              item.selected ? "check-circle" : "checkbox-blank-circle-outline"
-            }
-            color={
-              item.selected ? theme.colors.primary500 : theme.colors.linegray
-            }
-            fontFamily="MaterialCommunityIcons"
-            fontSize="4xl"
-          />
-        </Box>
-      </Box>
+      <UserRow
+        item={item}
+        rightIcon={item.selected ? selectedIcon : unselectedIcon}
+      />
     </TouchableHighlight>
   );
 };
