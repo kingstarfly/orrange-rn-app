@@ -7,8 +7,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { theme } from "constants/theme";
 
 import { LocaleConfig } from "react-native-calendars";
-import { useDispatch, useSelector } from "react-redux";
-import { setSelectedDates } from "../../../../redux/slices/DatePickerSlice";
+import { setSelectedDates } from "redux/slices/DatePickerSlice";
+
 import { useAppDispatch, useAppSelector } from "redux/hooks";
 
 LocaleConfig.locales["en"] = {
