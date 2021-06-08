@@ -41,7 +41,6 @@ export default function LoginScreen() {
     setCallingCode(country.callingCode[0] ? `+${country.callingCode[0]}` : "");
     setCountry(country);
   };
-  let testing = true;
 
   const onLoginPress = () => {
     const phoneProvider = new firebaseApp.auth.PhoneAuthProvider();
@@ -50,38 +49,29 @@ export default function LoginScreen() {
       return;
     }
 
-    navigation.push("Verify", { verificationId: "123123" });
-
     const fullNumber = callingCode + phoneNumber;
 
-    if (testing) {
-      navigation.push("Verify");
-    } else {
-      phoneProvider
-        .verifyPhoneNumber(fullNumber, recaptchaVerifier.current)
-        .then((verificationId) => {
-          console.log("Verified");
-          console.log(verificationId);
-          navigation.replace("Verify", {
-            verificationId,
-          });
-        })
-        .catch((err) => {
-          console.log(err);
+    phoneProvider
+      .verifyPhoneNumber(fullNumber, recaptchaVerifier.current)
+      .then((verificationId) => {
+        navigation.replace("Verify", {
+          verificationId,
         });
-    }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <Container>
       <Box flex={1}>
-        {!testing && (
-          <FirebaseRecaptchaVerifierModal
-            ref={recaptchaVerifier}
-            firebaseConfig={firebaseConfig}
-            attemptInvisibleVerification={false}
-          />
-        )}
+        <FirebaseRecaptchaVerifierModal
+          ref={recaptchaVerifier}
+          firebaseConfig={firebaseConfig}
+          attemptInvisibleVerification={false}
+        />
+
         <View style={styles.phoneContainer}>
           <CountryPicker
             containerButtonStyle={styles.countryPicker}

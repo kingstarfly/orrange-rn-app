@@ -27,7 +27,6 @@ export default function VerificationScreen() {
     useNavigation<StackNavigationProp<RootStackParamList, "Verify">>();
   const authData = useAuth();
 
-  const { verificationId } = route.params;
   const [verificationCode, setVerificationCode] = useState("");
   const ref = useBlurOnFulfill({
     value: verificationCode,
@@ -39,7 +38,7 @@ export default function VerificationScreen() {
   });
 
   const onVerificationPress = async () => {
-    authData.fakeLogin();
+    authData.verify(route.params.verificationId, verificationCode);
     console.log("Verified code");
   };
 

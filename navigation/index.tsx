@@ -28,7 +28,7 @@ import MainBottomTabNavigator from "./MainBottomTabNavigator";
 import ContactsScreen from "screens/Contacts/ContactsScreen";
 import { useAuth } from "lib/auth";
 
-let skipAuth = true;
+let skipAuth = false;
 
 export default function Navigation({
   colorScheme,
@@ -64,18 +64,14 @@ function RootNavigator() {
       2. Contacts
   */
   const content =
-    !skipAuth || !authData.userData ? (
+    !skipAuth && !authData.userData ? (
       <>
         <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{ title: "Login" }}
         />
-        <Stack.Screen
-          name="Verify"
-          component={VerificationScreen}
-          initialParams={{ verificationId: "123" }}
-        />
+        <Stack.Screen name="Verify" component={VerificationScreen} />
       </>
     ) : (
       <>
