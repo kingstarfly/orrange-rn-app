@@ -108,8 +108,15 @@ function useProvideAuth() {
   };
 
   const fakeLogin = async () => {
-    setUserData(dummyUser);
-    setIsLoading(false);
+    setIsLoading(true);
+    try {
+      const userCredential = await auth.signInAnonymously();
+      let user = handleUser(userCredential.user);
+      AsyncStorage.setItem("@AuthData", JSON.stringify(user)); // TODO: check if this actually works because state changes might not have taken place
+      console.log("Signed in anonymously");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const signOut = async () => {
@@ -120,6 +127,8 @@ function useProvideAuth() {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((e) => {
+      console.log("auth state changed");
+
       handleUser(e);
     });
 

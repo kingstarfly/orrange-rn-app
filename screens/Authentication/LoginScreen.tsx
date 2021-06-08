@@ -17,6 +17,8 @@ import { firebaseApp, firebaseConfig } from "lib/firebase";
 import { useNavigation } from "@react-navigation/core";
 import { RootStackParamList } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
+import Container from "components/Container";
+import { Box } from "react-native-magnus";
 
 export default function LoginScreen() {
   const navigation =
@@ -71,50 +73,52 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      {!testing && (
-        <FirebaseRecaptchaVerifierModal
-          ref={recaptchaVerifier}
-          firebaseConfig={firebaseConfig}
-          attemptInvisibleVerification={false}
-        />
-      )}
-      <View style={styles.phoneContainer}>
-        <CountryPicker
-          containerButtonStyle={styles.countryPicker}
-          {...{
-            countryCode,
-            withFilter,
-            withFlag,
-            withCountryNameButton,
-            withAlphaFilter,
-            withCallingCode,
-            withEmoji,
-            onSelect,
-          }}
-          visible={false}
-        />
-        <TextInput
-          style={styles.phoneCc}
-          editable={false}
-          selectTextOnFocus={false}
-          value={callingCode}
-        />
-        <TextInput
-          keyboardType={"phone-pad"}
-          style={styles.input}
-          placeholder="Phone number"
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setPhoneNumber(text)}
-          value={phoneNumber}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
-      </View>
-      <TouchableOpacity style={styles.button} onPress={() => onLoginPress()}>
-        <Text style={styles.buttonTitle}>Send code</Text>
-      </TouchableOpacity>
-    </View>
+    <Container>
+      <Box flex={1}>
+        {!testing && (
+          <FirebaseRecaptchaVerifierModal
+            ref={recaptchaVerifier}
+            firebaseConfig={firebaseConfig}
+            attemptInvisibleVerification={false}
+          />
+        )}
+        <View style={styles.phoneContainer}>
+          <CountryPicker
+            containerButtonStyle={styles.countryPicker}
+            {...{
+              countryCode,
+              withFilter,
+              withFlag,
+              withCountryNameButton,
+              withAlphaFilter,
+              withCallingCode,
+              withEmoji,
+              onSelect,
+            }}
+            visible={false}
+          />
+          <TextInput
+            style={styles.phoneCc}
+            editable={false}
+            selectTextOnFocus={false}
+            value={callingCode}
+          />
+          <TextInput
+            keyboardType={"phone-pad"}
+            style={styles.input}
+            placeholder="Phone number"
+            placeholderTextColor="#aaaaaa"
+            onChangeText={(text) => setPhoneNumber(text)}
+            value={phoneNumber}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+        </View>
+        <TouchableOpacity style={styles.button} onPress={() => onLoginPress()}>
+          <Text style={styles.buttonTitle}>Send code</Text>
+        </TouchableOpacity>
+      </Box>
+    </Container>
   );
 }
 const styles = StyleSheet.create({

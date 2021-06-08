@@ -28,6 +28,8 @@ import MainBottomTabNavigator from "./MainBottomTabNavigator";
 import ContactsScreen from "screens/Contacts/ContactsScreen";
 import { useAuth } from "lib/auth";
 
+let skipAuth = true;
+
 export default function Navigation({
   colorScheme,
 }: {
@@ -47,6 +49,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const authData = useAuth();
+  console.log(authData.userData);
 
   /*
       Unauth
@@ -60,28 +63,29 @@ function RootNavigator() {
           3. Pals (this is a stack navigator)
       2. Contacts
   */
-  const content = authData.userData ? (
-    <>
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ title: "Login" }}
-      />
-      <Stack.Screen
-        name="Verify"
-        component={VerificationScreen}
-        initialParams={{ verificationId: "123" }}
-      />
-    </>
-  ) : (
-    <>
-      <Stack.Screen
-        name="MainBottomTabNavigator"
-        component={MainBottomTabNavigator}
-      />
-      <Stack.Screen name="Contacts" component={ContactsScreen} />
-    </>
-  );
+  const content =
+    !skipAuth || !authData.userData ? (
+      <>
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ title: "Login" }}
+        />
+        <Stack.Screen
+          name="Verify"
+          component={VerificationScreen}
+          initialParams={{ verificationId: "123" }}
+        />
+      </>
+    ) : (
+      <>
+        <Stack.Screen
+          name="MainBottomTabNavigator"
+          component={MainBottomTabNavigator}
+        />
+        <Stack.Screen name="Contacts" component={ContactsScreen} />
+      </>
+    );
 
   return (
     <Stack.Navigator

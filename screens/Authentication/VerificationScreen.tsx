@@ -17,6 +17,7 @@ import {
 import { RootStackParamList } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useAuth } from "lib/auth";
+import Container from "components/Container";
 
 const CODE_LENGTH = 6;
 
@@ -49,37 +50,39 @@ export default function VerificationScreen() {
   }, [verificationCode.length]);
 
   return (
-    <View style={styles.container}>
-      <CodeField
-        ref={ref}
-        {...props}
-        value={verificationCode}
-        onChangeText={setVerificationCode}
-        cellCount={CODE_LENGTH}
-        rootStyle={styles.codeFieldRoot}
-        keyboardType="number-pad"
-        textContentType="oneTimeCode"
-        renderCell={({ index, symbol, isFocused }) => (
-          <View
-            key={index}
-            style={[styles.cell, isFocused && styles.focusCell]}
-          >
-            <Text
-              style={styles.cellText}
-              onLayout={getCellOnLayoutHandler(index)}
+    <Container>
+      <View style={styles.container}>
+        <CodeField
+          ref={ref}
+          {...props}
+          value={verificationCode}
+          onChangeText={setVerificationCode}
+          cellCount={CODE_LENGTH}
+          rootStyle={styles.codeFieldRoot}
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          renderCell={({ index, symbol, isFocused }) => (
+            <View
+              key={index}
+              style={[styles.cell, isFocused && styles.focusCell]}
             >
-              {symbol || (isFocused ? <Cursor /> : null)}
-            </Text>
-          </View>
-        )}
-      />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => onVerificationPress()}
-      >
-        <Text style={styles.buttonTitle}>Verify code</Text>
-      </TouchableOpacity>
-    </View>
+              <Text
+                style={styles.cellText}
+                onLayout={getCellOnLayoutHandler(index)}
+              >
+                {symbol || (isFocused ? <Cursor /> : null)}
+              </Text>
+            </View>
+          )}
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => onVerificationPress()}
+        >
+          <Text style={styles.buttonTitle}>Verify code</Text>
+        </TouchableOpacity>
+      </View>
+    </Container>
   );
 }
 const styles = StyleSheet.create({
