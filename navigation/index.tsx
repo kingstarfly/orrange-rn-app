@@ -3,30 +3,30 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
+import React from "react";
+
 import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import * as React from "react";
 import { ColorSchemeName } from "react-native";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
-import SelectDates from "screens/Create/SelectDates";
-import SelectTime from "screens/Create/SelectTime";
-import PublicFeed from "screens/PublicFeed";
-import ViewPlansTopTabNavigator from "./ViewPlansTopTabNavigator";
 
 import { RootStackParamList } from "../types/types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { theme } from "constants/theme";
-import MeetupDetails from "screens/Create/MeetupDetails";
-import TestScreen from "screens/TestScreen";
-import { Text } from "react-native-magnus";
-import PalsTopTabvNavigator from "./PalsTopTabvNavigator";
 
-import Login from "screens/Authentication/Login";
+import TestScreen from "screens/TestScreen";
+
+import LoginScreen from "screens/Authentication/LoginScreen";
+import VerificationScreen from "screens/Authentication/VerificationScreen";
+
+import MainBottomTabNavigator from "./MainBottomTabNavigator";
+import ContactsScreen from "screens/Contacts/ContactsScreen";
+import { useAuth } from "lib/auth";
 
 export default function Navigation({
   colorScheme,
@@ -46,6 +46,43 @@ export default function Navigation({
 const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const authData = useAuth();
+
+  /*
+      Unauth
+      1. Login
+      2. Verify
+
+      Auth
+      1. BottomTab
+          1. Plans (this is tab navigator)
+          2. Create (this is a stack navigator)
+          3. Pals (this is a stack navigator)
+      2. Contacts
+  */
+  const content = authData.userData ? (
+    <>
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ title: "Login" }}
+      />
+      <Stack.Screen
+        name="Verify"
+        component={VerificationScreen}
+        initialParams={{ verificationId: "123" }}
+      />
+    </>
+  ) : (
+    <>
+      <Stack.Screen
+        name="MainBottomTabNavigator"
+        component={MainBottomTabNavigator}
+      />
+      <Stack.Screen name="Contacts" component={ContactsScreen} />
+    </>
+  );
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -70,56 +107,9 @@ function RootNavigator() {
         headerTitle: "",
         headerBackAllowFontScaling: true,
       }}
-      initialRouteName="Login" //!! to change
+      // initialRouteName="TestScreen" //!! to change
     >
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{ title: "Login" }}
-      />
-      <Stack.Screen
-        name="PublicFeed"
-        component={PublicFeed}
-        options={{ title: "Public Feed" }}
-      />
-
-      <Stack.Screen
-        name="SelectDates"
-        component={SelectDates}
-        options={{ title: "Pick Date" }}
-      />
-
-      <Stack.Screen
-        name="SelectTime"
-        component={SelectTime}
-        options={{ title: "Pick Time" }}
-      />
-
-      <Stack.Screen
-        name="ViewPlans"
-        component={ViewPlansTopTabNavigator}
-        options={{
-          title: "View Plans",
-        }}
-      />
-
-      <Stack.Screen
-        name="MeetupDetails"
-        component={MeetupDetails}
-        options={{ title: "Meetup Details" }}
-      />
-
-      <Stack.Screen
-        name="Pals"
-        component={PalsTopTabvNavigator}
-        options={{ title: "Pals" }}
-      />
-
-      <Stack.Screen
-        name="NotFound"
-        component={NotFoundScreen}
-        options={{ title: "Oops!" }}
-      />
+      {content}
 
       <Stack.Screen
         name="TestScreen"

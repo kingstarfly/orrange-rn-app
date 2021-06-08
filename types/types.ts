@@ -8,16 +8,21 @@ import { ImageSourcePropType } from "react-native";
 import { DotMarking, PeriodMarking } from "react-native-calendars";
 
 export type RootStackParamList = {
-  PublicFeed: undefined;
-  SelectDates: undefined;
-  ViewPlans: undefined;
-  SelectTime: undefined;
-  MeetupDetails: undefined;
-  AddFriends: undefined;
-  Pals: undefined;
+  // PublicFeed: undefined;
+  // SelectDates: undefined;
+  // ViewPlans: undefined;
+  // SelectTime: undefined;
+  // MeetupDetails: undefined;
+  // AddFriends: undefined;
+  // Pals: undefined;
   NotFound: undefined;
   TestScreen: undefined;
   Login: undefined;
+  Verify: {
+    verificationId: string;
+  };
+  MainBottomTabNavigator: undefined;
+  Contacts: undefined;
 };
 
 export type ViewPlansTabParamList = {
