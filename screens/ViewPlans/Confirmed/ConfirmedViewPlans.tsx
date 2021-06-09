@@ -5,7 +5,7 @@ import BottomNavBar from "components/BottomNavBar";
 import Container from "components/Container";
 import MeetingCard from "screens/ViewPlans/MeetingCard";
 import { meetDataOne, meetingsData } from "constants/mockdata";
-import { RootStackParamList } from "types/types";
+import { RootStackParamList, ViewPlansTabParamList } from "types/types";
 import { SectionList } from "react-native";
 import { styles } from "./styles";
 import AddButton from "components/AddButton";
@@ -16,18 +16,12 @@ import { Header2 } from "components/StyledText";
 
 const ConfirmedViewPlans = ({
   navigation,
-}: StackScreenProps<RootStackParamList, "ViewPlans">) => {
+}: StackScreenProps<ViewPlansTabParamList, "Confirmed">) => {
   const renderItem = ({ item }) => {
     return <MeetingCard meeting={item} leftBorder />;
   };
   return (
     <Container>
-      {/* <Box flex={1} justifyContent="flex-start" alignItems="stretch">
-        <Text>View Plans</Text>
-        <MonthSection meetings={meetingsData} />
-        <MeetingCard meeting={meetDataOne} />
-      </Box> */}
-
       <SectionList
         style={styles.scrollViewContainer}
         sections={meetingsData}

@@ -1,4 +1,9 @@
-import { Header3 } from "components/StyledText";
+import {
+  Header3,
+  SubBodyMediumText,
+  SubBodyNormalText,
+} from "components/StyledText";
+import { PhosphorIcon } from "constants/Icons";
 import { theme } from "constants/theme";
 import { format, parseISO } from "date-fns";
 import React from "react";
@@ -11,7 +16,7 @@ interface MeetingCardProps extends MeetingProps {
 }
 
 const MeetingCard = ({ meeting, leftBorder }: MeetingCardProps) => {
-  const NUM_PROFILES = 2;
+  const NUM_PROFILES = 1;
   let firstParticipants: participantProps[] | undefined;
   let leftovers: participantProps[] | undefined;
   if (meeting.participants.length <= NUM_PROFILES) {
@@ -36,62 +41,79 @@ const MeetingCard = ({ meeting, leftBorder }: MeetingCardProps) => {
       row
       alignItems="center"
       alignSelf="stretch"
+      justifyContent="space-between"
       my={8}
-      borderColor={theme.colors.primary700}
-      borderLeftWidth={leftBorder ? 3 : 0}
     >
-      <Box mx={8}>
-        <Header3
-          textTransform="uppercase"
-          numberOfLines={1}
-          w={WINDOW_WIDTH * 0.55}
-        >
-          {meeting.title}
-        </Header3>
+      {/* The accent */}
+      <Box h="100%" w={3} bg={theme.colors.primary700} />
+      <Box row alignItems="center">
+        <Box justifyContent="center">
+          <Header3
+            textAlignVertical="center"
+            numberOfLines={1}
+            w={WINDOW_WIDTH * 0.55}
+            mb={4}
+          >
+            {meeting.title}
+          </Header3>
 
-        <Box row>
-          <Text fontSize={12}>{date_string}</Text>
-          <Text ml={24} fontSize={12}>
-            {start_string} - {end_string}
-          </Text>
+          <Box justifyContent="center">
+            <Box row mb={4} alignItems="center">
+              <PhosphorIcon
+                color={theme.colors.textdark}
+                size={16}
+                name="clock"
+              />
+              <SubBodyNormalText ml={8}>
+                {start_string} - {end_string}
+              </SubBodyNormalText>
+            </Box>
+            <Box row mb={4} alignItems="center">
+              <PhosphorIcon
+                color={theme.colors.textdark}
+                size={16}
+                name="activity"
+              />
+              <SubBodyNormalText ml={8}>{meeting.activity}</SubBodyNormalText>
+            </Box>
+            <Box row alignItems="center">
+              <PhosphorIcon
+                color={theme.colors.textdark}
+                size={16}
+                name="calendar-blank"
+              />
+              <SubBodyNormalText ml={8}>{date_string}</SubBodyNormalText>
+            </Box>
+          </Box>
         </Box>
 
-        <Text fontSize={12}>{meeting.activity}</Text>
-        <Box row>
-          <Text fontSize={12} fontFamily="inter-light" fontStyle="italic">
-            {participants_string}
-          </Text>
-          <Text fontSize={12} fontFamily="inter-light" fontStyle="italic">
-            {leftovers && ` and ${leftovers.length} others`}
-          </Text>
-        </Box>
-      </Box>
-      <Box row>
-        <Image
-          h={50}
-          w={50}
-          rounded="circle"
-          borderWidth={2}
-          borderColor="white"
-          source={meeting.organiser.avatar}
-          zIndex={2}
-        />
-        {firstParticipants.map((part, index) => (
+        <Box row alignItems="center">
           <Image
-            key={index}
             h={50}
             w={50}
             rounded="circle"
             borderWidth={2}
             borderColor="white"
-            source={part.avatar}
-            ml={-14}
-            zIndex={-index}
+            source={meeting.organiser.avatar}
+            zIndex={2}
           />
-        ))}
-        <Text textAlign="center" w={24}>
-          {leftovers ? `+ ${leftovers?.length}` : ""}
-        </Text>
+          {firstParticipants.map((part, index) => (
+            <Image
+              key={index}
+              h={50}
+              w={50}
+              rounded="circle"
+              borderWidth={2}
+              borderColor="white"
+              source={part.avatar}
+              ml={-14}
+              zIndex={-index}
+            />
+          ))}
+          <SubBodyMediumText textAlign="center" ml={4}>
+            {leftovers ? `+${leftovers?.length}` : ""}
+          </SubBodyMediumText>
+        </Box>
       </Box>
     </Box>
   );
