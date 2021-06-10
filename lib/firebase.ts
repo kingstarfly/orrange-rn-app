@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import Constants from "expo-constants";
 
 // Optionally import the services that you want to use
 import "firebase/auth";
@@ -21,7 +22,16 @@ export const firebaseConfig = {
 if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
 }
-export const database = firebase.database();
-export const auth = firebase.auth();
-export const firestore = firebase.firestore();
-export const firebaseApp = firebase;
+const database = firebase.database();
+const auth = firebase.auth();
+const firestore = firebase.firestore();
+if (__DEV__) {
+  console.log("Switching to local Firebase instance...");
+  const origin =
+    Constants.manifest.debuggerHost?.split(":").shift() || "localhost";
+
+  firestore.useEmulator(origin, 4123);
+}
+const firebaseApp = firebase;
+
+export { database, auth, firestore, firebaseApp };
