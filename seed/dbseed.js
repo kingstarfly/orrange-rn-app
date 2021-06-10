@@ -14,7 +14,7 @@ function getSeedData() {
   try {
     [...Array(10).keys()].map(() =>
       db.collection("events").add({
-        author_name: faker.name.firstName() + "" + faker.name.lastName(),
+        author_name: faker.name.firstName() + " " + faker.name.lastName(),
         author_profile_pic: faker.image.imageUrl(),
         title: faker.commerce.productName(),
         description: faker.commerce.productDescription(),
