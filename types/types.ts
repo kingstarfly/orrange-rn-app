@@ -40,6 +40,13 @@ export type BottomTabParamList = {
   TabTwo: undefined;
 };
 
+export type ConfirmedPlansStackList = {
+  List: undefined;
+  IndividualPlan: {
+    meeting: MeetingProps;
+  };
+};
+
 export type TabOneParamList = {
   TabOneScreen: undefined;
 };
@@ -49,19 +56,17 @@ export type TabTwoParamList = {
 };
 
 export type MeetingProps = {
-  meeting: {
-    id: string;
-    title: string;
-    start_time: string;
-    end_time: string;
-    activity: string;
-    organiser: participantProps;
-    participants: participantProps[];
-  };
+  id: string;
+  title: string;
+  start_time: string;
+  end_time: string;
+  activity: string;
+  organiser: participantProps;
+  participants: participantProps[];
 };
 
 export type MeetingsProps = {
-  meetings: { title: string; data: MeetingProps["meeting"][] }[];
+  meetings: { title: string; data: MeetingProps[] }[];
 };
 
 export type participantProps = {

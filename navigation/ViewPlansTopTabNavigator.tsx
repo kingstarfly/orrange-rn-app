@@ -6,6 +6,7 @@ import { ViewPlansTabParamList } from "types/types";
 import { Text } from "react-native-magnus";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { theme } from "constants/theme";
+import ConfimedPlansStackNavigator from "./ConfimedPlansStackNavigator";
 
 const Tab = createMaterialTopTabNavigator<ViewPlansTabParamList>();
 
@@ -33,7 +34,7 @@ function ViewPlansTopTabNavigator() {
     >
       <Tab.Screen
         name="Confirmed"
-        component={ConfirmedViewPlans}
+        component={ConfimedPlansStackNavigator}
         options={{ tabBarLabel: "Confirmed" }}
       />
       <Tab.Screen
