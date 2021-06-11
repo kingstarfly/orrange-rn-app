@@ -6,6 +6,7 @@ export const theme = {
     primary600: "#F6933C",
     primary700: "#F47D15",
     textdark: "#121113",
+    textlight: "#F6F6F6",
     backgroundlight: "#F9F9F9",
     linegray: "#B6B6B6",
     textgray200: "#B8B8B8",
@@ -13,6 +14,6 @@ export const theme = {
     gray5: "#E0E0E0",
   },
   fontSize: {
-    "7xl": 64
+    "7xl": 64,
   },
 };

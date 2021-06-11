@@ -1,9 +1,9 @@
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 import { add, format, startOfDay } from "date-fns";
 import React, { useRef, useState } from "react";
 import { View } from "react-native";
 import { Box, Text } from "react-native-magnus";
-import { useAppDispatch } from "src/redux/hooks";
+import { useAppDispatch } from "redux/hooks";
 import GridCell from "./GridCell";
 
 type dayProps = {

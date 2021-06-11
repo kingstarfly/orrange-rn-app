@@ -21,6 +21,12 @@ export type RootStackParamList = {
   Verify: {
     verificationId: string;
   };
+  DiscussDetails: {
+    meeting: MeetingProps;
+  };
+  FinalDetails: {
+    meeting: MeetingProps;
+  };
   MainBottomTabNavigator: undefined;
   Contacts: undefined;
 };
@@ -38,13 +44,6 @@ export type PalsTabParamList = {
 export type BottomTabParamList = {
   TabOne: undefined;
   TabTwo: undefined;
-};
-
-export type ConfirmedPlansStackList = {
-  List: undefined;
-  IndividualPlan: {
-    meeting: MeetingProps;
-  };
 };
 
 export type TabOneParamList = {

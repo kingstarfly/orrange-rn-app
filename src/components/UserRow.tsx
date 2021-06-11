@@ -1,5 +1,5 @@
 import { BodyText } from "components/StyledText";
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 import React from "react";
 import { Avatar, Box, Button, Icon, Text } from "react-native-magnus";
 import { AddPalContactDetails, TootleUser } from "types/types";

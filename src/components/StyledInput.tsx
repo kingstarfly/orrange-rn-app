@@ -1,5 +1,5 @@
 import React from "react";
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 import { Input } from "react-native-magnus";
 import { InputProps } from "react-native-magnus";
 

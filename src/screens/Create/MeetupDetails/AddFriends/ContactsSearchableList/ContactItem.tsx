@@ -1,11 +1,11 @@
 import UserRow from "components/UserRow";
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 import React from "react";
 import { TouchableHighlight } from "react-native";
 import { Icon } from "react-native-magnus";
-import { useAppDispatch } from "src/redux/hooks";
-import { toggleSelectedState } from "src/redux/slices/AllFriendsSlice";
-import { onSelectFriend } from "src/redux/slices/SelectedFriendsSlice";
+import { useAppDispatch } from "redux/hooks";
+import { toggleSelectedState } from "redux/slices/AllFriendsSlice";
+import { onSelectFriend } from "redux/slices/SelectedFriendsSlice";
 import { TootleUser } from "types/types";
 
 interface ContactItemProps {

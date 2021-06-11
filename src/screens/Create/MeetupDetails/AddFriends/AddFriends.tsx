@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Box, DivProps, Text } from "react-native-magnus";
-import ContactsSearchableList from "src/screens/Create/MeetupDetails/AddFriends/ContactsSearchableList";
+import ContactsSearchableList from "screens/Create/MeetupDetails/AddFriends/ContactsSearchableList";
 import SelectedFriends from "./SelectedFriends";
-import { getMockUsers } from "src/mockapi";
-import { useAppDispatch, useAppSelector } from "src/redux/hooks";
+import { getMockUsers } from "mockapi";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { setAllFriends } from "../../../../redux/slices/AllFriendsSlice";
 import { useWindowDimensions } from "react-native";
 

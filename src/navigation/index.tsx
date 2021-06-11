@@ -17,16 +17,20 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 
 import { RootStackParamList } from "../types/types";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 
-import TestScreen from "src/screens/TestScreen";
+import TestScreen from "screens/TestScreen";
 
-import LoginScreen from "src/screens/Authentication/LoginScreen";
-import VerificationScreen from "src/screens/Authentication/VerificationScreen";
+import LoginScreen from "screens/Authentication/LoginScreen";
+import VerificationScreen from "screens/Authentication/VerificationScreen";
 
 import MainBottomTabNavigator from "./MainBottomTabNavigator";
-import ContactsScreen from "src/screens/Contacts/ContactsScreen";
-import { useAuth } from "src/lib/auth";
+import ContactsScreen from "screens/Contacts/ContactsScreen";
+import { useAuth } from "lib/auth";
+import DiscussDetailScreen from "screens/Plan/DiscussDetailsScreen";
+import DiscussDetailsScreen from "screens/Plan/DiscussDetailsScreen";
+import { headerHeight } from "constants/Layout";
+import Header from "components/Header";
 
 let skipAuth = false;
 
@@ -78,24 +82,41 @@ function RootNavigator() {
         <Stack.Screen
           name="MainBottomTabNavigator"
           component={MainBottomTabNavigator}
+          options={{ headerShown: false }}
         />
         <Stack.Screen name="Contacts" component={ContactsScreen} />
+        <Stack.Screen
+          name="DiscussDetails"
+          component={DiscussDetailsScreen}
+          options={{
+            // header: ({ scene, previous, navigation }) => (
+            //   <Header
+            //     scene={scene}
+            //     previous={previous}
+            //     navigation={navigation}
+            //   />
+            // ),
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              flex: 1,
+              textAlign: "center",
+            },
+          }}
+        />
+        <Stack.Screen name="FinalDetails" component={DiscussDetailsScreen} />
       </>
     );
 
   return (
     <Stack.Navigator
+      headerMode="screen"
       screenOptions={{
         headerStyle: {
           backgroundColor: theme.colors.backgroundlight,
           elevation: 0,
           shadowOpacity: 0,
+          height: headerHeight,
         },
-
-        headerLeftContainerStyle: {
-          paddingHorizontal: 8,
-        },
-
         headerTintColor: theme.colors.textdark,
         headerTitleStyle: {
           fontFamily: "inter-regular",
@@ -103,8 +124,7 @@ function RootNavigator() {
           marginHorizontal: 0,
         },
         headerTransparent: true,
-        headerBackTitleVisible: true,
-        headerTitle: "",
+        headerBackTitleVisible: false,
         headerBackAllowFontScaling: true,
       }}
       // initialRouteName="TestScreen" //!! to change

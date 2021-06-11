@@ -6,6 +6,10 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
 import {
@@ -16,8 +20,10 @@ import {
 } from "react-native-confirmation-code-field";
 import { RootStackParamList } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useAuth } from "src/lib/auth";
+import { useAuth } from "lib/auth";
 import Container from "components/Container";
+import LargeButton from "components/LargeButton";
+import { Box, WINDOW_HEIGHT } from "react-native-magnus";
 
 const CODE_LENGTH = 6;
 
@@ -28,6 +34,8 @@ export default function VerificationScreen() {
   const authData = useAuth();
 
   const [verificationCode, setVerificationCode] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const ref = useBlurOnFulfill({
     value: verificationCode,
     cellCount: CODE_LENGTH,
@@ -38,6 +46,7 @@ export default function VerificationScreen() {
   });
 
   const onVerificationPress = async () => {
+    setLoading(true);
     authData.verify(route.params.verificationId, verificationCode);
     console.log("Verified code");
   };
@@ -50,37 +59,49 @@ export default function VerificationScreen() {
 
   return (
     <Container>
-      <View style={styles.container}>
-        <CodeField
-          ref={ref}
-          {...props}
-          value={verificationCode}
-          onChangeText={setVerificationCode}
-          cellCount={CODE_LENGTH}
-          rootStyle={styles.codeFieldRoot}
-          keyboardType="number-pad"
-          textContentType="oneTimeCode"
-          renderCell={({ index, symbol, isFocused }) => (
-            <View
-              key={index}
-              style={[styles.cell, isFocused && styles.focusCell]}
-            >
-              <Text
-                style={styles.cellText}
-                onLayout={getCellOnLayoutHandler(index)}
-              >
-                {symbol || (isFocused ? <Cursor /> : null)}
-              </Text>
-            </View>
-          )}
-        />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => onVerificationPress()}
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
         >
-          <Text style={styles.buttonTitle}>Verify code</Text>
-        </TouchableOpacity>
-      </View>
+          <View style={styles.container}>
+            <CodeField
+              ref={ref}
+              {...props}
+              value={verificationCode}
+              onChangeText={setVerificationCode}
+              cellCount={CODE_LENGTH}
+              rootStyle={styles.codeFieldRoot}
+              keyboardType="number-pad"
+              textContentType="oneTimeCode"
+              renderCell={({ index, symbol, isFocused }) => (
+                <View
+                  key={index}
+                  style={[styles.cell, isFocused && styles.focusCell]}
+                >
+                  <Text
+                    style={styles.cellText}
+                    onLayout={getCellOnLayoutHandler(index)}
+                  >
+                    {symbol || (isFocused ? <Cursor /> : null)}
+                  </Text>
+                </View>
+              )}
+            />
+            <Box position="absolute" bottom={WINDOW_HEIGHT * 0.05}>
+              <LargeButton
+                title="Verify Code"
+                loading={loading}
+                onPress={onVerificationPress}
+              />
+            </Box>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </Container>
   );
 }
@@ -134,7 +155,7 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 2,
     borderColor: "#00000030",
     textAlign: "center",
     borderRadius: 8,

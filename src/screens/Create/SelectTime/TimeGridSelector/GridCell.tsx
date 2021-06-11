@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 import { add, format } from "date-fns";
 import { Box, Text } from "react-native-magnus";
 import { cellProps } from "types/types";

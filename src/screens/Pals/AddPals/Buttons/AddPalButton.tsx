@@ -1,7 +1,7 @@
 import React from "react";
 import { SubBodyNormalText } from "components/StyledText";
 import { PhosphorIcon } from "constants/Icons";
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 import { Box } from "react-native-magnus";
 
 const AddPalButton = () => {

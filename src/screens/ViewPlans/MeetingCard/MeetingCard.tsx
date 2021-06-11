@@ -1,21 +1,17 @@
 import { useNavigation } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
-import {
-  Header3,
-  SubBodyMediumText,
-  SubBodyNormalText,
-} from "src/components/StyledText";
-import { PhosphorIcon } from "src/constants/Icons";
-import { theme } from "src/constants/theme";
+import { BodyHeading, SmallText, TinyText } from "components/StyledText";
+import { PhosphorIcon } from "constants/Icons";
+import { theme } from "constants/theme";
 import { format, parseISO } from "date-fns";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { Text, Box, Image, WINDOW_WIDTH } from "react-native-magnus";
 import {
-  ConfirmedPlansStackList,
   MeetingProps,
   participantProps,
-} from "src/types/types";
+  RootStackParamList,
+} from "types/types";
 
 interface MeetingCardProps {
   meeting: MeetingProps;
@@ -24,7 +20,9 @@ interface MeetingCardProps {
 
 const MeetingCard = ({ meeting, accent }: MeetingCardProps) => {
   const navigation =
-    useNavigation<StackNavigationProp<ConfirmedPlansStackList, "List">>();
+    useNavigation<
+      StackNavigationProp<RootStackParamList, "MainBottomTabNavigator">
+    >();
   const NUM_PROFILES = 1;
   let firstParticipants: participantProps[] | undefined;
   let leftovers: participantProps[] | undefined;
@@ -49,7 +47,7 @@ const MeetingCard = ({ meeting, accent }: MeetingCardProps) => {
     <TouchableOpacity
       onPress={() => {
         console.log(meeting);
-        navigation.push("IndividualPlan", { meeting: meeting });
+        navigation.push("DiscussDetails", { meeting: meeting });
       }}
     >
       <Box
@@ -63,14 +61,14 @@ const MeetingCard = ({ meeting, accent }: MeetingCardProps) => {
         {accent && <Box h="100%" w={3} bg={theme.colors.primary700} />}
         <Box row alignItems="center">
           <Box justifyContent="center">
-            <Header3
+            <BodyHeading
               textAlignVertical="center"
               numberOfLines={1}
               w={WINDOW_WIDTH * 0.55}
               mb={4}
             >
               {meeting.title}
-            </Header3>
+            </BodyHeading>
 
             <Box justifyContent="center">
               <Box row mb={4} alignItems="center">
@@ -79,9 +77,9 @@ const MeetingCard = ({ meeting, accent }: MeetingCardProps) => {
                   size={16}
                   name="clock"
                 />
-                <SubBodyNormalText ml={8}>
+                <SmallText ml={8}>
                   {start_string} - {end_string}
-                </SubBodyNormalText>
+                </SmallText>
               </Box>
               <Box row mb={4} alignItems="center">
                 <PhosphorIcon
@@ -89,7 +87,7 @@ const MeetingCard = ({ meeting, accent }: MeetingCardProps) => {
                   size={16}
                   name="activity"
                 />
-                <SubBodyNormalText ml={8}>{meeting.activity}</SubBodyNormalText>
+                <SmallText ml={8}>{meeting.activity}</SmallText>
               </Box>
               <Box row alignItems="center">
                 <PhosphorIcon
@@ -97,7 +95,7 @@ const MeetingCard = ({ meeting, accent }: MeetingCardProps) => {
                   size={16}
                   name="calendar-blank"
                 />
-                <SubBodyNormalText ml={8}>{date_string}</SubBodyNormalText>
+                <SmallText ml={8}>{date_string}</SmallText>
               </Box>
             </Box>
           </Box>
@@ -125,9 +123,9 @@ const MeetingCard = ({ meeting, accent }: MeetingCardProps) => {
                 zIndex={-index}
               />
             ))}
-            <SubBodyMediumText textAlign="center" ml={4}>
+            <TinyText textAlign="center" ml={4}>
               {leftovers ? `+${leftovers?.length}` : ""}
-            </SubBodyMediumText>
+            </TinyText>
           </Box>
         </Box>
       </Box>

@@ -12,6 +12,7 @@ type UserData = {
 interface AuthContextValue {
   userData?: UserData;
   isLoading: boolean;
+  loggedIn: boolean;
   verify: (verificationId: string, verificationCode: string) => Promise<void>;
   signOut: () => void;
   fakeLogin: () => void;
@@ -43,6 +44,7 @@ export const useAuth = () => {
 function useProvideAuth() {
   const [userData, setUserData] = useState<UserData | null>();
   const [isLoading, setIsLoading] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     //Every time the App is opened, this provider is rendered
@@ -58,6 +60,7 @@ function useProvideAuth() {
         //If there are data, it's converted to an Object and the state is updated.
         const _userData: UserData = JSON.parse(authDataSerialized);
         setUserData(_userData);
+        setLoggedIn(true);
       }
     } catch (error) {
     } finally {
@@ -77,9 +80,11 @@ function useProvideAuth() {
         contact: phoneNumber,
       };
       setUserData(user);
+      setLoggedIn(true);
       setIsLoading(false);
     } else {
       setUserData(null);
+      setLoggedIn(false);
       setIsLoading(false);
     }
     return user;
@@ -97,6 +102,7 @@ function useProvideAuth() {
       AsyncStorage.setItem("@AuthData", JSON.stringify(user)); // TODO: check if this actually works because state changes might not have taken place
       console.log("Signed in successfully");
     } catch (err) {
+      console.log("useAuth verify failed");
       console.log(err);
     }
   };
@@ -139,6 +145,7 @@ function useProvideAuth() {
   // Returns the authContext object containing the user object and auth methods
   return {
     userData,
+    loggedIn,
     isLoading,
     verify,
     signOut,

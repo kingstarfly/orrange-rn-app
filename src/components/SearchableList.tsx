@@ -1,4 +1,4 @@
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 import React, { useState } from "react";
 import { FlatList, ListRenderItem } from "react-native";
 import { Box, Icon, Input, Text } from "react-native-magnus";

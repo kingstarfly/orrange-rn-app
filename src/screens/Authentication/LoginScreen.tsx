@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
   Image,
@@ -6,6 +6,10 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import CountryPicker, {
@@ -18,7 +22,10 @@ import { useNavigation } from "@react-navigation/core";
 import { RootStackParamList } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Container from "components/Container";
-import { Box } from "react-native-magnus";
+import { Box, Input, WINDOW_HEIGHT, WINDOW_WIDTH } from "react-native-magnus";
+import { Heading1, Heading3 } from "components/StyledText";
+import { theme } from "constants/theme";
+import LargeButton from "components/LargeButton";
 
 export default function LoginScreen() {
   const navigation =
@@ -35,7 +42,9 @@ export default function LoginScreen() {
   const [withEmoji, setWithEmoji] = useState<boolean>(true);
   const [withFilter, setWithFilter] = useState<boolean>(true);
   const [withAlphaFilter, setWithAlphaFilter] = useState<boolean>(false);
-  const [withCallingCode, setWithCallingCode] = useState<boolean>(false);
+  const [withCallingCode, setWithCallingCode] = useState<boolean>(true);
+
+  const [loading, setLoading] = useState(false);
   const onSelect = (country: Country) => {
     setCountryCode(country.cca2);
     setCallingCode(country.callingCode[0] ? `+${country.callingCode[0]}` : "");
@@ -49,8 +58,8 @@ export default function LoginScreen() {
       return;
     }
 
+    setLoading(true);
     const fullNumber = callingCode + phoneNumber;
-
     phoneProvider
       .verifyPhoneNumber(fullNumber, recaptchaVerifier.current)
       .then((verificationId) => {
@@ -65,119 +74,92 @@ export default function LoginScreen() {
 
   return (
     <Container>
-      <Box flex={1}>
-        <FirebaseRecaptchaVerifierModal
-          ref={recaptchaVerifier}
-          firebaseConfig={firebaseConfig}
-          attemptInvisibleVerification={false}
-        />
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <Box flex={1} justifyContent="center" alignItems="center">
+            <FirebaseRecaptchaVerifierModal
+              ref={recaptchaVerifier}
+              firebaseConfig={firebaseConfig}
+              attemptInvisibleVerification={false}
+            />
 
-        <View style={styles.phoneContainer}>
-          <CountryPicker
-            containerButtonStyle={styles.countryPicker}
-            {...{
-              countryCode,
-              withFilter,
-              withFlag,
-              withCountryNameButton,
-              withAlphaFilter,
-              withCallingCode,
-              withEmoji,
-              onSelect,
-            }}
-            visible={false}
-          />
-          <TextInput
-            style={styles.phoneCc}
-            editable={false}
-            selectTextOnFocus={false}
-            value={callingCode}
-          />
-          <TextInput
-            keyboardType={"phone-pad"}
-            style={styles.input}
-            placeholder="Phone number"
-            placeholderTextColor="#aaaaaa"
-            onChangeText={(text) => setPhoneNumber(text)}
-            value={phoneNumber}
-            underlineColorAndroid="transparent"
-            autoCapitalize="none"
-          />
-        </View>
-        <TouchableOpacity style={styles.button} onPress={() => onLoginPress()}>
-          <Text style={styles.buttonTitle}>Send code</Text>
-        </TouchableOpacity>
-      </Box>
+            <Box alignSelf="center" w="80%" mb="10%">
+              <Heading1 textAlign="center">
+                Log in with your phone number
+              </Heading1>
+            </Box>
+
+            <Box row alignItems="center" justifyContent="center" w="100%">
+              <Box
+                row
+                alignItems="center"
+                // borderWidth={1}
+                borderColor={theme.colors.linegray}
+                rounded="sm"
+                // px="sm"
+                h={60}
+              >
+                <CountryPicker
+                  containerButtonStyle={{}}
+                  {...{
+                    countryCode,
+                    withFilter,
+                    withFlag,
+                    withCountryNameButton,
+                    withAlphaFilter,
+                    withCallingCode,
+                    withEmoji,
+                    onSelect,
+                  }}
+                  visible={false}
+                />
+              </Box>
+              <Box
+                row
+                alignItems="center"
+                borderWidth={1}
+                rounded={10}
+                bg="white"
+                px="md"
+              >
+                <Heading3>{callingCode}</Heading3>
+                <Input
+                  keyboardType={"phone-pad"}
+                  placeholder="Phone number"
+                  placeholderTextColor="#aaaaaa"
+                  fontFamily="inter-medium"
+                  fontSize={20}
+                  onChangeText={(text) => setPhoneNumber(text)}
+                  value={phoneNumber}
+                  underlineColorAndroid="transparent"
+                  borderWidth={0}
+                  my={1}
+                  p={0}
+                  w={WINDOW_WIDTH * 0.6}
+                />
+              </Box>
+            </Box>
+
+            <Box position="absolute" bottom={WINDOW_HEIGHT * 0.05}>
+              <LargeButton
+                loading={loading}
+                onPress={() => {
+                  Keyboard.dismiss();
+                  onLoginPress();
+                }}
+                title="NEXT"
+              />
+            </Box>
+          </Box>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </Container>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  phoneCc: {
-    textAlign: "center",
-    width: 80,
-    height: 48,
-    borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 5,
-    overflow: "hidden",
-    backgroundColor: "white",
-    marginTop: 10,
-    marginBottom: 10,
-    marginLeft: 16,
-    paddingLeft: 16,
-    paddingRight: 16,
-    color: "#aaaaaa",
-    borderRightWidth: 1.5,
-    borderColor: "#f1f2f1",
-    fontSize: 16,
-  },
-  countryPicker: {},
-  phoneContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingLeft: 25,
-    paddingRight: 25,
-  },
-  logo: {
-    flex: 1,
-    height: 120,
-    width: 90,
-    alignSelf: "center",
-    margin: 30,
-  },
-  input: {
-    flex: 1,
-    height: 48,
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
-    overflow: "hidden",
-    backgroundColor: "white",
-    marginTop: 10,
-    marginBottom: 10,
-    paddingLeft: 16,
-    paddingRight: 16,
-    fontSize: 16,
-  },
-  button: {
-    backgroundColor: "#788eec",
-    marginLeft: 30,
-    marginRight: 30,
-    marginTop: 20,
-    padding: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-    height: 48,
-    borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonTitle: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-});

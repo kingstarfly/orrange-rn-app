@@ -1,12 +1,11 @@
 import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import ConfirmedViewPlans from "src/screens/ViewPlans/Confirmed";
-import InProgressViewPlans from "src/screens/ViewPlans/InProgress/InProgressViewPlans";
+import ConfirmedViewPlans from "screens/ViewPlans/Confirmed";
+import InProgressViewPlans from "screens/ViewPlans/InProgress/InProgressViewPlans";
 import { ViewPlansTabParamList } from "types/types";
 import { Text } from "react-native-magnus";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { theme } from "src/constants/theme";
-import ConfimedPlansStackNavigator from "./ConfimedPlansStackNavigator";
+import { theme } from "constants/theme";
 
 const Tab = createMaterialTopTabNavigator<ViewPlansTabParamList>();
 
@@ -34,7 +33,7 @@ function ViewPlansTopTabNavigator() {
     >
       <Tab.Screen
         name="Confirmed"
-        component={ConfimedPlansStackNavigator}
+        component={ConfirmedViewPlans}
         options={{ tabBarLabel: "Confirmed" }}
       />
       <Tab.Screen

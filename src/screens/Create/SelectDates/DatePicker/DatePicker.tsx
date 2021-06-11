@@ -4,12 +4,12 @@ import { Text, Box, Image } from "react-native-magnus";
 import { Calendar, DateObject } from "react-native-calendars";
 
 import { AntDesign } from "@expo/vector-icons";
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 
 import { LocaleConfig } from "react-native-calendars";
-import { setSelectedDates } from "src/redux/slices/DatePickerSlice";
+import { setSelectedDates } from "redux/slices/DatePickerSlice";
 
-import { useAppDispatch, useAppSelector } from "src/redux/hooks";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
 
 LocaleConfig.locales["en"] = {
   monthNames: [

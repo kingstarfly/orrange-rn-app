@@ -1,7 +1,7 @@
 import Container from "components/Container";
 import SearchableList from "components/SearchableList";
 import UserRow from "components/UserRow";
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 import { addPal, inviteContactToapp } from "lib/api/pals";
 import { getMockAddPals } from "mockapi";
 import React, { useEffect, useState } from "react";

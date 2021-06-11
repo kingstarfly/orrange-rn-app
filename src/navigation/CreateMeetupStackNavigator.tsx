@@ -1,9 +1,9 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { theme } from "src/constants/theme";
-import MeetupDetails from "src/screens/Create/MeetupDetails";
-import SelectDates from "src/screens/Create/SelectDates";
-import SelectTime from "src/screens/Create/SelectTime";
+import { theme } from "constants/theme";
+import MeetupDetails from "screens/Create/MeetupDetails";
+import SelectDates from "screens/Create/SelectDates";
+import SelectTime from "screens/Create/SelectTime";
 
 const Stack = createStackNavigator();
 

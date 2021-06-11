@@ -3,7 +3,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Box, Button, Icon, Input, Text } from "react-native-magnus";
 import { RootStackParamList } from "types/types";
 import Container from "components/Container";
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 import StyledButton from "components/StyledButton";
 import { BodyText, Header3, Header2 } from "components/StyledText";
 import { useWindowDimensions } from "react-native";

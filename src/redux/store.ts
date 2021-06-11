@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import AllFriendsReducer from "src/redux/slices/AllFriendsSlice";
-import SelectedFriendsReducer from "src/redux/slices/SelectedFriendsSlice";
-import DatePickerReducer from "src/redux/slices/DatePickerSlice";
+import AllFriendsReducer from "redux/slices/AllFriendsSlice";
+import SelectedFriendsReducer from "redux/slices/SelectedFriendsSlice";
+import DatePickerReducer from "redux/slices/DatePickerSlice";
 import GridInfoReducer from "./GridInfoSlice";
 
 const store = configureStore({

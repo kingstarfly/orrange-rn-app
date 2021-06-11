@@ -1,9 +1,9 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import React, { useState } from "react";
 import { Box, Button, Icon, Text } from "react-native-magnus";
-import Container from "src/components/Container";
+import Container from "components/Container";
 import { RootStackParamList } from "../../types/types";
-import AddButton from "src/components/AddButton";
+import AddButton from "components/AddButton";
 
 const PublicFeed = () =>
   // : StackScreenProps<RootStackParamList, "PublicFeed">)

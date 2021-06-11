@@ -1,10 +1,10 @@
 import SearchableList from "components/SearchableList";
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList } from "react-native";
 import { Box, Icon, Input, Text } from "react-native-magnus";
-import { useAppDispatch, useAppSelector } from "src/redux/hooks";
-import { toggleSelectedState } from "src/redux/slices/AllFriendsSlice";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
+import { toggleSelectedState } from "redux/slices/AllFriendsSlice";
 import { TootleUser } from "types/types";
 import ContactItem from "./ContactItem";
 

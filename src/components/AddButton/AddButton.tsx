@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 import React from "react";
 import { Box, Button, Icon } from "react-native-magnus";
 

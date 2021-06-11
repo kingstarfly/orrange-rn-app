@@ -1,7 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack";
-import DatePicker from "src/screens/Create/SelectDates/DatePicker";
+import DatePicker from "screens/Create/SelectDates/DatePicker";
 import StyledButton from "components/StyledButton";
-import { theme } from "src/constants/theme";
+import { theme } from "constants/theme";
 import React from "react";
 import { useWindowDimensions } from "react-native";
 import { Box, Button, Text } from "react-native-magnus";

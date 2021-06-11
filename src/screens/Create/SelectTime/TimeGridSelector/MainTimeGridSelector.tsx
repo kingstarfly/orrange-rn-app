@@ -1,10 +1,10 @@
-import { DATE_FORMAT } from "src/screens/Create/SelectDates/DatePicker";
+import { DATE_FORMAT } from "screens/Create/SelectDates/DatePicker";
 import { compareAsc, parse } from "date-fns";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Box } from "react-native-magnus";
-import { useAppSelector } from "src/redux/hooks";
+import { useAppSelector } from "redux/hooks";
 import Day from "./Day";
 import TimeLabels from "./TimeLabels";
 

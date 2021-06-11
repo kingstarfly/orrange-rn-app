@@ -2,9 +2,9 @@ import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { PalsTabParamList } from "types/types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { theme } from "src/constants/theme";
-import ViewPals from "src/screens/Pals/ViewPals";
-import AddPals from "src/screens/Pals/AddPals";
+import { theme } from "constants/theme";
+import ViewPals from "screens/Pals/ViewPals";
+import AddPals from "screens/Pals/AddPals";
 import { Box, Text } from "react-native-magnus";
 
 const Tab = createMaterialTopTabNavigator<PalsTabParamList>();
