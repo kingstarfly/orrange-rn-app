@@ -6,6 +6,7 @@ import { ViewPlansTabParamList } from "types/types";
 import { Text } from "react-native-magnus";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { theme } from "constants/theme";
+import { headerHeight } from "constants/Layout";
 
 const Tab = createMaterialTopTabNavigator<ViewPlansTabParamList>();
 
@@ -18,16 +19,21 @@ function ViewPlansTopTabNavigator() {
         style: {
           backgroundColor: theme.colors.backgroundlight,
           elevation: 0,
-          marginTop: insets.top,
+          paddingTop: headerHeight,
+          // paddingTop: headerHeight + insets.top,
         },
         labelStyle: {
           textTransform: "none",
+          fontFamily: "inter-medium",
+          fontSize: 20,
         },
         inactiveTintColor: "black",
         activeTintColor: "black",
         indicatorStyle: {
           backgroundColor: theme.colors.primary600,
           height: 4,
+          borderBottomLeftRadius: 4,
+          borderBottomRightRadius: 4,
         },
       }}
     >

@@ -1,5 +1,5 @@
 import React from "react";
-import { SubBodyNormalText } from "components/StyledText";
+import { SmallText } from "components/StyledText";
 import { PhosphorIcon } from "constants/Icons";
 import { theme } from "constants/theme";
 import { Box } from "react-native-magnus";
@@ -15,7 +15,7 @@ const InviteTootleButton = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <SubBodyNormalText pr={4}>Invite to Tootle</SubBodyNormalText>
+      <SmallText pr={4}>Invite to Tootle</SmallText>
       <PhosphorIcon
         name="paper-plane-tilt"
         size={10}

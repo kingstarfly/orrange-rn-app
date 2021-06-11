@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { Box, Button, Icon, Input, Text } from "react-native-magnus";
-import { RootStackParamList } from "types/types";
+import { Box } from "react-native-magnus";
+import { CreateMeetupStackParamList } from "types/types";
 import Container from "components/Container";
 import { theme } from "constants/theme";
 import StyledButton from "components/StyledButton";
-import { BodyText, Header3, Header2 } from "components/StyledText";
+import { Heading2 } from "components/StyledText";
 import { useWindowDimensions } from "react-native";
 import { StyledInput } from "components/StyledInput";
 import AddFriends from "./AddFriends";
 
 const MeetupDetails = ({
   navigation,
-}: StackScreenProps<RootStackParamList, "MeetupDetails">) => {
+}: StackScreenProps<CreateMeetupStackParamList, "MeetupDetails">) => {
   const { width, height } = useWindowDimensions();
   const [name, setName] = useState("");
 
@@ -20,10 +20,10 @@ const MeetupDetails = ({
     <Container>
       <Box px={16} justifyContent="space-between" flex={1}>
         <Box py="2xl">
-          <Header2>Create New Plan</Header2>
+          <Heading2>Create New Plan</Heading2>
         </Box>
         <Box flex={1}>
-          <Header3>Name your meetup!</Header3>
+          <Heading2>Name your meetup!</Heading2>
           <StyledInput
             px={0}
             py="sm"
@@ -34,7 +34,7 @@ const MeetupDetails = ({
         </Box>
 
         <Box flex={5} mb={height * 0.1}>
-          <Header3>Add your pals!</Header3>
+          <Heading2>Add your pals!</Heading2>
           <AddFriends />
         </Box>
       </Box>

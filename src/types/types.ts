@@ -31,6 +31,12 @@ export type RootStackParamList = {
   Contacts: undefined;
 };
 
+export type CreateMeetupStackParamList = {
+  MeetupDetails: undefined;
+  SelectDates: undefined;
+  SelectTime: undefined;
+};
+
 export type ViewPlansTabParamList = {
   Confirmed: undefined;
   InProgress: undefined;

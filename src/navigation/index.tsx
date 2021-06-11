@@ -31,6 +31,8 @@ import DiscussDetailScreen from "screens/Plan/DiscussDetailsScreen";
 import DiscussDetailsScreen from "screens/Plan/DiscussDetailsScreen";
 import { headerHeight } from "constants/Layout";
 import Header from "components/Header";
+import FinalDetailsScreen from "screens/Plan/FinalDetailsScreen";
+import AppLogo from "components/AppLogo";
 
 let skipAuth = false;
 
@@ -82,28 +84,14 @@ function RootNavigator() {
         <Stack.Screen
           name="MainBottomTabNavigator"
           component={MainBottomTabNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="Contacts" component={ContactsScreen} />
-        <Stack.Screen
-          name="DiscussDetails"
-          component={DiscussDetailsScreen}
           options={{
-            // header: ({ scene, previous, navigation }) => (
-            //   <Header
-            //     scene={scene}
-            //     previous={previous}
-            //     navigation={navigation}
-            //   />
-            // ),
+            headerTitle: () => <AppLogo />,
             headerTitleAlign: "center",
-            headerTitleStyle: {
-              flex: 1,
-              textAlign: "center",
-            },
           }}
         />
-        <Stack.Screen name="FinalDetails" component={DiscussDetailsScreen} />
+        <Stack.Screen name="Contacts" component={ContactsScreen} />
+        <Stack.Screen name="DiscussDetails" component={DiscussDetailsScreen} />
+        <Stack.Screen name="FinalDetails" component={FinalDetailsScreen} />
       </>
     );
 
@@ -129,13 +117,13 @@ function RootNavigator() {
       }}
       // initialRouteName="TestScreen" //!! to change
     >
-      {content}
-
       <Stack.Screen
         name="TestScreen"
         component={TestScreen}
         options={{ title: "" }}
       />
+
+      {content}
     </Stack.Navigator>
   );
 }

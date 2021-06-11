@@ -46,7 +46,7 @@ const ConfirmedViewPlans = () => {
         keyExtractor={(item, index) => item.id}
         renderItem={renderItem}
         renderSectionHeader={({ section: { title } }) => (
-          <Heading2 textTransform="uppercase" mt={30}>
+          <Heading2 textTransform="uppercase" mt={20}>
             {title}
           </Heading2>
         )}

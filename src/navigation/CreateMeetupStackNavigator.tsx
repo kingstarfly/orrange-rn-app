@@ -4,8 +4,9 @@ import { theme } from "constants/theme";
 import MeetupDetails from "screens/Create/MeetupDetails";
 import SelectDates from "screens/Create/SelectDates";
 import SelectTime from "screens/Create/SelectTime";
+import { CreateMeetupStackParamList } from "types/types";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<CreateMeetupStackParamList>();
 
 function CreateMeetupStackNavigator() {
   return (

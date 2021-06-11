@@ -1,5 +1,5 @@
 import React from "react";
-import { SubBodyNormalText } from "components/StyledText";
+import { SmallText } from "components/StyledText";
 import { PhosphorIcon } from "constants/Icons";
 import { theme } from "constants/theme";
 import { Box } from "react-native-magnus";
@@ -16,7 +16,7 @@ const RequestedPalButton = () => {
       borderWidth={1}
       borderColor={theme.colors.linegray}
     >
-      <SubBodyNormalText pr={4}>Requested</SubBodyNormalText>
+      <SmallText pr={4}>Requested</SmallText>
       <PhosphorIcon
         name="user-plus"
         size={10}

@@ -1,11 +1,11 @@
-import { BodyText } from "components/StyledText";
+import { BodyMainText } from "components/StyledText";
 import { theme } from "constants/theme";
 import React from "react";
 import { Avatar, Box, Button, Icon, Text } from "react-native-magnus";
-import { AddPalContactDetails, TootleUser } from "types/types";
+import { NonTootleUser, TootleUser } from "types/types";
 
 interface UserRowProps {
-  item: TootleUser | AddPalContactDetails; // todo add possible item combis in future. TootleUser | XXXDetials | YYYDetails
+  item: TootleUser | NonTootleUser; // todo add possible item combis in future. TootleUser | XXXDetials | YYYDetails
   // handleSelectUser: (item: TootleUser) => void;
   rightIcon?: JSX.Element;
 }
@@ -44,13 +44,13 @@ const UserRow = ({ item, rightIcon }: UserRowProps) => {
             size={40}
             color={theme.colors.textdark}
           >
-            <BodyText>{getInitials(item.name)}</BodyText>
+            <BodyMainText>{getInitials(item.name)}</BodyMainText>
           </Avatar>
         )}
       </Box>
 
       <Box flex={1} justifyContent="center">
-        <BodyText textAlign="left">{item.name}</BodyText>
+        <BodyMainText textAlign="left">{item.name}</BodyMainText>
       </Box>
 
       <Box justifyContent="center" alignItems="center">

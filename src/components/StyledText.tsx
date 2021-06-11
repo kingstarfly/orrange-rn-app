@@ -58,7 +58,7 @@ export const TinyText: React.FC<TextProps> = ({ children, ...rest }) => {
   );
 };
 
-// export const SubBodyNormalText: React.FC<TextProps> = ({
+// export const SmallText: React.FC<TextProps> = ({
 //   children,
 //   ...rest
 // }) => {
