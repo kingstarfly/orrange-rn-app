@@ -45,11 +45,11 @@ export default function VerificationScreen() {
     setValue: setVerificationCode,
   });
 
-  const onVerificationPress = useCallback(async () => {
+  const onVerificationPress = async () => {
     setLoading(true);
     authData.verify(route.params.verificationId, verificationCode);
     console.log("Verified code");
-  }, [verificationCode]);
+  };
 
   useEffect(() => {
     if (verificationCode.length == 6) {

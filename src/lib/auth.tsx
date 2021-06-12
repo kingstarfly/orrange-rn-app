@@ -42,16 +42,16 @@ export const useAuth = () => {
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
-  const [userData, setUserData] = useState<UserData | null>();
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState<boolean>(undefined);
 
-  useEffect(() => {
-    //Every time the App is opened, this provider is rendered
-    //and call de loadStorageData function.
+  // useEffect(() => {
+  //   //Every time the App is opened, this provider is rendered
+  //   //and call de loadStorageData function.
 
-    loadStorageData();
-  }, []);
+  //   loadStorageData();
+  // }, []);
 
   const loadStorageData = async () => {
     await AsyncStorage.removeItem("@AuthData"); // todo attempt bug fix
@@ -138,7 +138,8 @@ function useProvideAuth() {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((e) => {
-      console.log("auth state changed");
+      // console.log("auth state changed");
+      // console.log(e);
 
       handleUser(e);
     });

@@ -15,7 +15,7 @@ import { ColorSchemeName } from "react-native";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
 
-import { RootStackParamList } from "../types/types";
+import { AuthStackParamList, RootStackParamList } from "../types/types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { theme } from "constants/theme";
 
@@ -29,10 +29,8 @@ import ContactsScreen from "screens/Contacts/ContactsScreen";
 import { useAuth } from "lib/auth";
 import DiscussDetailsScreen from "screens/Plan/DiscussDetailsScreen";
 import { headerHeight } from "constants/Layout";
-import Header from "components/Header";
 import FinalDetailsScreen from "screens/Plan/FinalDetailsScreen";
 import AppLogo from "components/AppLogo";
-import { useEffect } from "react";
 
 export default function Navigation({
   colorScheme,
@@ -48,87 +46,64 @@ export default function Navigation({
     </NavigationContainer>
   );
 }
+const AuthStack = createStackNavigator<AuthStackParamList>();
+const AuthStackScreen = () => (
+  <AuthStack.Navigator initialRouteName="Login">
+    <AuthStack.Screen
+      name="Login"
+      component={LoginScreen}
+      options={{ headerShown: false }}
+    />
+    <AuthStack.Screen
+      name="Verify"
+      component={VerificationScreen}
+      options={{ headerShown: false }}
+    />
+  </AuthStack.Navigator>
+);
 
-const Stack = createStackNavigator<RootStackParamList>();
+const AppStack = createStackNavigator<RootStackParamList>();
+const AppStackScreen = () => (
+  <AppStack.Navigator
+    headerMode="screen"
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: theme.colors.backgroundlight,
+        elevation: 0,
+        shadowOpacity: 0,
+        height: headerHeight,
+      },
+      headerTintColor: theme.colors.textdark,
+      headerTitleStyle: {
+        fontFamily: "inter-regular",
+        textAlignVertical: "center",
+        marginHorizontal: 0,
+      },
+      headerTransparent: true,
+      headerBackTitleVisible: false,
+      headerBackAllowFontScaling: true,
+    }}
+    initialRouteName="MainBottomTabNavigator"
+  >
+    <AppStack.Screen
+      name="MainBottomTabNavigator"
+      component={MainBottomTabNavigator}
+      options={{
+        headerTitle: () => <AppLogo />,
+        headerTitleAlign: "center",
+      }}
+    />
+    <AppStack.Screen name="Contacts" component={ContactsScreen} />
+    <AppStack.Screen name="DiscussDetails" component={DiscussDetailsScreen} />
+    <AppStack.Screen name="FinalDetails" component={FinalDetailsScreen} />
+  </AppStack.Navigator>
+);
 
 function RootNavigator() {
   const authData = useAuth();
-
-  useEffect(() => {
-    console.log(authData.userData);
-    console.log(!authData.userData);
-  }, [authData]);
-
-  /*
-      Unauth
-      1. Login
-      2. Verify
-
-      Auth
-      1. BottomTab
-          1. Plans (this is tab navigator)
-          2. Create (this is a stack navigator)
-          3. Pals (this is a stack navigator)
-      2. Contacts
-  */
-  const content = !authData.userData ? (
-    <>
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Verify"
-        component={VerificationScreen}
-        options={{ headerShown: false }}
-      />
-    </>
-  ) : (
-    <>
-      <Stack.Screen
-        name="MainBottomTabNavigator"
-        component={MainBottomTabNavigator}
-        options={{
-          headerTitle: () => <AppLogo />,
-          headerTitleAlign: "center",
-        }}
-      />
-      <Stack.Screen name="Contacts" component={ContactsScreen} />
-      <Stack.Screen name="DiscussDetails" component={DiscussDetailsScreen} />
-      <Stack.Screen name="FinalDetails" component={FinalDetailsScreen} />
-    </>
-  );
-
-  return (
-    <Stack.Navigator
-      headerMode="screen"
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: theme.colors.backgroundlight,
-          elevation: 0,
-          shadowOpacity: 0,
-          height: headerHeight,
-        },
-        headerTintColor: theme.colors.textdark,
-        headerTitleStyle: {
-          fontFamily: "inter-regular",
-          textAlignVertical: "center",
-          marginHorizontal: 0,
-        },
-        headerTransparent: true,
-        headerBackTitleVisible: false,
-        headerBackAllowFontScaling: true,
-      }}
-      // initialRouteName="TestScreen" //!! to change
-    >
-      <Stack.Screen
-        name="TestScreen"
-        component={TestScreen}
-        options={{ title: "" }}
-      />
-
-      {content}
-    </Stack.Navigator>
-  );
+  if (!authData.userData) {
+    return <AuthStackScreen />;
+  } else {
+    return <AppStackScreen />;
+  }
 }

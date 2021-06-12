@@ -7,6 +7,13 @@ import { MutableRefObject } from "react";
 import { ImageSourcePropType } from "react-native";
 import { DotMarking, PeriodMarking } from "react-native-calendars";
 
+export type AuthStackParamList = {
+  Login: undefined;
+  Verify: {
+    verificationId: string;
+  };
+};
+
 export type RootStackParamList = {
   // PublicFeed: undefined;
   // SelectDates: undefined;
@@ -17,10 +24,7 @@ export type RootStackParamList = {
   // Pals: undefined;
   NotFound: undefined;
   TestScreen: undefined;
-  Login: undefined;
-  Verify: {
-    verificationId: string;
-  };
+
   DiscussDetails: {
     meeting: MeetingProps;
   };

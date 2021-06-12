@@ -27,6 +27,7 @@ import { Heading1, Heading3 } from "components/StyledText";
 import { theme } from "constants/theme";
 import LargeButton from "components/LargeButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAuth } from "lib/auth";
 
 export default function LoginScreen() {
   const navigation =
@@ -52,6 +53,8 @@ export default function LoginScreen() {
     setCountry(country);
   };
 
+  const authData = useAuth();
+
   // useEffect(() => {
   //   const fn = async () => {
   //     await AsyncStorage.clear();
@@ -76,6 +79,7 @@ export default function LoginScreen() {
         });
       })
       .catch((err) => {
+        console.log("Error verifying phone number");
         console.log(err);
       });
   };
@@ -153,6 +157,17 @@ export default function LoginScreen() {
                   w={WINDOW_WIDTH * 0.6}
                 />
               </Box>
+            </Box>
+
+            <Box position="absolute" bottom={WINDOW_HEIGHT * 0.15}>
+              <LargeButton
+                loading={loading}
+                onPress={() => {
+                  Keyboard.dismiss();
+                  authData.signOut();
+                }}
+                title="LOGOUT"
+              />
             </Box>
 
             <Box position="absolute" bottom={WINDOW_HEIGHT * 0.05}>
