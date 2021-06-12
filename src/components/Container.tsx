@@ -9,7 +9,11 @@ interface ContainerProps {
   avoidHeader?: boolean;
 }
 
-const Container: React.FC<ContainerProps> = ({ bg, children, avoidHeader }) => {
+const Container: React.FC<ContainerProps> = ({
+  bg,
+  children,
+  avoidHeader = false,
+}) => {
   return (
     <SafeAreaView
       style={{

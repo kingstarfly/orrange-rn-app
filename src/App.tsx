@@ -12,7 +12,6 @@ import { Provider } from "react-redux";
 import { useColorScheme, View } from "react-native";
 import { AuthProvider } from "lib/auth";
 import { registerRootComponent } from "expo";
-import { useEffect } from "react";
 import RenderSplashScreen from "components/RenderSplashScreen";
 
 function App() {
@@ -27,17 +26,17 @@ function App() {
         <ThemeProvider theme={theme}>
           <AuthProvider>
             <Provider store={store}>
-              <RenderSplashScreen
+              {/* <RenderSplashScreen
                 isCachedResourcesLoadingComplete={
                   isCachedResourcesLoadingComplete
                 }
-              >
-                <Navigation colorScheme={colorScheme} />
-                <StatusBar
-                  style="dark"
-                  backgroundColor={theme.colors.primary600}
-                />
-              </RenderSplashScreen>
+              > */}
+              <Navigation colorScheme={colorScheme} />
+              <StatusBar
+                style="dark"
+                backgroundColor={theme.colors.primary600}
+              />
+              {/* </RenderSplashScreen> */}
             </Provider>
           </AuthProvider>
         </ThemeProvider>

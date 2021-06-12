@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   Image,
@@ -45,11 +45,11 @@ export default function VerificationScreen() {
     setValue: setVerificationCode,
   });
 
-  const onVerificationPress = async () => {
+  const onVerificationPress = useCallback(async () => {
     setLoading(true);
     authData.verify(route.params.verificationId, verificationCode);
     console.log("Verified code");
-  };
+  }, [verificationCode]);
 
   useEffect(() => {
     if (verificationCode.length == 6) {

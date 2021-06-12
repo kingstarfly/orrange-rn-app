@@ -12,7 +12,7 @@ type UserData = {
 interface AuthContextValue {
   userData?: UserData;
   isLoading: boolean;
-  loggedIn: boolean;
+  loggedIn: boolean | undefined;
   verify: (verificationId: string, verificationCode: string) => Promise<void>;
   signOut: () => void;
   fakeLogin: () => void;
@@ -44,25 +44,30 @@ export const useAuth = () => {
 function useProvideAuth() {
   const [userData, setUserData] = useState<UserData | null>();
   const [isLoading, setIsLoading] = useState(true);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(undefined);
 
   useEffect(() => {
     //Every time the App is opened, this provider is rendered
     //and call de loadStorageData function.
+
     loadStorageData();
   }, []);
 
   const loadStorageData = async () => {
+    await AsyncStorage.removeItem("@AuthData"); // todo attempt bug fix
     try {
       //Try get the data from Async Storage
       const authDataSerialized = await AsyncStorage.getItem("@AuthData");
       if (authDataSerialized) {
+        console.log("Old data detected in async storage");
         //If there are data, it's converted to an Object and the state is updated.
         const _userData: UserData = JSON.parse(authDataSerialized);
         setUserData(_userData);
         setLoggedIn(true);
       }
     } catch (error) {
+      console.log("error retrieving async storage");
+      console.log(error);
     } finally {
       //loading finished
       setIsLoading(false);

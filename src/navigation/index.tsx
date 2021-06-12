@@ -27,14 +27,12 @@ import VerificationScreen from "screens/Authentication/VerificationScreen";
 import MainBottomTabNavigator from "./MainBottomTabNavigator";
 import ContactsScreen from "screens/Contacts/ContactsScreen";
 import { useAuth } from "lib/auth";
-import DiscussDetailScreen from "screens/Plan/DiscussDetailsScreen";
 import DiscussDetailsScreen from "screens/Plan/DiscussDetailsScreen";
 import { headerHeight } from "constants/Layout";
 import Header from "components/Header";
 import FinalDetailsScreen from "screens/Plan/FinalDetailsScreen";
 import AppLogo from "components/AppLogo";
-
-let skipAuth = false;
+import { useEffect } from "react";
 
 export default function Navigation({
   colorScheme,
@@ -55,7 +53,11 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const authData = useAuth();
-  console.log(authData.userData);
+
+  useEffect(() => {
+    console.log(authData.userData);
+    console.log(!authData.userData);
+  }, [authData]);
 
   /*
       Unauth
@@ -69,31 +71,34 @@ function RootNavigator() {
           3. Pals (this is a stack navigator)
       2. Contacts
   */
-  const content =
-    !skipAuth && !authData.userData ? (
-      <>
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ title: "Login" }}
-        />
-        <Stack.Screen name="Verify" component={VerificationScreen} />
-      </>
-    ) : (
-      <>
-        <Stack.Screen
-          name="MainBottomTabNavigator"
-          component={MainBottomTabNavigator}
-          options={{
-            headerTitle: () => <AppLogo />,
-            headerTitleAlign: "center",
-          }}
-        />
-        <Stack.Screen name="Contacts" component={ContactsScreen} />
-        <Stack.Screen name="DiscussDetails" component={DiscussDetailsScreen} />
-        <Stack.Screen name="FinalDetails" component={FinalDetailsScreen} />
-      </>
-    );
+  const content = !authData.userData ? (
+    <>
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Verify"
+        component={VerificationScreen}
+        options={{ headerShown: false }}
+      />
+    </>
+  ) : (
+    <>
+      <Stack.Screen
+        name="MainBottomTabNavigator"
+        component={MainBottomTabNavigator}
+        options={{
+          headerTitle: () => <AppLogo />,
+          headerTitleAlign: "center",
+        }}
+      />
+      <Stack.Screen name="Contacts" component={ContactsScreen} />
+      <Stack.Screen name="DiscussDetails" component={DiscussDetailsScreen} />
+      <Stack.Screen name="FinalDetails" component={FinalDetailsScreen} />
+    </>
+  );
 
   return (
     <Stack.Navigator

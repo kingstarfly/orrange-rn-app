@@ -26,6 +26,7 @@ import { Box, Input, WINDOW_HEIGHT, WINDOW_WIDTH } from "react-native-magnus";
 import { Heading1, Heading3 } from "components/StyledText";
 import { theme } from "constants/theme";
 import LargeButton from "components/LargeButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginScreen() {
   const navigation =
@@ -50,6 +51,13 @@ export default function LoginScreen() {
     setCallingCode(country.callingCode[0] ? `+${country.callingCode[0]}` : "");
     setCountry(country);
   };
+
+  // useEffect(() => {
+  //   const fn = async () => {
+  //     await AsyncStorage.clear();
+  //   };
+  //   fn();
+  // }, []);
 
   const onLoginPress = () => {
     const phoneProvider = new firebaseApp.auth.PhoneAuthProvider();
@@ -83,7 +91,7 @@ export default function LoginScreen() {
             Keyboard.dismiss();
           }}
         >
-          <Box flex={1} justifyContent="center" alignItems="center">
+          <Box flex={1} justifyContent="center" alignItems="center" bg="red200">
             <FirebaseRecaptchaVerifierModal
               ref={recaptchaVerifier}
               firebaseConfig={firebaseConfig}
