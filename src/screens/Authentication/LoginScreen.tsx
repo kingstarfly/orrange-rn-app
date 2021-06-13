@@ -74,6 +74,7 @@ export default function LoginScreen() {
     phoneProvider
       .verifyPhoneNumber(fullNumber, recaptchaVerifier.current)
       .then((verificationId) => {
+        console.log("Going to verify screen");
         navigation.replace("Verify", {
           verificationId,
         });

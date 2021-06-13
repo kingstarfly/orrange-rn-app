@@ -12,6 +12,7 @@ export type AuthStackParamList = {
   Verify: {
     verificationId: string;
   };
+  Start: undefined;
 };
 
 export type RootStackParamList = {
@@ -33,6 +34,8 @@ export type RootStackParamList = {
   };
   MainBottomTabNavigator: undefined;
   Contacts: undefined;
+  YourInfo: undefined;
+  YourUsername: undefined;
 };
 
 export type CreateMeetupStackParamList = {
