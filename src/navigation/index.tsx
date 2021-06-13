@@ -31,6 +31,10 @@ import DiscussDetailsScreen from "screens/Plan/DiscussDetailsScreen";
 import { headerHeight } from "constants/Layout";
 import FinalDetailsScreen from "screens/Plan/FinalDetailsScreen";
 import AppLogo from "components/AppLogo";
+import YourUsername from "screens/Authentication/YourUsername";
+import YourInfo from "screens/Authentication/YourInfo";
+import StartScreen from "screens/Authentication/StartScreen";
+import { firebaseApp, firestore } from "lib/firebase";
 
 export default function Navigation({
   colorScheme,
@@ -48,22 +52,24 @@ export default function Navigation({
 }
 const AuthStack = createStackNavigator<AuthStackParamList>();
 const AuthStackScreen = () => (
-  <AuthStack.Navigator initialRouteName="Login">
+  <AuthStack.Navigator initialRouteName="Start" screenOptions={{headerShown:false}}>
+    <AuthStack.Screen
+      name="Start"
+      component={StartScreen}
+    />
     <AuthStack.Screen
       name="Login"
       component={LoginScreen}
-      options={{ headerShown: false }}
     />
     <AuthStack.Screen
       name="Verify"
       component={VerificationScreen}
-      options={{ headerShown: false }}
     />
   </AuthStack.Navigator>
 );
 
 const AppStack = createStackNavigator<RootStackParamList>();
-const AppStackScreen = () => (
+const AppStackScreen = (isFirstLogin) => (
   <AppStack.Navigator
     headerMode="screen"
     screenOptions={{
@@ -83,8 +89,10 @@ const AppStackScreen = () => (
       headerBackTitleVisible: false,
       headerBackAllowFontScaling: true,
     }}
-    initialRouteName="MainBottomTabNavigator"
+    initialRouteName= {isFirstLogin ?  "YourInfo": "MainBottomTabNavigator"}
   >
+    <AppStack.Screen name="YourInfo" component={YourInfo} options={{headerShown:false}} />
+    <AppStack.Screen name="YourUsername" component={YourUsername} options={{headerShown:false}} />
     <AppStack.Screen
       name="MainBottomTabNavigator"
       component={MainBottomTabNavigator}
@@ -99,11 +107,25 @@ const AppStackScreen = () => (
   </AppStack.Navigator>
 );
 
+async function checkIfFirstLogin(uid) {
+  console.log('uid: ',uid);
+  const userDocument = await firestore.collection('users').doc(String(uid)).get();
+  if (userDocument.exists) {
+    console.log('found user document: ', uid);
+    return false;
+  } else {
+    console.log('unable to find user document id: ', uid);
+    return true;
+  }
+}
+
 function RootNavigator() {
   const authData = useAuth();
   if (!authData.userData) {
+    console.log(authData.userData)
     return <AuthStackScreen />;
   } else {
-    return <AppStackScreen />;
+    console.log(authData.userData.uid)
+    return <AppStackScreen/>;
   }
 }

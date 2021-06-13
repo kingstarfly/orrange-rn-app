@@ -25,13 +25,13 @@ if (firebase.apps.length === 0) {
 const database = firebase.database();
 const auth = firebase.auth();
 const firestore = firebase.firestore();
-if (__DEV__) {
-  console.log("Switching to local Firebase instance...");
-  const origin =
-    Constants.manifest.debuggerHost?.split(":").shift() || "localhost";
+// if (__DEV__) {
+//   console.log("Switching to local Firebase instance...");
+//   const origin =
+//     Constants.manifest.debuggerHost?.split(":").shift() || "localhost";
 
-  firestore.useEmulator(origin, 4123);
-}
+//   firestore.useEmulator(origin, 4123);
+// }
 const firebaseApp = firebase;
 
 export { database, auth, firestore, firebaseApp };
