@@ -84,7 +84,7 @@ const AppStackScreen = (isFirstLogin) => (
       headerBackTitleVisible: false,
       headerBackAllowFontScaling: true,
     }}
-    initialRouteName={isFirstLogin ? "YourInfo" : "MainBottomTabNavigator"}
+    initialRouteName="YourInfo"
   >
     <AppStack.Screen
       name="YourInfo"

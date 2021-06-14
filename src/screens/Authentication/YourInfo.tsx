@@ -75,9 +75,10 @@ export default function YourInfo({navigation}) {
             <ActivityIndicator size='large'/>
         </View> 
         :
+        <Div  alignItems='center' justifyContent='center' flex={1}>
         <View>
-            <Div alignItems='center' justifyContent='center' mt={200}>
-                <Div row mb={50}>
+            <Div>
+                <Div row mb={100}>
                     <Div flex={2} ml={50} mr={20}>
                         <Text fontSize={40} mb={10}>Your Info</Text>
                         <Text fontSize={15}>Please enter your name and upload a photo</Text>
@@ -95,13 +96,15 @@ export default function YourInfo({navigation}) {
                         </TouchableOpacity>
                     </Div>
                 </Div>
-                <Input w={width * 0.9} mb={10} placeholder="First Name" bg='transparent' onChangeText={setFirstName}/>
-                <Input w={width * 0.9} mb={10} placeholder="Last Name" bg='transparent' onChangeText={setLastName}/>
-                <Button onPress={onConfirmYourInfo} alignSelf='center' w={width * 0.9} rounded='circle' bg='#FAB77C'>
-                    <Text>Next</Text>
+                <Input fontSize={20} w={width * 0.9} mb={30} placeholder="First Name" bg='transparent' onChangeText={setFirstName}/>
+                <Input fontSize={20} w={width * 0.9} mb={30} placeholder="Last Name" bg='transparent' onChangeText={setLastName}/>
+                    
+                <Button mt={100} onPress={onConfirmYourInfo} w={width * 0.9} rounded='circle' bg='#FAB77C'>
+                    <Text fontSize={30}>Next</Text>
                 </Button>
-
+               
             </Div>
         </View>
+        </Div>
     )
 }
