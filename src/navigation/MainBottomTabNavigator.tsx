@@ -27,7 +27,11 @@ function MainBottomTabNavigator() {
         //   },
         // }}
       />
-      <Tab.Screen name="Create" component={CreateMeetupStackNavigator} />
+      <Tab.Screen
+        name="Create"
+        component={CreateMeetupStackNavigator}
+        options={{}}
+      />
       <Tab.Screen name="Pals" component={PalsTopTabvNavigator} />
     </Tab.Navigator>
   );

@@ -9,6 +9,7 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
+  getFocusedRouteNameFromRoute,
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ColorSchemeName } from "react-native";
@@ -52,19 +53,13 @@ export default function Navigation({
 }
 const AuthStack = createStackNavigator<AuthStackParamList>();
 const AuthStackScreen = () => (
-  <AuthStack.Navigator initialRouteName="Start" screenOptions={{headerShown:false}}>
-    <AuthStack.Screen
-      name="Start"
-      component={StartScreen}
-    />
-    <AuthStack.Screen
-      name="Login"
-      component={LoginScreen}
-    />
-    <AuthStack.Screen
-      name="Verify"
-      component={VerificationScreen}
-    />
+  <AuthStack.Navigator
+    initialRouteName="Start"
+    screenOptions={{ headerShown: false }}
+  >
+    <AuthStack.Screen name="Start" component={StartScreen} />
+    <AuthStack.Screen name="Login" component={LoginScreen} />
+    <AuthStack.Screen name="Verify" component={VerificationScreen} />
   </AuthStack.Navigator>
 );
 
@@ -89,17 +84,29 @@ const AppStackScreen = (isFirstLogin) => (
       headerBackTitleVisible: false,
       headerBackAllowFontScaling: true,
     }}
-    initialRouteName= {isFirstLogin ?  "YourInfo": "MainBottomTabNavigator"}
+    initialRouteName={isFirstLogin ? "YourInfo" : "MainBottomTabNavigator"}
   >
-    <AppStack.Screen name="YourInfo" component={YourInfo} options={{headerShown:false}} />
-    <AppStack.Screen name="YourUsername" component={YourUsername} options={{headerShown:false}} />
+    <AppStack.Screen
+      name="YourInfo"
+      component={YourInfo}
+      options={{ headerShown: false }}
+    />
+    <AppStack.Screen
+      name="YourUsername"
+      component={YourUsername}
+      options={{ headerShown: false }}
+    />
     <AppStack.Screen
       name="MainBottomTabNavigator"
       component={MainBottomTabNavigator}
-      options={{
-        headerTitle: () => <AppLogo />,
+      options={({ route }) => ({
+        headerTitle: () => {
+          if (willShowHeader(route)) {
+            return <AppLogo />;
+          } else return null;
+        },
         headerTitleAlign: "center",
-      }}
+      })}
     />
     <AppStack.Screen name="Contacts" component={ContactsScreen} />
     <AppStack.Screen name="DiscussDetails" component={DiscussDetailsScreen} />
@@ -108,13 +115,16 @@ const AppStackScreen = (isFirstLogin) => (
 );
 
 async function checkIfFirstLogin(uid) {
-  console.log('uid: ',uid);
-  const userDocument = await firestore.collection('users').doc(String(uid)).get();
+  console.log("uid: ", uid);
+  const userDocument = await firestore
+    .collection("users")
+    .doc(String(uid))
+    .get();
   if (userDocument.exists) {
-    console.log('found user document: ', uid);
+    console.log("found user document: ", uid);
     return false;
   } else {
-    console.log('unable to find user document id: ', uid);
+    console.log("unable to find user document id: ", uid);
     return true;
   }
 }
@@ -122,10 +132,25 @@ async function checkIfFirstLogin(uid) {
 function RootNavigator() {
   const authData = useAuth();
   if (!authData.userData) {
-    console.log(authData.userData)
+    console.log(authData.userData);
     return <AuthStackScreen />;
   } else {
-    console.log(authData.userData.uid)
-    return <AppStackScreen/>;
+    console.log(authData.userData.uid);
+    return <AppStackScreen />;
+  }
+}
+
+function willShowHeader(route) {
+  // If the focused route is not found, we need to assume it's the initial screen
+  // This can happen during if there hasn't been any navigation inside the screen
+  // In our case, it's "Feed" as that's the first screen inside the navigator
+  const routeName = getFocusedRouteNameFromRoute(route) ?? "Feed";
+
+  switch (routeName) {
+    case "Create":
+      return false;
+
+    default:
+      return true;
   }
 }
