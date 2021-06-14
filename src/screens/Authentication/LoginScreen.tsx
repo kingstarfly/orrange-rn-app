@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
   Image,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -22,7 +21,7 @@ import { useNavigation } from "@react-navigation/core";
 import { RootStackParamList } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Container from "components/Container";
-import { Box, Input, WINDOW_HEIGHT, WINDOW_WIDTH } from "react-native-magnus";
+import { Box, Input, Text, WINDOW_HEIGHT, WINDOW_WIDTH} from "react-native-magnus";
 import { Heading1, Heading3 } from "components/StyledText";
 import { theme } from "constants/theme";
 import LargeButton from "components/LargeButton";
@@ -96,7 +95,7 @@ export default function LoginScreen() {
             Keyboard.dismiss();
           }}
         >
-          <Box flex={1} justifyContent="center" alignItems="center" bg="red200">
+          <Box flex={1} justifyContent="center" alignItems="center">
             <FirebaseRecaptchaVerifierModal
               ref={recaptchaVerifier}
               firebaseConfig={firebaseConfig}
@@ -104,9 +103,12 @@ export default function LoginScreen() {
             />
 
             <Box alignSelf="center" w="80%" mb="10%">
-              <Heading1 textAlign="center">
-                Log in with your phone number
-              </Heading1>
+              <Text textAlign="center" fontSize={40} pb={50}>
+                Your Phone
+              </Text>
+              <Text textAlign="center" fontSize={15}>
+                Please confirm your country code and enter your phone number
+              </Text>
             </Box>
 
             <Box row alignItems="center" justifyContent="center" w="100%">

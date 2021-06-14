@@ -41,16 +41,18 @@ export default function YourUsername({route, navigation}) {
 
     const width = useWindowDimensions().width;
     return (
+        <Div flex={1} justifyContent='center'>
         <View>
-            <Div alignItems='center' justifyContent='center' mt={200}>
-                <Text fontSize={40}>Your Username</Text>
-                <Text>Enter your preferred username below</Text>
-                <Input autoCapitalize='none' w={width * 0.9} mb={10} placeholder="Username" bg='transparent' onChangeText={setUsername}/>
-                <Button onPress={onConfirmYourUsername} alignSelf='center' w={width * 0.9} rounded='circle' bg='#FAB77C'>
-                    <Text>Next</Text>
+            <Div alignItems='center' justifyContent='center'>
+                <Text fontSize={40} mb={20}>Your Username</Text>
+                <Text fontSize={20} mb={20}>Enter your preferred username below</Text>
+                <Input mt={100} fontSize={20} autoCapitalize='none' w={width * 0.9} mb={10} placeholder="Username" bg='transparent' onChangeText={setUsername}/>
+                <Button mt={100} onPress={onConfirmYourUsername} alignSelf='center' w={width * 0.9} rounded='circle' bg='#FAB77C'>
+                    <Text fontSize={30}>Next</Text>
                 </Button>
 
             </Div>
         </View>
+        </Div>
     )
 }
