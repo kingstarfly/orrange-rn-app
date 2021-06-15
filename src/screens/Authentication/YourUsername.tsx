@@ -4,17 +4,19 @@ import React, { useState } from "react";
 import { firestore, auth } from "lib/firebase";
 import { useAuth } from "lib/auth";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { AppStackParamList } from "types/types";
+import { AppStackParamList, SignUpStackParamList, UserData } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Container from "components/Container";
 
 export default function YourUsername() {
-  const route = useRoute<RouteProp<AppStackParamList, "YourUsername">>();
+  const route = useRoute<RouteProp<SignUpStackParamList, "YourUsername">>();
   const navigation =
-    useNavigation<StackNavigationProp<AppStackParamList, "YourUsername">>();
+    useNavigation<StackNavigationProp<SignUpStackParamList, "YourUsername">>();
   const authData = useAuth();
-  const { firstName, lastName } = route.params;
+
   const phoneNumber = auth.currentUser.phoneNumber;
+  const { firstName, lastName } = route.params;
+  const [username, setUsername] = useState("");
 
   const onConfirmYourUsername = async () => {
     if (!username) return alert("Please enter a username!");
@@ -35,18 +37,18 @@ export default function YourUsername() {
           return alert("Username is already taken!");
         } else {
           console.log("Username is unique! Continuing to next page");
-          firestore.collection("users").doc(authData.userData.uid).set({
+          authData.updateUserInfo({
+            uid: auth.currentUser.uid,
             firstName: firstName,
             lastName: lastName,
             username: username,
-            phoneNumber: phoneNumber,
-          });
-          navigation.navigate("MainBottomTabNavigator");
+            contact: phoneNumber,
+            url_original: null,
+            url_thumbnail: null,
+          } as UserData);
         }
       });
   };
-
-  const [username, setUsername] = useState(null);
 
   const width = useWindowDimensions().width;
   return (

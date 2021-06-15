@@ -4,7 +4,6 @@ import { Box, Button, Text } from "react-native-magnus";
 import Container from "components/Container";
 import MeetingCard from "screens/ViewPlans/MeetingCard";
 import { meetDataOne, meetingsData } from "constants/mockdata";
-import { RootStackParamList } from "types/types";
 import { SectionList } from "react-native";
 import { styles } from "./styles";
 import AddButton from "components/AddButton";
@@ -27,10 +26,6 @@ const InProgressViewPlans = () => {
           </Heading2>
         )}
       />
-      {/* Scroll View of each month */}
-      {/* Within each month, there are cards for each meeting */}
-
-      <AddButton to="MeetupDetails" />
     </Container>
   );
 };

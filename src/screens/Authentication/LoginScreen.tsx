@@ -97,7 +97,7 @@ export default function LoginScreen() {
             Keyboard.dismiss();
           }}
         >
-          <Box flex={1} justifyContent="center" alignItems="center" bg="red200">
+          <Box flex={1} justifyContent="center" alignItems="center">
             <FirebaseRecaptchaVerifierModal
               ref={recaptchaVerifier}
               firebaseConfig={firebaseConfig}
@@ -161,7 +161,7 @@ export default function LoginScreen() {
               </Box>
             </Box>
 
-            <Box position="absolute" bottom={WINDOW_HEIGHT * 0.15}>
+            {/* <Box position="absolute" bottom={WINDOW_HEIGHT * 0.15}>
               <LargeButton
                 loading={loading}
                 onPress={() => {
@@ -170,7 +170,7 @@ export default function LoginScreen() {
                 }}
                 title="LOGOUT"
               />
-            </Box>
+            </Box> */}
 
             <Box position="absolute" bottom={WINDOW_HEIGHT * 0.05}>
               <LargeButton

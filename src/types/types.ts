@@ -7,12 +7,29 @@ import { MutableRefObject } from "react";
 import { ImageSourcePropType } from "react-native";
 import { DotMarking, PeriodMarking } from "react-native-calendars";
 
+export type UserData = {
+  uid: string;
+  firstName: string;
+  lastName: string;
+  contact: string;
+  username: string;
+  url_original: string;
+  url_thumbnail: string;
+};
+
 export type AuthStackParamList = {
   Login: undefined;
   Verify: {
     verificationId: string;
   };
-  Start: undefined;
+};
+
+export type SignUpStackParamList = {
+  YourInfo: undefined;
+  YourUsername: {
+    firstName: string;
+    lastName: string;
+  };
 };
 
 export type AppStackParamList = {
@@ -27,11 +44,6 @@ export type AppStackParamList = {
   };
   MainBottomTabNavigator: undefined;
   Contacts: undefined;
-  YourInfo: undefined;
-  YourUsername: {
-    firstName: string;
-    lastName: string;
-  };
 };
 
 export type CreateMeetupStackParamList = {

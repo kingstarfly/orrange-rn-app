@@ -11,7 +11,7 @@ import { WINDOW_WIDTH } from "react-native-magnus";
 import { Heading3 } from "./StyledText";
 
 interface LargeButtonProps extends ButtonProps {
-  loading: boolean;
+  loading?: boolean;
 }
 
 const LargeButton: React.FC<LargeButtonProps> = ({

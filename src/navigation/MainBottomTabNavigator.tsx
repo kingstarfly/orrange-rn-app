@@ -30,6 +30,7 @@ function MainBottomTabNavigator() {
           shadowRadius: 10,
         },
       }}
+      initialRouteName="Plans"
     >
       <Tab.Screen
         name="Plans"

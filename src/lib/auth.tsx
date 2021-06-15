@@ -1,21 +1,16 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import firebase from "firebase";
-import { auth, firebaseApp } from "./firebase";
+import { auth, firebaseApp, firestore } from "./firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-type UserData = {
-  uid: string;
-  name: string;
-  contact: string;
-};
+import { UserData } from "types/types";
 
 interface AuthContextValue {
   userData?: UserData;
   isLoading: boolean;
-  loggedIn: boolean | undefined;
   verify: (verificationId: string, verificationCode: string) => Promise<void>;
   signOut: () => void;
-  fakeLogin: () => void;
+  updateUserInfo: (userInfo: UserData) => Promise<void>;
+  // fakeLogin: () => void;
 }
 
 // We explicitly allow `undefined` as a potential value here
@@ -44,37 +39,11 @@ export const useAuth = () => {
 function useProvideAuth() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [loggedIn, setLoggedIn] = useState<boolean>(undefined);
 
-  // useEffect(() => {
-  //   //Every time the App is opened, this provider is rendered
-  //   //and call de loadStorageData function.
-
-  //   loadStorageData();
-  // }, []);
-
-  const loadStorageData = async () => {
-    await AsyncStorage.removeItem("@AuthData"); // todo attempt bug fix
-    try {
-      //Try get the data from Async Storage
-      const authDataSerialized = await AsyncStorage.getItem("@AuthData");
-      if (authDataSerialized) {
-        console.log("Old data detected in async storage");
-        //If there are data, it's converted to an Object and the state is updated.
-        const _userData: UserData = JSON.parse(authDataSerialized);
-        setUserData(_userData);
-        setLoggedIn(true);
-      }
-    } catch (error) {
-      console.log("error retrieving async storage");
-      console.log(error);
-    } finally {
-      //loading finished
-      setIsLoading(false);
-    }
-  };
-
-  const handleUser = (rawUser: firebase.User | null) => {
+  const handleUser = async (rawUser: firebase.User | null) => {
+    setIsLoading(true);
+    console.log("Handle user recevied this object");
+    console.log(rawUser);
     let user;
     if (rawUser) {
       const { uid, displayName, phoneNumber } = rawUser;
@@ -84,12 +53,29 @@ function useProvideAuth() {
         name: displayName,
         contact: phoneNumber,
       };
-      setUserData(user);
-      setLoggedIn(true);
+
+      // check if user uid exists in `users` collection
+      const userDocument = await firestore.collection("users").doc(uid).get();
+      if (userDocument.exists) {
+        console.log("found user document: ", uid);
+        console.log(userDocument.data());
+
+        setUserData(userDocument.data() as UserData);
+      } else {
+        console.log("did not find user document");
+        setUserData({
+          uid: uid,
+          contact: phoneNumber,
+          firstName: null,
+          lastName: null,
+          username: null,
+          url_original: null,
+          url_thumbnail: null,
+        } as UserData);
+      }
       setIsLoading(false);
     } else {
       setUserData(null);
-      setLoggedIn(false);
       setIsLoading(false);
     }
     return user;
@@ -102,9 +88,8 @@ function useProvideAuth() {
         verificationCode
       );
       const userCredential = await auth.signInWithCredential(credential);
-      let user = handleUser(userCredential.user);
-
-      AsyncStorage.setItem("@AuthData", JSON.stringify(user)); // TODO: check if this actually works because state changes might not have taken place
+      let user = await handleUser(userCredential.user);
+      // AsyncStorage.setItem("@AuthData", JSON.stringify(user)); // TODO: check if this actually works because state changes might not have taken place
       console.log("Signed in successfully");
     } catch (err) {
       console.log("useAuth verify failed");
@@ -112,23 +97,17 @@ function useProvideAuth() {
     }
   };
 
-  const dummyUser: UserData = {
-    contact: "12345678",
-    name: "dummy user",
-    uid: "1",
-  };
-
-  const fakeLogin = async () => {
-    setIsLoading(true);
-    try {
-      const userCredential = await auth.signInAnonymously();
-      let user = handleUser(userCredential.user);
-      AsyncStorage.setItem("@AuthData", JSON.stringify(user)); // TODO: check if this actually works because state changes might not have taken place
-      console.log("Signed in anonymously");
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const fakeLogin = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     const userCredential = await auth.signInAnonymously();
+  //     let user = handleUser(userCredential.user);
+  //     AsyncStorage.setItem("@AuthData", JSON.stringify(user)); // TODO: check if this actually works because state changes might not have taken place
+  //     console.log("Signed in anonymously");
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   const signOut = async () => {
     await auth.signOut();
@@ -148,13 +127,29 @@ function useProvideAuth() {
     return () => unsubscribe();
   }, []);
 
+  const updateUserInfo = async (userInfo: UserData) => {
+    // update state
+    setUserData(userInfo);
+
+    const { firstName, lastName, username } = userInfo;
+
+    // update firestore entry
+    await firestore
+      .collection("users")
+      .doc(userInfo.uid)
+      .update({
+        firstName,
+        lastName,
+        username,
+      } as UserData);
+  };
+
   // Returns the authContext object containing the user object and auth methods
   return {
     userData,
-    loggedIn,
     isLoading,
     verify,
     signOut,
-    fakeLogin,
+    updateUserInfo,
   };
 }

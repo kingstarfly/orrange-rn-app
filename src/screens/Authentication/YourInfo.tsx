@@ -10,23 +10,22 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "lib/auth";
 import { firestore } from "lib/firebase";
-import { AppStackParamList } from "types/types";
+import { AppStackParamList, SignUpStackParamList } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 
 import Container from "components/Container";
+import LargeButton from "components/LargeButton";
+import { BodyMainText } from "components/StyledText";
 
 export default function YourInfo() {
   const navigation =
-    useNavigation<StackNavigationProp<AppStackParamList, "YourInfo">>();
+    useNavigation<StackNavigationProp<SignUpStackParamList, "YourInfo">>();
 
   const onConfirmYourInfo = () => {
-    console.log("Going to YourUsername page");
     if (!firstName || !lastName) {
       return alert("Please enter first and last name!");
     }
-    console.log(firstName);
-    console.log(lastName);
     navigation.navigate("YourUsername", { firstName, lastName });
   };
 
@@ -35,31 +34,28 @@ export default function YourInfo() {
   const [image, setImage] = useState(null);
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const authData = useAuth();
 
   useEffect(() => {
-    async function isFirstLogin() {
-      const uid = authData.userData.uid;
-      const userDocument = await firestore
-        .collection("users")
-        .doc(String(uid))
-        .get();
-      if (userDocument.exists) {
-        console.log("found user document, is not first time user: ", uid);
-        navigation.navigate("MainBottomTabNavigator");
-      } else {
-        console.log(
-          "unable to find user document id, so is first time user,: ",
-          uid
-        );
-        setIsLoading(false);
-        return;
-      }
-    }
+    //   async function isFirstLogin() {
+    //     const uid = authData.userData.uid;
+    //     const userDocument = await firestore
+    //       .collection("users")
+    //       .doc(String(uid))
+    //       .get();
+    //     if (userDocument.exists) {
+    //       console.log("found user document, is not first time user: ", uid);
+    //       navigation.navigate("MainBottomTabNavigator");
+    //     } else {
+    //       console.log(
+    //         "unable to find user document id, so is first time user,: ",
+    //         uid
+    //       );
+    //       setIsLoading(false);
+    //       return;
+    //     }
+    //   }
 
-    isFirstLogin();
+    //   isFirstLogin();
 
     (async () => {
       if (Platform.OS !== "web") {
@@ -88,11 +84,9 @@ export default function YourInfo() {
     }
   };
 
-  return isLoading ? (
-    <View>
-      <ActivityIndicator size="large" />
-    </View>
-  ) : (
+  const authData = useAuth();
+
+  return (
     <Container>
       <Div alignItems="center" justifyContent="center" mt={200}>
         <Div row mb={50}>
@@ -129,15 +123,7 @@ export default function YourInfo() {
           bg="transparent"
           onChangeText={setLastName}
         />
-        <Button
-          onPress={onConfirmYourInfo}
-          alignSelf="center"
-          w={width * 0.9}
-          rounded="circle"
-          bg="#FAB77C"
-        >
-          <Text>Next</Text>
-        </Button>
+        <LargeButton title="NEXT" onPress={onConfirmYourInfo} />
       </Div>
     </Container>
   );

@@ -76,7 +76,7 @@ export default function VerificationScreen() {
               onChangeText={setVerificationCode}
               cellCount={CODE_LENGTH}
               rootStyle={styles.codeFieldRoot}
-              keyboardType="number-pad"
+              keyboardType="numeric"
               textContentType="oneTimeCode"
               renderCell={({ index, symbol, isFocused }) => (
                 <View

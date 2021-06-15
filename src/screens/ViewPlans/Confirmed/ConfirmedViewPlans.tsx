@@ -50,7 +50,7 @@ const ConfirmedViewPlans = () => {
         )}
       />
 
-      {/* <Button onPress={() => authData.signOut()}>Sign out</Button> */}
+      <Button onPress={() => authData.signOut()}>Sign out</Button>
     </Container>
   );
 };

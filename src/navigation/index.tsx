@@ -16,7 +16,11 @@ import { ColorSchemeName } from "react-native";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
 
-import { AppStackParamList, AuthStackParamList } from "../types/types";
+import {
+  AppStackParamList,
+  AuthStackParamList,
+  SignUpStackParamList,
+} from "../types/types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { theme } from "constants/theme";
 
@@ -37,12 +41,19 @@ import YourInfo from "screens/Authentication/YourInfo";
 import StartScreen from "screens/Authentication/StartScreen";
 import { firebaseApp, firestore } from "lib/firebase";
 import { PhosphorIcon } from "constants/Icons";
+import Loading from "components/Loading";
+import { auth } from "firebase-admin";
 
 export default function Navigation({
   colorScheme,
 }: {
   colorScheme: ColorSchemeName;
 }) {
+  const authData = useAuth();
+  if (authData.isLoading) {
+    return <Loading />;
+  }
+
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
@@ -55,7 +66,7 @@ export default function Navigation({
 const AuthStack = createStackNavigator<AuthStackParamList>();
 const AuthStackScreen = () => (
   <AuthStack.Navigator
-    initialRouteName="Start"
+    initialRouteName="Login"
     screenOptions={{ headerShown: false }}
   >
     {/* <AuthStack.Screen name="Start" component={StartScreen} /> */}
@@ -64,8 +75,27 @@ const AuthStackScreen = () => (
   </AuthStack.Navigator>
 );
 
+const SignUpStack = createStackNavigator<SignUpStackParamList>();
+const SignUpStackScreen = () => (
+  <SignUpStack.Navigator
+    initialRouteName="YourInfo"
+    screenOptions={{ headerShown: false }}
+  >
+    <SignUpStack.Screen
+      name="YourInfo"
+      component={YourInfo}
+      options={{ headerShown: false }}
+    />
+    <SignUpStack.Screen
+      name="YourUsername"
+      component={YourUsername}
+      options={{ headerShown: false }}
+    />
+  </SignUpStack.Navigator>
+);
+
 const AppStack = createStackNavigator<AppStackParamList>();
-const AppStackScreen = (isFirstLogin) => (
+const AppStackScreen = () => (
   <AppStack.Navigator
     headerMode="screen"
     screenOptions={{
@@ -89,24 +119,14 @@ const AppStackScreen = (isFirstLogin) => (
       ),
       headerLeftContainerStyle: { paddingLeft: 10 },
     }}
-    initialRouteName={isFirstLogin ? "YourInfo" : "MainBottomTabNavigator"}
+    initialRouteName={"MainBottomTabNavigator"}
   >
-    <AppStack.Screen
-      name="YourInfo"
-      component={YourInfo}
-      options={{ headerShown: false }}
-    />
-    <AppStack.Screen
-      name="YourUsername"
-      component={YourUsername}
-      options={{ headerShown: false }}
-    />
     <AppStack.Screen
       name="MainBottomTabNavigator"
       component={MainBottomTabNavigator}
-      options={({ route }) => ({
+      options={{
         headerShown: false,
-      })}
+      }}
     />
     <AppStack.Screen
       name="Contacts"
@@ -126,27 +146,15 @@ const AppStackScreen = (isFirstLogin) => (
   </AppStack.Navigator>
 );
 
-async function checkIfFirstLogin(uid) {
-  console.log("uid: ", uid);
-  const userDocument = await firestore
-    .collection("users")
-    .doc(String(uid))
-    .get();
-  if (userDocument.exists) {
-    console.log("found user document: ", uid);
-    return false;
-  } else {
-    console.log("unable to find user document id: ", uid);
-    return true;
-  }
-}
-
 function RootNavigator() {
   const authData = useAuth();
   if (!authData.userData) {
     console.log(authData.userData);
     return <AuthStackScreen />;
   } else {
+    if (!authData.userData.username) {
+      return <SignUpStackScreen />;
+    }
     console.log(authData.userData.uid);
     return <AppStackScreen />;
   }
