@@ -16,7 +16,7 @@ import { ColorSchemeName } from "react-native";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
 
-import { AuthStackParamList, RootStackParamList } from "../types/types";
+import { AppStackParamList, AuthStackParamList } from "../types/types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { theme } from "constants/theme";
 
@@ -36,6 +36,7 @@ import YourUsername from "screens/Authentication/YourUsername";
 import YourInfo from "screens/Authentication/YourInfo";
 import StartScreen from "screens/Authentication/StartScreen";
 import { firebaseApp, firestore } from "lib/firebase";
+import { PhosphorIcon } from "constants/Icons";
 
 export default function Navigation({
   colorScheme,
@@ -63,7 +64,7 @@ const AuthStackScreen = () => (
   </AuthStack.Navigator>
 );
 
-const AppStack = createStackNavigator<RootStackParamList>();
+const AppStack = createStackNavigator<AppStackParamList>();
 const AppStackScreen = (isFirstLogin) => (
   <AppStack.Navigator
     headerMode="screen"
@@ -83,6 +84,10 @@ const AppStackScreen = (isFirstLogin) => (
       headerTransparent: true,
       headerBackTitleVisible: false,
       headerBackAllowFontScaling: true,
+      headerBackImage: ({ tintColor }) => (
+        <PhosphorIcon name="caret-left" size={30} color={tintColor} />
+      ),
+      headerLeftContainerStyle: { paddingLeft: 10 },
     }}
     initialRouteName={isFirstLogin ? "YourInfo" : "MainBottomTabNavigator"}
   >
@@ -100,12 +105,7 @@ const AppStackScreen = (isFirstLogin) => (
       name="MainBottomTabNavigator"
       component={MainBottomTabNavigator}
       options={({ route }) => ({
-        headerTitle: () => {
-          if (willShowHeader(route)) {
-            return <AppLogo />;
-          } else return null;
-        },
-        headerTitleAlign: "center",
+        headerShown: false,
       })}
     />
     <AppStack.Screen name="Contacts" component={ContactsScreen} />

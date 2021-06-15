@@ -19,7 +19,7 @@ import CountryPicker, {
 } from "react-native-country-picker-modal";
 import { firebaseApp, firebaseConfig } from "lib/firebase";
 import { useNavigation } from "@react-navigation/core";
-import { RootStackParamList } from "types/types";
+import { AuthStackParamList } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Container from "components/Container";
 import { Box, Input, WINDOW_HEIGHT, WINDOW_WIDTH } from "react-native-magnus";
@@ -31,7 +31,8 @@ import { useAuth } from "lib/auth";
 
 export default function LoginScreen() {
   const navigation =
-    useNavigation<StackNavigationProp<RootStackParamList, "Login">>();
+    useNavigation<StackNavigationProp<AuthStackParamList, "Login">>();
+
   const [phoneNumber, setPhoneNumber] = useState("");
   const [verificationId, setVerificationId] = useState("");
   const recaptchaVerifier = useRef(null);

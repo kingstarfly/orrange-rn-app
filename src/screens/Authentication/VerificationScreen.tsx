@@ -18,7 +18,7 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
-import { RootStackParamList } from "types/types";
+import { AuthStackParamList } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useAuth } from "lib/auth";
 import Container from "components/Container";
@@ -28,9 +28,9 @@ import { Box, WINDOW_HEIGHT } from "react-native-magnus";
 const CODE_LENGTH = 6;
 
 export default function VerificationScreen() {
-  const route = useRoute<RouteProp<RootStackParamList, "Verify">>();
+  const route = useRoute<RouteProp<AuthStackParamList, "Verify">>();
   const navigation =
-    useNavigation<StackNavigationProp<RootStackParamList, "Verify">>();
+    useNavigation<StackNavigationProp<AuthStackParamList, "Verify">>();
   const authData = useAuth();
 
   const [verificationCode, setVerificationCode] = useState("");

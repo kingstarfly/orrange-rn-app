@@ -7,11 +7,14 @@ import { Text } from "react-native-magnus";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { theme } from "constants/theme";
 import { headerHeight } from "constants/Layout";
+import { createStackNavigator } from "@react-navigation/stack";
+import { StackFrame } from "react-native/Libraries/Core/Devtools/parseErrorStack";
+import AppLogo from "components/AppLogo";
 
+const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator<ViewPlansTabParamList>();
 
-function ViewPlansTopTabNavigator() {
-  const insets = useSafeAreaInsets();
+function InnerTabNavigator() {
   return (
     <Tab.Navigator
       initialRouteName="Confirmed"
@@ -19,8 +22,7 @@ function ViewPlansTopTabNavigator() {
         style: {
           backgroundColor: theme.colors.backgroundlight,
           elevation: 0,
-          paddingTop: headerHeight,
-          // paddingTop: headerHeight + insets.top,
+          // paddingTop: headerHeight,
         },
         labelStyle: {
           textTransform: "none",
@@ -51,4 +53,37 @@ function ViewPlansTopTabNavigator() {
   );
 }
 
-export default ViewPlansTopTabNavigator;
+function ViewPlansNavigator() {
+  const insets = useSafeAreaInsets();
+  return (
+    <Stack.Navigator
+      headerMode="screen"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.backgroundlight,
+          elevation: 0,
+          shadowOpacity: 0,
+          height: headerHeight,
+        },
+        headerTintColor: theme.colors.textdark,
+        headerTransparent: false,
+        headerBackTitleVisible: false,
+        headerBackAllowFontScaling: true,
+      }}
+    >
+      <Stack.Screen
+        name="ViewPlansTabNavigator"
+        options={({ route }) => ({
+          title: "Meetup Details",
+          headerTitle: () => {
+            return <AppLogo />;
+          },
+          headerTitleAlign: "center",
+        })}
+        component={InnerTabNavigator}
+      />
+    </Stack.Navigator>
+  );
+}
+
+export default ViewPlansNavigator;

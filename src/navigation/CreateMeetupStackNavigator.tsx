@@ -5,39 +5,29 @@ import MeetupDetails from "screens/Create/MeetupDetails";
 import SelectDates from "screens/Create/SelectDates";
 import SelectTime from "screens/Create/SelectTime";
 import { CreateMeetupStackParamList } from "types/types";
+import { PhosphorIcon } from "constants/Icons";
 
 const Stack = createStackNavigator<CreateMeetupStackParamList>();
 
 function CreateMeetupStackNavigator() {
   return (
     <Stack.Navigator
+      headerMode="screen"
       screenOptions={{
-        headerStyle: {
-          backgroundColor: theme.colors.backgroundlight,
-          elevation: 0,
-          shadowOpacity: 0,
-        },
-
-        headerLeftContainerStyle: {
-          paddingHorizontal: 8,
-        },
-
         headerTintColor: theme.colors.textdark,
-        headerTitleStyle: {
-          fontFamily: "inter-regular",
-          textAlignVertical: "center",
-          marginHorizontal: 0,
-        },
-        headerTransparent: true,
-        headerBackTitleVisible: true,
         headerTitle: "",
-        headerBackAllowFontScaling: true,
+        headerTransparent: true,
+        headerBackImage: ({ tintColor }) => (
+          <PhosphorIcon name="caret-left" size={30} color={tintColor} />
+        ),
+        headerLeftContainerStyle: { paddingLeft: 10 },
       }}
+      initialRouteName="MeetupDetails"
     >
       <Stack.Screen
         name="MeetupDetails"
         component={MeetupDetails}
-        options={{ title: "Meetup Details" }}
+        options={{ title: "Meetup Details", header: () => null }}
       />
       <Stack.Screen
         name="SelectDates"

@@ -9,10 +9,9 @@ import useCachedResources from "./hooks/useCachedResources";
 import Navigation from "./navigation";
 import store from "./redux/store";
 import { Provider } from "react-redux";
-import { useColorScheme, View } from "react-native";
+import { useColorScheme } from "react-native";
 import { AuthProvider } from "lib/auth";
 import { registerRootComponent } from "expo";
-import RenderSplashScreen from "components/RenderSplashScreen";
 
 function App() {
   const isCachedResourcesLoadingComplete = useCachedResources();
@@ -26,17 +25,11 @@ function App() {
         <ThemeProvider theme={theme}>
           <AuthProvider>
             <Provider store={store}>
-              {/* <RenderSplashScreen
-                isCachedResourcesLoadingComplete={
-                  isCachedResourcesLoadingComplete
-                }
-              > */}
               <Navigation colorScheme={colorScheme} />
               <StatusBar
                 style="dark"
                 backgroundColor={theme.colors.primary600}
               />
-              {/* </RenderSplashScreen> */}
             </Provider>
           </AuthProvider>
         </ThemeProvider>

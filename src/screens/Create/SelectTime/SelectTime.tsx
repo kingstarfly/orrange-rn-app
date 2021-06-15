@@ -6,12 +6,12 @@ import MainTimeGridSelector from "screens/Create/SelectTime/TimeGridSelector/Mai
 import StyledButton from "components/StyledButton";
 
 import { theme } from "constants/theme";
-import { RootStackParamList } from "types/types";
+import { CreateMeetupStackParamList, RootStackParamList } from "types/types";
 import { StackScreenProps } from "@react-navigation/stack";
 
 const SelectTime = ({
   navigation,
-}: StackScreenProps<RootStackParamList, "SelectTime">) => {
+}: StackScreenProps<CreateMeetupStackParamList, "SelectTime">) => {
   const { width, height } = useWindowDimensions();
 
   return (

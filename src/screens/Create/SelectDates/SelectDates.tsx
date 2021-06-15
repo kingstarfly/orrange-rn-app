@@ -7,11 +7,11 @@ import { useWindowDimensions } from "react-native";
 import { Box, Button, Text } from "react-native-magnus";
 import BottomNavBar from "components/BottomNavBar";
 import Container from "components/Container";
-import { RootStackParamList } from "types/types";
+import { CreateMeetupStackParamList, RootStackParamList } from "types/types";
 
 const SelectDates = ({
   navigation,
-}: StackScreenProps<RootStackParamList, "SelectDates">) => {
+}: StackScreenProps<CreateMeetupStackParamList, "SelectDates">) => {
   const { width, height } = useWindowDimensions();
   return (
     <Container>

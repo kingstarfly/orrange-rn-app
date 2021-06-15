@@ -1,58 +1,64 @@
 import React from "react";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { PalsTabParamList } from "types/types";
+import { PalsStackParamList } from "types/types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { theme } from "constants/theme";
 import ViewPals from "screens/Pals/ViewPals";
 import AddPals from "screens/Pals/AddPals";
 import { Box, Text } from "react-native-magnus";
+import { createStackNavigator } from "@react-navigation/stack";
 
-const Tab = createMaterialTopTabNavigator<PalsTabParamList>();
+const Stack = createStackNavigator<PalsStackParamList>();
 
-function PalsTopTabvNavigator() {
+function PalsStackNavigator() {
   const insets = useSafeAreaInsets();
   return (
-    <Tab.Navigator
+    <Stack.Navigator
       initialRouteName="ViewPals"
-      tabBarOptions={{
-        style: {
+      screenOptions={{
+        headerStyle: {
           backgroundColor: theme.colors.backgroundlight,
-          // backgroundColor: "red",
-          elevation: 1,
-          marginTop: insets.top,
+          elevation: 0,
+          shadowOpacity: 0,
         },
-        labelStyle: {
-          textTransform: "none",
+        headerTintColor: theme.colors.textdark,
+        headerTitleStyle: {
+          fontFamily: "inter-regular",
+          textAlignVertical: "center",
+          marginHorizontal: 0,
         },
-        inactiveTintColor: "black",
-        activeTintColor: "black",
-        tabStyle: {
-          flex: 1,
-        },
-        indicatorStyle: {
-          backgroundColor: theme.colors.primary600,
-          height: 4,
-        },
+        headerTransparent: true,
+        headerBackTitleVisible: false,
+        headerBackAllowFontScaling: true,
       }}
+      // ={{
+      //   style: {
+      //     backgroundColor: theme.colors.backgroundlight,
+      //     // backgroundColor: "red",
+      //     elevation: 1,
+      //     marginTop: insets.top,
+      //   },
+      //   labelStyle: {
+      //     textTransform: "none",
+      //   },
+      //   inactiveTintColor: "black",
+      //   activeTintColor: "black",
+      //   tabStyle: {
+      //     flex: 1,
+      //   },
+      //   indicatorStyle: {
+      //     backgroundColor: theme.colors.primary600,
+      //     height: 4,
+      //   },
+      // }}
     >
-      <Tab.Screen
+      <Stack.Screen
         name="ViewPals"
         component={ViewPals}
-        options={{
-          tabBarLabel: () => (
-            <Box>
-              <Text>Pals</Text>
-            </Box>
-          ),
-        }}
+        options={{ headerShown: false }}
       />
-      <Tab.Screen
-        name="AddPals"
-        component={AddPals}
-        options={{ tabBarLabel: "Add Pals" }}
-      />
-    </Tab.Navigator>
+      <Stack.Screen name="AddPals" component={AddPals} />
+    </Stack.Navigator>
   );
 }
 
-export default PalsTopTabvNavigator;
+export default PalsStackNavigator;

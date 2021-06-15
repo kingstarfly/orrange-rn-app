@@ -15,14 +15,7 @@ export type AuthStackParamList = {
   Start: undefined;
 };
 
-export type RootStackParamList = {
-  // PublicFeed: undefined;
-  // SelectDates: undefined;
-  // ViewPlans: undefined;
-  // SelectTime: undefined;
-  // MeetupDetails: undefined;
-  // AddFriends: undefined;
-  // Pals: undefined;
+export type AppStackParamList = {
   NotFound: undefined;
   TestScreen: undefined;
 
@@ -35,7 +28,10 @@ export type RootStackParamList = {
   MainBottomTabNavigator: undefined;
   Contacts: undefined;
   YourInfo: undefined;
-  YourUsername: undefined;
+  YourUsername: {
+    firstName: string;
+    lastName: string;
+  };
 };
 
 export type CreateMeetupStackParamList = {
@@ -49,7 +45,7 @@ export type ViewPlansTabParamList = {
   InProgress: undefined;
 };
 
-export type PalsTabParamList = {
+export type PalsStackParamList = {
   ViewPals: undefined;
   AddPals: undefined;
 };
