@@ -58,7 +58,7 @@ const AuthStackScreen = () => (
     initialRouteName="Start"
     screenOptions={{ headerShown: false }}
   >
-    <AuthStack.Screen name="Start" component={StartScreen} />
+    {/* <AuthStack.Screen name="Start" component={StartScreen} /> */}
     <AuthStack.Screen name="Login" component={LoginScreen} />
     <AuthStack.Screen name="Verify" component={VerificationScreen} />
   </AuthStack.Navigator>

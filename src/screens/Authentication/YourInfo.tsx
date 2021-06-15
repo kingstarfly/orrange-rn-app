@@ -14,6 +14,8 @@ import { AppStackParamList } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 
+import Container from "components/Container";
+
 export default function YourInfo() {
   const navigation =
     useNavigation<StackNavigationProp<AppStackParamList, "YourInfo">>();
@@ -91,7 +93,7 @@ export default function YourInfo() {
       <ActivityIndicator size="large" />
     </View>
   ) : (
-    <View>
+    <Container>
       <Div alignItems="center" justifyContent="center" mt={200}>
         <Div row mb={50}>
           <Div flex={2} ml={50} mr={20}>
@@ -137,6 +139,6 @@ export default function YourInfo() {
           <Text>Next</Text>
         </Button>
       </Div>
-    </View>
+    </Container>
   );
 }

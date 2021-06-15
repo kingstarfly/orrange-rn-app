@@ -6,6 +6,7 @@ import { useAuth } from "lib/auth";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { AppStackParamList } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
+import Container from "components/Container";
 
 export default function YourUsername() {
   const route = useRoute<RouteProp<AppStackParamList, "YourUsername">>();
@@ -49,7 +50,7 @@ export default function YourUsername() {
 
   const width = useWindowDimensions().width;
   return (
-    <View>
+    <Container>
       <Div alignItems="center" justifyContent="center" mt={200}>
         <Text fontSize={40}>Your Username</Text>
         <Text>Enter your preferred username below</Text>
@@ -71,6 +72,6 @@ export default function YourUsername() {
           <Text>Next</Text>
         </Button>
       </Div>
-    </View>
+    </Container>
   );
 }

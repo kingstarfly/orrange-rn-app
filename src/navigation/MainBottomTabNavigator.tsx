@@ -5,6 +5,7 @@ import PalsTopTabvNavigator from "./PalsTopTabvNavigator";
 import ViewPlansNavigator from "./ViewPlansNavigator";
 import { PhosphorIcon } from "constants/Icons";
 import { theme } from "constants/theme";
+import { WINDOW_HEIGHT } from "react-native-magnus";
 
 const Tab = createBottomTabNavigator();
 
@@ -16,7 +17,9 @@ function MainBottomTabNavigator() {
         activeTintColor: theme.colors.primary700,
         inactiveTintColor: theme.colors.textdark,
         style: {
-          height: 80,
+          backgroundColor: theme.colors.backgroundlight,
+          borderWidth: 0,
+          height: WINDOW_HEIGHT * 0.08,
           // For Android
           elevation: 5,
 
@@ -34,7 +37,7 @@ function MainBottomTabNavigator() {
         options={{
           tabBarIcon: ({ focused, size, color }) => {
             let iconName = focused ? "house-fill" : "house";
-            return <PhosphorIcon color={color} name={iconName} size={30} />;
+            return <PhosphorIcon color={color} name={iconName} size={36} />;
           },
         }}
       />
@@ -44,7 +47,7 @@ function MainBottomTabNavigator() {
         options={{
           tabBarIcon: ({ focused, size, color }) => {
             let iconName = focused ? "plus-circle-fill" : "plus-circle";
-            return <PhosphorIcon color={color} name={iconName} size={30} />;
+            return <PhosphorIcon color={color} name={iconName} size={36} />;
           },
         }}
       />
@@ -54,7 +57,7 @@ function MainBottomTabNavigator() {
         options={{
           tabBarIcon: ({ focused, size, color }) => {
             let iconName = focused ? "users-fill" : "users";
-            return <PhosphorIcon color={color} name={iconName} size={30} />;
+            return <PhosphorIcon color={color} name={iconName} size={36} />;
           },
         }}
       />
