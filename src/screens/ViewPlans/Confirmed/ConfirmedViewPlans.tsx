@@ -1,9 +1,7 @@
-import { StackScreenProps } from "@react-navigation/stack";
 import React, { useEffect } from "react";
 import Container from "components/Container";
 import MeetingCard from "screens/ViewPlans/MeetingCard";
 import { meetDataOne, meetingsData } from "constants/mockdata";
-import { RootStackParamList, ViewPlansTabParamList } from "types/types";
 import { SectionList } from "react-native";
 import { styles } from "./styles";
 import AddButton from "components/AddButton";
@@ -51,11 +49,8 @@ const ConfirmedViewPlans = () => {
           </Heading2>
         )}
       />
-      {/* Scroll View of each month */}
-      {/* Within each month, there are cards for each meeting */}
 
-      <Button onPress={() => authData.signOut()}>Sign out</Button>
-      <AddButton to="MeetupDetails" />
+      {/* <Button onPress={() => authData.signOut()}>Sign out</Button> */}
     </Container>
   );
 };

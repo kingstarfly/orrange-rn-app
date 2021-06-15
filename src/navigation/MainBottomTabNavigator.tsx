@@ -15,6 +15,17 @@ function MainBottomTabNavigator() {
         showLabel: false,
         activeTintColor: theme.colors.primary700,
         inactiveTintColor: theme.colors.textdark,
+        style: {
+          height: 80,
+          // For Android
+          elevation: 5,
+
+          // For IOS // TODO: to test on IOS simulator
+          shadowOffset: { height: 10, width: 10 },
+          shadowColor: "#000",
+          shadowOpacity: 0.4,
+          shadowRadius: 10,
+        },
       }}
     >
       <Tab.Screen

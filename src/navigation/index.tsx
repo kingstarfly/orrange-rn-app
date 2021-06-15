@@ -108,9 +108,21 @@ const AppStackScreen = (isFirstLogin) => (
         headerShown: false,
       })}
     />
-    <AppStack.Screen name="Contacts" component={ContactsScreen} />
-    <AppStack.Screen name="DiscussDetails" component={DiscussDetailsScreen} />
-    <AppStack.Screen name="FinalDetails" component={FinalDetailsScreen} />
+    <AppStack.Screen
+      name="Contacts"
+      component={ContactsScreen}
+      options={{ title: "" }}
+    />
+    <AppStack.Screen
+      name="DiscussDetails"
+      component={DiscussDetailsScreen}
+      options={{ title: "" }}
+    />
+    <AppStack.Screen
+      name="FinalDetails"
+      component={FinalDetailsScreen}
+      options={{ title: "" }}
+    />
   </AppStack.Navigator>
 );
 
