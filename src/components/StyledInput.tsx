@@ -15,8 +15,9 @@ export const StyledInput = (props: InputProps) => {
       bg={theme.colors.backgroundlight}
       focusBorderColor={theme.colors.primary400}
       {...props}
-      color="#000"
-      fontSize={16}
+      color={theme.colors.textdark}
+      placeholderTextColor={theme.colors.textgray400}
+      fontSize={17}
       fontFamily="inter-regular"
       textAlignVertical="bottom"
     />

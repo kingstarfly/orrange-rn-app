@@ -5,7 +5,13 @@ import { CreateMeetupStackParamList } from "types/types";
 import Container from "components/Container";
 import { theme } from "constants/theme";
 import StyledButton from "components/StyledButton";
-import { Heading2 } from "components/StyledText";
+import {
+  CaptionText,
+  Heading1,
+  Heading2,
+  Heading3,
+  MediumText,
+} from "components/StyledText";
 import { useWindowDimensions } from "react-native";
 import { StyledInput } from "components/StyledInput";
 import AddFriends from "./AddFriends";
@@ -20,10 +26,10 @@ const MeetupDetails = ({
     <Container>
       <Box px={16} justifyContent="space-between" flex={1}>
         <Box py="2xl">
-          <Heading2>Create New Plan</Heading2>
+          <Heading1>Create New Plan</Heading1>
         </Box>
         <Box flex={1}>
-          <Heading2>Name your meetup!</Heading2>
+          <Heading3 opacity={0.5}>Name your meetup!</Heading3>
           <StyledInput
             px={0}
             py="sm"
@@ -34,7 +40,7 @@ const MeetupDetails = ({
         </Box>
 
         <Box flex={5} mb={height * 0.1}>
-          <Heading2>Add your pals!</Heading2>
+          <Heading3 opacity={0.5}>Add your pals!</Heading3>
           <AddFriends />
         </Box>
       </Box>
