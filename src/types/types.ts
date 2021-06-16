@@ -17,6 +17,10 @@ export type UserData = {
   url_thumbnail: string;
 };
 
+export type PalFields = {
+  addedDate: string;
+};
+
 export type AuthStackParamList = {
   Login: undefined;
   Verify: {
