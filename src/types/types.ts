@@ -18,11 +18,30 @@ export type UserData = {
 };
 
 export type PalFields = {
-  addedDate: string;
+  addedAt: string;
+};
+
+export type ParticipantsFields = {
+  preferredDurations: {
+    startAt: string;
+    endAt: string;
+  }[];
+  isHost: boolean;
+};
+
+export type PendingParticipantsfields = {
+  requestedAt: string;
+};
+
+export type SuggestionsFields = {
+  ownerUid: string;
+  likedBy: string[];
+  content: string;
+  createdAt: string;
 };
 
 export type PalRequestFields = {
-  requestDate: string;
+  requestedAt: string;
 };
 
 export type MeetupFields = {
@@ -30,8 +49,8 @@ export type MeetupFields = {
   createdBy: string;
   name: string;
   activity: string;
-  startTime: string;
-  endTime: string;
+  startAt: string;
+  endAt: string;
 };
 
 export type AuthStackParamList = {

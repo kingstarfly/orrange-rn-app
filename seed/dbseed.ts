@@ -2,6 +2,9 @@ import {
   MeetupFields,
   PalFields,
   PalRequestFields,
+  ParticipantsFields,
+  PendingParticipantsfields,
+  SuggestionsFields,
   UserData,
 } from "types/types";
 
@@ -61,7 +64,7 @@ function createPals() {
           .doc(user.uid)
           .collection("pals")
           .doc(users[prevIndex].uid),
-        { addedDate: faker.date.past().toISOString() } as PalFields
+        { addedAt: faker.date.past().toISOString() } as PalFields
       );
       batch.set(
         db
@@ -69,7 +72,7 @@ function createPals() {
           .doc(user.uid)
           .collection("pals")
           .doc(users[nextIndex].uid),
-        { addedDate: faker.date.past().toISOString() } as PalFields
+        { addedAt: faker.date.past().toISOString() } as PalFields
       );
       batch.commit();
     });
@@ -91,7 +94,7 @@ function createPalRequests() {
         .collection("incomingPalRequests")
         .doc(users[prevIndex].uid)
         .set({
-          requestDate: faker.date.past().toISOString(),
+          requestedAt: faker.date.past().toISOString(),
         } as PalRequestFields);
     });
   } catch (error) {
@@ -116,10 +119,11 @@ const meetups = [...Array(4).keys()].map((val) => {
     createdBy: users[val].uid,
     name: meetupNames[val],
     activity: meetupNames[val],
-    startTime: startTime.toISOString(),
-    endTime: endTime.toISOString(),
+    startAt: startTime.toISOString(),
+    endAt: endTime.toISOString(),
   } as MeetupFields;
 });
+
 function initialiseMeetups() {
   try {
     meetups.forEach((meetup) => {
@@ -130,8 +134,80 @@ function initialiseMeetups() {
   }
 }
 
+// add first 8 users to all meet ups, and last 2 users as pending for all meet ups.
+let today = new Date();
+function addParticipants() {
+  try {
+    meetups.forEach((meetup, meetupIndex) => {
+      users.slice(8).forEach((user, userIndex) => {
+        db.collection("meetups")
+          .doc(meetup.id)
+          .collection("participants")
+          .doc(user.uid)
+          .set({
+            preferredDurations: [
+              {
+                startAt: addHours(today, 8).toISOString(),
+                endAt: addHours(today, 12).toISOString(),
+              },
+              {
+                startAt: addHours(today, 20).toISOString(),
+                endAt: addHours(today, 25).toISOString(),
+              },
+            ],
+            isHost: meetupIndex === userIndex ? true : false, // user 0 is host for meeting 0
+          } as ParticipantsFields);
+      });
+
+      users.slice(8, 10).forEach((user, userIndex) => {
+        db.collection("meetups")
+          .doc(meetup.id)
+          .collection("pendingParticipants")
+          .doc(user.uid)
+          .set({
+            requestedAt: faker.date.past().toISOString(),
+          } as PendingParticipantsfields);
+      });
+    });
+  } catch (error) {
+    console.log(
+      error,
+      "failed to init add participants and pending particpants"
+    );
+  }
+}
+
+// suggestions
+
+function createSuggestions() {
+  const START = 2;
+  const END = 6;
+  try {
+    meetups.forEach((meetup, meetupIndex) => {
+      users.slice(START, END + 1).forEach((user, userIndex) => {
+        db.collection("meetups")
+          .doc(meetup.id)
+          .collection("suggestions")
+          .doc(user.uid)
+          .set({
+            ownerUid: user.uid,
+            likedBy: users
+              .slice(START + userIndex, END + 1)
+              .map((user) => user.uid),
+            content: faker.lorem.words(6),
+            createdAt: faker.date.recent(30).toString(),
+          } as SuggestionsFields);
+      });
+    });
+  } catch (error) {
+    console.log(error, "failed to create suggestions");
+  }
+}
+
 initialiseUsers();
 createPals();
 createPalRequests();
 initialiseMeetups();
+addParticipants();
+createSuggestions();
 console.log("Seeding success");

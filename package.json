@@ -2,7 +2,7 @@
   "main": "src/App.tsx",
   "scripts": {
     "start": "expo start",
-    "fbemu": "firebase emulators:start",
+    "emu": "concurrently \"firebase emulators:start\" \"npm run seed\"",
     "seed": "ts-node seed/dbseed.ts",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -69,6 +69,7 @@
     "@types/react-native-calendars": "^1.505.3",
     "@types/react-test-renderer": "^17.0.1",
     "babel-plugin-module-resolver": "^4.1.0",
+    "concurrently": "^6.2.0",
     "faker": "^5.5.3",
     "firebase-admin": "^9.9.0",
     "jest-expo": "~41.0.0",
