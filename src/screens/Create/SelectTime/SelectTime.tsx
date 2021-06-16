@@ -6,7 +6,7 @@ import MainTimeGridSelector from "screens/Create/SelectTime/TimeGridSelector/Mai
 import StyledButton from "components/StyledButton";
 
 import { theme } from "constants/theme";
-import { CreateMeetupStackParamList, RootStackParamList } from "types/types";
+import { CreateMeetupStackParamList } from "types/types";
 import { StackScreenProps } from "@react-navigation/stack";
 
 const SelectTime = ({
@@ -15,17 +15,7 @@ const SelectTime = ({
   const { width, height } = useWindowDimensions();
 
   return (
-    <Container>
-      <Text
-        mt={height * 0.08}
-        mb={height * 0.02}
-        px={width * 0.2}
-        textAlign="center"
-        fontSize="5xl"
-      >
-        What are your free time slots?
-      </Text>
-
+    <Container avoidHeader>
       <MainTimeGridSelector />
 
       <Box

@@ -5,9 +5,8 @@ import { theme } from "constants/theme";
 import React from "react";
 import { useWindowDimensions } from "react-native";
 import { Box, Button, Text } from "react-native-magnus";
-import BottomNavBar from "components/BottomNavBar";
 import Container from "components/Container";
-import { CreateMeetupStackParamList, RootStackParamList } from "types/types";
+import { CreateMeetupStackParamList } from "types/types";
 
 const SelectDates = ({
   navigation,

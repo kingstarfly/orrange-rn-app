@@ -17,7 +17,6 @@ const Day = ({ date, startTime, endTime, isRightMostDay }: dayProps) => {
   // Get all periods by hour from startTime to endTime
 
   const dateStart = startOfDay(date);
-  const [dayX, setDayX] = useState(0); // save the absolute x-coordinate of this Day column
 
   let allStartTimes: Date[] = [];
   for (let x = startTime; x < endTime; x += 1) {
@@ -28,50 +27,35 @@ const Day = ({ date, startTime, endTime, isRightMostDay }: dayProps) => {
   const ref = useRef();
 
   return (
-    <View
-      ref={ref}
-      onLayout={(e) => {
-        console.log("DAY - ");
-        if (ref.current) {
-          //@ts-ignore
-          ref.current.measureInWindow((x, y) => {
-            console.log(x, y);
-            setDayX(x);
-          });
-        }
-      }}
-    >
-      <Box alignItems="center">
-        <Text
-          fontFamily="inter-regular"
-          color={theme.colors.textgray400}
-          fontSize={14}
-        >
-          {format(date, "EEE")}
-        </Text>
-        <Text
-          fontFamily="poppins-regular"
-          color={theme.colors.textgray400}
-          fontSize={14}
-        >
-          {format(date, "d")}
-        </Text>
+    <Box alignItems="center">
+      <Text
+        fontFamily="inter-regular"
+        color={theme.colors.textgray400}
+        fontSize={14}
+      >
+        {format(date, "EEE")}
+      </Text>
+      <Text
+        fontFamily="inter-regular"
+        color={theme.colors.textgray400}
+        fontSize={14}
+      >
+        {format(date, "d")}
+      </Text>
 
-        {/* For the below view, check for user taps (not drags). If tapped, create a new timeslot and display it. Actually should  check tap on each grid to know which timing was tapped. */}
+      {/* For the below view, check for user taps (not drags). If tapped, create a new timeslot and display it. Actually should  check tap on each grid to know which timing was tapped. */}
 
-        <Box>
-          {allStartTimes.map((start, index) => (
-            <GridCell
-              key={index}
-              start={start}
-              isRightMostCell={isRightMostDay}
-              isBottomMostCell={index === allStartTimes.length - 1}
-              x={dayX}
-            />
-          ))}
-        </Box>
+      <Box>
+        {allStartTimes.map((start, index) => (
+          <GridCell
+            key={index}
+            start={start}
+            isRightMostCell={isRightMostDay}
+            isBottomMostCell={index === allStartTimes.length - 1}
+          />
+        ))}
       </Box>
-    </View>
+    </Box>
   );
 };
 
