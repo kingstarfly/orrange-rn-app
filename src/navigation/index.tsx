@@ -119,7 +119,7 @@ const AppStackScreen = () => (
       ),
       headerLeftContainerStyle: { paddingLeft: 10 },
     }}
-    initialRouteName={"MainBottomTabNavigator"}
+    initialRouteName="MainBottomTabNavigator"
   >
     <AppStack.Screen
       name="MainBottomTabNavigator"

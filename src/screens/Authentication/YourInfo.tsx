@@ -88,8 +88,8 @@ export default function YourInfo() {
 
   return (
     <Container>
-      <Div alignItems="center" justifyContent="center" mt={200}>
-        <Div row mb={50}>
+      <Div>
+        <Div row mb={100}>
           <Div flex={2} ml={50} mr={20}>
             <Text fontSize={40} mb={10}>
               Your Info
@@ -110,19 +110,22 @@ export default function YourInfo() {
           </Div>
         </Div>
         <Input
+          fontSize={20}
           w={width * 0.9}
-          mb={10}
+          mb={30}
           placeholder="First Name"
           bg="transparent"
           onChangeText={setFirstName}
         />
         <Input
+          fontSize={20}
           w={width * 0.9}
-          mb={10}
+          mb={30}
           placeholder="Last Name"
           bg="transparent"
           onChangeText={setLastName}
         />
+
         <LargeButton title="NEXT" onPress={onConfirmYourInfo} />
       </Div>
     </Container>

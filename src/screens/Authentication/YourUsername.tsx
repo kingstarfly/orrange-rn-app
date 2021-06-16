@@ -53,10 +53,16 @@ export default function YourUsername() {
   const width = useWindowDimensions().width;
   return (
     <Container>
-      <Div alignItems="center" justifyContent="center" mt={200}>
-        <Text fontSize={40}>Your Username</Text>
-        <Text>Enter your preferred username below</Text>
+      <Div alignItems="center" justifyContent="center">
+        <Text fontSize={40} mb={20}>
+          Your Username
+        </Text>
+        <Text fontSize={20} mb={20}>
+          Enter your preferred username below
+        </Text>
         <Input
+          mt={100}
+          fontSize={20}
           autoCapitalize="none"
           w={width * 0.9}
           mb={10}
@@ -65,13 +71,14 @@ export default function YourUsername() {
           onChangeText={setUsername}
         />
         <Button
+          mt={100}
           onPress={onConfirmYourUsername}
           alignSelf="center"
           w={width * 0.9}
           rounded="circle"
           bg="#FAB77C"
         >
-          <Text>Next</Text>
+          <Text fontSize={30}>Next</Text>
         </Button>
       </Div>
     </Container>
