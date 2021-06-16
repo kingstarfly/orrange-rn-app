@@ -21,6 +21,19 @@ export type PalFields = {
   addedDate: string;
 };
 
+export type PalRequestFields = {
+  requestDate: string;
+};
+
+export type MeetupFields = {
+  id: string;
+  createdBy: string;
+  name: string;
+  activity: string;
+  startTime: string;
+  endTime: string;
+};
+
 export type AuthStackParamList = {
   Login: undefined;
   Verify: {

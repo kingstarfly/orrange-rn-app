@@ -2,7 +2,8 @@
   "main": "src/App.tsx",
   "scripts": {
     "start": "expo start",
-    "fbemu": "firebase emulators:start --import=./fb-emulator-exports",
+    "fbemu": "firebase emulators:start",
+    "seed": "ts-node seed/dbseed.ts",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
@@ -72,6 +73,7 @@
     "firebase-admin": "^9.9.0",
     "jest-expo": "~41.0.0",
     "react-native-svg-transformer": "^0.14.3",
+    "ts-node": "^10.0.0",
     "typescript": "^4.0.7"
   },
   "private": true
