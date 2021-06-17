@@ -35,7 +35,6 @@ import { useAuth } from "lib/auth";
 import DiscussDetailsScreen from "screens/Plan/DiscussDetailsScreen";
 import { headerHeight } from "constants/Layout";
 import FinalDetailsScreen from "screens/Plan/FinalDetailsScreen";
-import AppLogo from "components/AppLogo";
 import YourUsername from "screens/Authentication/YourUsername";
 import YourInfo from "screens/Authentication/YourInfo";
 import StartScreen from "screens/Authentication/StartScreen";

@@ -101,7 +101,7 @@ export const Heading1: React.FC<TextProps> = ({ children, ...rest }) => {
 
 export const Heading2: React.FC<TextProps> = ({ children, ...rest }) => {
   return (
-    <Text style={{ fontFamily: "inter-light", fontSize: 24 }} {...rest}>
+    <Text style={{ fontFamily: "inter-medium", fontSize: 24 }} {...rest}>
       {children}
     </Text>
   );

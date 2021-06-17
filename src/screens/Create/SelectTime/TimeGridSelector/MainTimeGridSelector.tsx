@@ -7,6 +7,8 @@ import { Box } from "react-native-magnus";
 import { useAppSelector } from "redux/hooks";
 import Day from "./Day";
 import TimeLabels from "./TimeLabels";
+import { getAllDurationsFromMeeting } from "lib/api/meetup";
+import { parseISO } from "date-fns/esm";
 
 // !! default start and end time, subject to change
 export const START_TIME = 0;
@@ -15,13 +17,12 @@ export const END_TIME = 24;
 const MainTimeGridSelector = () => {
   const selected = useAppSelector((state) => state.DatePicker.selected);
 
+  React.useEffect(() => {
+    getAllDurationsFromMeeting("5875d023-1173-40c4-a605-45fd88a8017c");
+  }, []);
+
   const dateStrings = Object.keys(selected);
-  dateStrings.sort((a, b) =>
-    compareAsc(
-      parse(a, DATE_FORMAT, new Date()),
-      parse(b, DATE_FORMAT, new Date())
-    )
-  );
+  dateStrings.sort((a, b) => compareAsc(parseISO(a), parseISO(b)));
   return (
     <ScrollView style={styles.scrollViewContainer}>
       <Box flexDir="row">

@@ -1,4 +1,4 @@
-import { NonTootleUser, TootleUser, CurrentUser } from "types/types";
+import { NonTootleUser, TootleUser, UserData } from "types/types";
 
 export const inviteContactToapp = (contact: NonTootleUser) => {
   console.log(
@@ -6,8 +6,8 @@ export const inviteContactToapp = (contact: NonTootleUser) => {
   );
 };
 
-export const addPal = (currentUser: CurrentUser, targetUser: TootleUser) => {
+export const addPal = (UserData: UserData, targetUser: TootleUser) => {
   console.log(
-    `userA: ${currentUser.name} is adding userB: ${targetUser.name} as a pal!`
+    `userA: ${UserData.name} is adding userB: ${targetUser.name} as a pal!`
   );
 };

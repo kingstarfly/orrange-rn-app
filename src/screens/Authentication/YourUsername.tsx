@@ -14,7 +14,7 @@ export default function YourUsername() {
     useNavigation<StackNavigationProp<SignUpStackParamList, "YourUsername">>();
   const authData = useAuth();
 
-  const phoneNumber = auth.currentUser.phoneNumber;
+  const phoneNumber = auth.UserData.phoneNumber;
   const { firstName, lastName } = route.params;
   const [username, setUsername] = useState("");
 
@@ -38,7 +38,7 @@ export default function YourUsername() {
         } else {
           console.log("Username is unique! Continuing to next page");
           authData.updateUserInfo({
-            uid: auth.currentUser.uid,
+            uid: auth.UserData.uid,
             firstName: firstName,
             lastName: lastName,
             username: username,

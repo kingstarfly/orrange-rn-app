@@ -42,8 +42,6 @@ function useProvideAuth() {
 
   const handleUser = async (rawUser: firebase.User | null) => {
     setIsLoading(true);
-    console.log("Handle user recevied this object");
-    console.log(rawUser);
     let user;
     if (rawUser) {
       const { uid, displayName, phoneNumber } = rawUser;
@@ -57,12 +55,8 @@ function useProvideAuth() {
       // check if user uid exists in `users` collection
       const userDocument = await firestore.collection("users").doc(uid).get();
       if (userDocument.exists) {
-        console.log("found user document: ", uid);
-        console.log(userDocument.data());
-
         setUserData(userDocument.data() as UserData);
       } else {
-        console.log("did not find user document");
         setUserData({
           uid: uid,
           contact: phoneNumber,
@@ -90,7 +84,6 @@ function useProvideAuth() {
       const userCredential = await auth.signInWithCredential(credential);
       let user = await handleUser(userCredential.user);
       // AsyncStorage.setItem("@AuthData", JSON.stringify(user)); // TODO: check if this actually works because state changes might not have taken place
-      console.log("Signed in successfully");
     } catch (err) {
       console.log("useAuth verify failed");
       console.log(err);
@@ -117,9 +110,6 @@ function useProvideAuth() {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((e) => {
-      // console.log("auth state changed");
-      // console.log(e);
-
       handleUser(e);
     });
 
@@ -134,14 +124,7 @@ function useProvideAuth() {
     const { firstName, lastName, username } = userInfo;
 
     // update firestore entry
-    await firestore
-      .collection("users")
-      .doc(userInfo.uid)
-      .update({
-        firstName,
-        lastName,
-        username,
-      } as UserData);
+    await firestore.collection("users").doc(userInfo.uid).set(userInfo);
   };
 
   // Returns the authContext object containing the user object and auth methods

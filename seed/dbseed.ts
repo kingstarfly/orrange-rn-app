@@ -2,9 +2,9 @@ import {
   MeetupFields,
   PalFields,
   PalRequestFields,
-  ParticipantsFields,
-  PendingParticipantsfields,
-  SuggestionsFields,
+  ParticipantFields,
+  PendingParticipantFields,
+  SuggestionFields,
   UserData,
 } from "types/types";
 
@@ -37,6 +37,7 @@ const users = [...Array(10).keys()].map(
       username: faker.internet.userName(),
       url_original: faker.image.imageUrl(),
       url_thumbnail: faker.image.imageUrl(),
+      meetup_ids: [],
     } as UserData)
 );
 
@@ -103,7 +104,6 @@ function createPalRequests() {
 }
 
 // Meetups
-
 const meetupNames = [
   "END OF SEM 2 PARTYYY",
   "Really long long long meet up name that is unnecessarily long. We probably want a hard cap.",
@@ -139,8 +139,9 @@ let today = new Date();
 function addParticipants() {
   try {
     meetups.forEach((meetup, meetupIndex) => {
-      users.slice(8).forEach((user, userIndex) => {
-        db.collection("meetups")
+      users.slice(8).forEach(async (user, userIndex) => {
+        await db
+          .collection("meetups")
           .doc(meetup.id)
           .collection("participants")
           .doc(user.uid)
@@ -156,7 +157,15 @@ function addParticipants() {
               },
             ],
             isHost: meetupIndex === userIndex ? true : false, // user 0 is host for meeting 0
-          } as ParticipantsFields);
+            username: user.username,
+            url_thumbnail: user.url_thumbnail,
+          } as ParticipantFields);
+        await db
+          .collection("users")
+          .doc(user.uid)
+          .update({
+            meetup_ids: admin.firestore.FieldValue.arrayUnion(meetup.id),
+          });
       });
 
       users.slice(8, 10).forEach((user, userIndex) => {
@@ -166,7 +175,9 @@ function addParticipants() {
           .doc(user.uid)
           .set({
             requestedAt: faker.date.past().toISOString(),
-          } as PendingParticipantsfields);
+            username: user.username,
+            url_thumbnail: user.url_thumbnail,
+          } as PendingParticipantFields);
       });
     });
   } catch (error) {
@@ -196,7 +207,7 @@ function createSuggestions() {
               .map((user) => user.uid),
             content: faker.lorem.words(6),
             createdAt: faker.date.recent(30).toString(),
-          } as SuggestionsFields);
+          } as SuggestionFields);
       });
     });
   } catch (error) {

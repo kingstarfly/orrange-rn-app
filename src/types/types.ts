@@ -15,25 +15,32 @@ export type UserData = {
   username: string;
   url_original: string;
   url_thumbnail: string;
+  meetup_ids: string[];
 };
 
 export type PalFields = {
   addedAt: string;
 };
 
-export type ParticipantsFields = {
-  preferredDurations: {
-    startAt: string;
-    endAt: string;
-  }[];
+export type ParticipantFields = {
+  preferredDurations: PreferredDuration[];
   isHost: boolean;
+  username: string;
+  url_thumbnail: string;
 };
 
-export type PendingParticipantsfields = {
+export type PreferredDuration = {
+  startAt: string;
+  endAt: string;
+};
+
+export type PendingParticipantFields = {
   requestedAt: string;
+  username: string;
+  url_thumbnail: string;
 };
 
-export type SuggestionsFields = {
+export type SuggestionFields = {
   ownerUid: string;
   likedBy: string[];
   content: string;
@@ -73,10 +80,12 @@ export type AppStackParamList = {
   TestScreen: undefined;
 
   DiscussDetails: {
-    meeting: MeetingProps;
+    meetingInfo: MeetupFields;
+    participants: ParticipantFields[];
+    pendingParticipants: PendingParticipantFields;
   };
   FinalDetails: {
-    meeting: MeetingProps;
+    meeting: MeetupFields;
   };
   MainBottomTabNavigator: undefined;
   Contacts: undefined;
@@ -111,28 +120,6 @@ export type TabTwoParamList = {
   TabTwoScreen: undefined;
 };
 
-export type MeetingProps = {
-  id: string;
-  title: string;
-  start_time: string;
-  end_time: string;
-  activity: string;
-  organiser: participantProps;
-  participants: participantProps[];
-};
-
-export type MeetingsProps = {
-  meetings: { title: string; data: MeetingProps[] }[];
-};
-
-export type participantProps = {
-  id: string;
-  display_name: string;
-  avatar: ImageSourcePropType;
-  responded: boolean;
-  confirmed: boolean;
-};
-
 export type cellProps = {
   start: Date;
   ref?: MutableRefObject<any>;
@@ -151,13 +138,6 @@ export enum USER_STATUS {
   isPal, // is pal (note: this should not be here i guess?)
   notOnApp, // not on app, have not invited
   inviteSent, // not on app, invitation to join app sent
-}
-
-export interface CurrentUser {
-  id: string;
-  name: string;
-  contactNumber: string;
-  thumbnail?: string;
 }
 
 export interface Person {

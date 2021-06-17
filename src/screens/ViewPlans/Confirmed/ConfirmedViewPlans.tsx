@@ -1,48 +1,36 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Container from "components/Container";
 import MeetingCard from "screens/ViewPlans/MeetingCard";
-import { meetDataOne, meetingsData } from "constants/mockdata";
 import { SectionList } from "react-native";
 import { styles } from "./styles";
-import AddButton from "components/AddButton";
-import { firestore } from "lib/firebase";
 import { Button } from "react-native-magnus";
 import { useAuth } from "lib/auth";
 import { Heading2 } from "components/StyledText";
+import { MeetingCardProps } from "../MeetingCard/MeetingCard";
+
+interface SectionListData {
+  title: string; // the month and year
+  data: MeetingCardProps[];
+}
 
 const ConfirmedViewPlans = () => {
   const authData = useAuth();
 
-  // useEffect(() => {
-  //   // todo DUMMY FUNCTION TO TEST FIRESTORE EMULATOR
-  //   var docRef = firestore
-  //     .collection("collection1")
-  //     .doc("7jBaDDZxoVRQmORxK4Tz");
-  //   docRef
-  //     .get()
-  //     .then((doc) => {
-  //       if (doc.exists) {
-  //         console.log("Document data:", doc.data());
-  //       } else {
-  //         // doc.data() will be undefined in this case
-  //         console.log("No such document!");
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log("Error getting document:", error);
-  //     });
-  // }, []);
+  const [meetingsData, setMeetingsData] = React.useState<SectionListData[]>();
 
-  const renderItem = ({ item }) => {
-    return <MeetingCard meeting={item} accent />;
-  };
+  React.useEffect(() => {
+    // retrieve all data for meetings related to this user here. worry about lazy fetching in future
+  }, []);
+
   return (
     <Container>
-      <SectionList
+      <SectionList<MeetingCardProps, SectionListData>
         style={styles.scrollViewContainer}
-        sections={meetingsData}
-        keyExtractor={(item, index) => item.id}
-        renderItem={renderItem}
+        sections={meetingsData} // enter data here
+        keyExtractor={(item, index) => item.meetingInfo.id}
+        renderItem={({ item }) => {
+          return <MeetingCard {...item} accent />;
+        }}
         renderSectionHeader={({ section: { title } }) => (
           <Heading2 textTransform="uppercase" mt={20}>
             {title}
