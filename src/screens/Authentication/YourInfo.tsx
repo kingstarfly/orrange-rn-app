@@ -88,7 +88,7 @@ export default function YourInfo() {
 
   return (
     <Container>
-      <Div>
+      <Div flex={1} justifyContent="center" alignItems="center">
         <Div row mb={100}>
           <Div flex={2} ml={50} mr={20}>
             <Text fontSize={40} mb={10}>

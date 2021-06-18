@@ -18,7 +18,7 @@ import {
 export interface MeetingCardProps {
   meetingInfo: MeetupFields;
   participants: ParticipantFields[];
-  pendingParticipants: PendingParticipantFields;
+  pendingParticipants: PendingParticipantFields[];
   accent?: boolean;
 }
 const NUM_PROFILES = 2;
@@ -29,6 +29,10 @@ const MeetingCard = ({
   pendingParticipants,
   accent,
 }: MeetingCardProps) => {
+  if (!meetingInfo) {
+    return null;
+  }
+
   const navigation =
     useNavigation<
       StackNavigationProp<AppStackParamList, "MainBottomTabNavigator">
@@ -70,11 +74,11 @@ const MeetingCard = ({
         row
         alignItems="center"
         alignSelf="stretch"
-        justifyContent="space-between"
+        // justifyContent="space-between"
         my={8}
       >
         {/* The accent */}
-        {accent && <Box h="100%" w={3} bg={theme.colors.primary700} />}
+        {accent && <Box h="100%" w={3} bg={theme.colors.primary700} mr={10} />}
         <Box row alignItems="center">
           <Box justifyContent="center">
             <BodyHeading
@@ -93,7 +97,9 @@ const MeetingCard = ({
                   size={16}
                   name="activity"
                 />
-                <SmallText ml={8}>{meetingInfo.activity}</SmallText>
+                <SmallText maxW={WINDOW_WIDTH * 0.7} numberOfLines={1} ml={8}>
+                  {meetingInfo.activity}
+                </SmallText>
               </Box>
               <Box row alignItems="center">
                 <PhosphorIcon
@@ -113,7 +119,7 @@ const MeetingCard = ({
             </Box>
           </Box>
 
-          <Box row alignItems="center">
+          {/* <Box row alignItems="center">
             {firstParticipants.map((part, index) => (
               <AvatarIcon
                 source={{ uri: part.url_thumbnail }}
@@ -123,7 +129,7 @@ const MeetingCard = ({
             <TinyText textAlign="center" ml={4}>
               {leftovers ? `+${leftovers?.length}` : ""}
             </TinyText>
-          </Box>
+          </Box> */}
         </Box>
       </Box>
     </TouchableOpacity>

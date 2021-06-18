@@ -15,7 +15,10 @@ import { useColorScheme } from "react-native";
 import { AuthProvider } from "lib/auth";
 import { registerRootComponent } from "expo";
 
+import { LogBox } from "react-native";
+
 function App() {
+  LogBox.ignoreAllLogs();
   const isCachedResourcesLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
@@ -36,3 +39,4 @@ function App() {
 registerRootComponent(App);
 
 export default App;
+LogBox.ignoreAllLogs();

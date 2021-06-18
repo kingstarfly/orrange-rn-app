@@ -7,6 +7,7 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { AppStackParamList, SignUpStackParamList, UserData } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Container from "components/Container";
+import LargeButton from "components/LargeButton";
 
 export default function YourUsername() {
   const route = useRoute<RouteProp<SignUpStackParamList, "YourUsername">>();
@@ -14,7 +15,7 @@ export default function YourUsername() {
     useNavigation<StackNavigationProp<SignUpStackParamList, "YourUsername">>();
   const authData = useAuth();
 
-  const phoneNumber = auth.UserData.phoneNumber;
+  const phoneNumber = authData.userData.contact;
   const { firstName, lastName } = route.params;
   const [username, setUsername] = useState("");
 
@@ -38,7 +39,7 @@ export default function YourUsername() {
         } else {
           console.log("Username is unique! Continuing to next page");
           authData.updateUserInfo({
-            uid: auth.UserData.uid,
+            uid: authData.userData.uid,
             firstName: firstName,
             lastName: lastName,
             username: username,
@@ -53,7 +54,7 @@ export default function YourUsername() {
   const width = useWindowDimensions().width;
   return (
     <Container>
-      <Div alignItems="center" justifyContent="center">
+      <Div flex={1} alignItems="center" justifyContent="center">
         <Text fontSize={40} mb={20}>
           Your Username
         </Text>
@@ -61,25 +62,17 @@ export default function YourUsername() {
           Enter your preferred username below
         </Text>
         <Input
-          mt={100}
+          mt={0.2 * width}
+          mb={0.1 * width}
           fontSize={20}
           autoCapitalize="none"
-          w={width * 0.9}
-          mb={10}
+          w={width * 0.8}
           placeholder="Username"
           bg="transparent"
           onChangeText={setUsername}
         />
-        <Button
-          mt={100}
-          onPress={onConfirmYourUsername}
-          alignSelf="center"
-          w={width * 0.9}
-          rounded="circle"
-          bg="#FAB77C"
-        >
-          <Text fontSize={30}>Next</Text>
-        </Button>
+
+        <LargeButton title="NEXT" onPress={onConfirmYourUsername} />
       </Div>
     </Container>
   );

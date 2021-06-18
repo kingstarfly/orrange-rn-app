@@ -8,6 +8,7 @@
       // "@components/*": ["components/*"],
       // "@screens/*": ["screens/*"],
       // "@types/*": ["types/*"]
-    }
-  }
+    },
+  },
+  
 }

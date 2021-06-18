@@ -82,7 +82,7 @@ export type AppStackParamList = {
   DiscussDetails: {
     meetingInfo: MeetupFields;
     participants: ParticipantFields[];
-    pendingParticipants: PendingParticipantFields;
+    pendingParticipants: PendingParticipantFields[];
   };
   FinalDetails: {
     meeting: MeetupFields;
