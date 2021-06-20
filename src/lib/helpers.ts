@@ -12,3 +12,13 @@ export const debounce = (func) => {
     }, 0);
   };
 };
+
+export const getInitials = (name: string) => {
+  const initials = name
+    .split(" ")
+    .map((str) => str[0])
+    .join("");
+
+  // return maximum first two only
+  return initials.length > 2 ? initials.slice(0, 2) : initials;
+};

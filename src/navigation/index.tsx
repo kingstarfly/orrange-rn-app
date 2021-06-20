@@ -148,7 +148,7 @@ const AppStackScreen = () => (
 function RootNavigator() {
   const authData = useAuth();
   if (!authData.userData) {
-    console.log(authData.userData);
+    console.log("No userData so showing auth stack");
     return <AuthStackScreen />;
   } else {
     if (!authData.userData.username) {

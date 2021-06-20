@@ -21,15 +21,22 @@ const LargeButton: React.FC<LargeButtonProps> = ({
 }) => {
   return (
     <TouchableOpacity
-      style={
+      style={[
         !loading
           ? styles.button
           : {
               ...styles.button,
               backgroundColor: theme.colors.primary200,
               elevation: 0,
-            }
-      }
+            },
+        // {
+        //   position: "absolute",
+        //   bottom: 20,
+        //   alignSelf: "center",
+        //   zIndex: 100,
+        // },
+        ,
+      ]}
       disabled={loading}
       onPress={onPress}
     >

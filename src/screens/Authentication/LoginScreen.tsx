@@ -21,7 +21,13 @@ import { useNavigation } from "@react-navigation/core";
 import { AuthStackParamList } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Container from "components/Container";
-import { Box, Input, Text, WINDOW_HEIGHT, WINDOW_WIDTH} from "react-native-magnus";
+import {
+  Box,
+  Input,
+  Text,
+  WINDOW_HEIGHT,
+  WINDOW_WIDTH,
+} from "react-native-magnus";
 import { Heading1, Heading3 } from "components/StyledText";
 import { theme } from "constants/theme";
 import LargeButton from "components/LargeButton";

@@ -1,5 +1,6 @@
 import { BodyMainText } from "components/StyledText";
 import { theme } from "constants/theme";
+import { getInitials } from "lib/helpers";
 import React from "react";
 import { Avatar, Box, Button, Icon, Text } from "react-native-magnus";
 import { NonTootleUser, TootleUser } from "types/types";
@@ -18,16 +19,6 @@ interface UserRowProps {
  *
  */
 const UserRow = ({ item, rightIcon }: UserRowProps) => {
-  const getInitials = (name: string) => {
-    const initials = name
-      .split(" ")
-      .map((str) => str[0])
-      .join("");
-
-    // return maximum first two only
-    return initials.length > 2 ? initials.slice(0, 2) : initials;
-  };
-
   return (
     <Box flexDir="row" my="sm" justifyContent="space-between" px="md">
       <Box justifyContent="center" mr="lg">

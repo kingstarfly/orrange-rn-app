@@ -73,20 +73,16 @@ const MeetingCard = ({
       <Box
         row
         alignItems="center"
-        alignSelf="stretch"
+        // alignSelf="stretch"
         // justifyContent="space-between"
         my={8}
+        // bg="red400"
       >
         {/* The accent */}
         {accent && <Box h="100%" w={3} bg={theme.colors.primary700} mr={10} />}
-        <Box row alignItems="center">
-          <Box justifyContent="center">
-            <BodyHeading
-              textAlignVertical="center"
-              numberOfLines={1}
-              w={WINDOW_WIDTH * 0.55}
-              mb={4}
-            >
+        <Box row alignItems="center" justifyContent="space-between">
+          <Box justifyContent="center" w={WINDOW_WIDTH * 0.6}>
+            <BodyHeading textAlignVertical="center" numberOfLines={1} mb={4}>
               {meetingInfo.name}
             </BodyHeading>
 
@@ -97,7 +93,7 @@ const MeetingCard = ({
                   size={16}
                   name="activity"
                 />
-                <SmallText maxW={WINDOW_WIDTH * 0.7} numberOfLines={1} ml={8}>
+                <SmallText numberOfLines={1} maxW={WINDOW_WIDTH * 0.45} ml={8}>
                   {meetingInfo.activity}
                 </SmallText>
               </Box>
@@ -119,17 +115,14 @@ const MeetingCard = ({
             </Box>
           </Box>
 
-          {/* <Box row alignItems="center">
+          <Box row alignItems="center">
             {firstParticipants.map((part, index) => (
-              <AvatarIcon
-                source={{ uri: part.url_thumbnail }}
-                label={part.username}
-              />
+              <AvatarIcon uri={part.url_thumbnail} label={part.username} />
             ))}
             <TinyText textAlign="center" ml={4}>
               {leftovers ? `+${leftovers?.length}` : ""}
             </TinyText>
-          </Box> */}
+          </Box>
         </Box>
       </Box>
     </TouchableOpacity>
