@@ -18,8 +18,20 @@ export type UserData = {
   meetup_ids: string[];
 };
 
-export type PalFields = {
+export type OtherUser = {
+  uid: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  url_thumbnail: string;
+};
+
+export type PalFields = OtherUser & {
   addedAt: string;
+};
+
+export type PalRequestFields = OtherUser & {
+  requestedAt: string;
 };
 
 export type ParticipantFields = {
@@ -45,10 +57,6 @@ export type SuggestionFields = {
   likedBy: string[];
   content: string;
   createdAt: string;
-};
-
-export type PalRequestFields = {
-  requestedAt: string;
 };
 
 export type MeetupFields = {
@@ -95,6 +103,12 @@ export type CreateMeetupStackParamList = {
   MeetupDetails: undefined;
   SelectDates: undefined;
   SelectTime: undefined;
+};
+
+export type MainBottomTabParamList = {
+  Plans: undefined;
+  Create: undefined;
+  Pals: undefined;
 };
 
 export type ViewPlansTabParamList = {

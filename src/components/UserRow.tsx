@@ -1,51 +1,48 @@
-import { BodyMainText } from "components/StyledText";
+import { BodyMainText, SmallText } from "components/StyledText";
 import { theme } from "constants/theme";
 import { getInitials } from "lib/helpers";
 import React from "react";
 import { Avatar, Box, Button, Icon, Text } from "react-native-magnus";
-import { NonTootleUser, TootleUser } from "types/types";
+import {
+  NonTootleUser,
+  OtherUser,
+  PalFields,
+  PalRequestFields,
+  TootleUser,
+} from "types/types";
+import AvatarIcon from "./AvatarIcon";
 
 interface UserRowProps {
-  item: TootleUser | NonTootleUser; // todo add possible item combis in future. TootleUser | XXXDetials | YYYDetails
+  item: OtherUser; // todo add possible item combis in future. TootleUser | XXXDetials | YYYDetails
   // handleSelectUser: (item: TootleUser) => void;
-  rightIcon?: JSX.Element;
+  rightItem?: JSX.Element;
 }
 /**
  * Common Component for rendering rows of user
  *
  * @param item - Information required for rendering the user
- * @param rightIcon - Component to display at the right section of the row
+ * @param rightItem - Component to display at the right section of the row
  *
  *
  */
-const UserRow = ({ item, rightIcon }: UserRowProps) => {
+const UserRow = ({ item, rightItem }: UserRowProps) => {
   return (
     <Box flexDir="row" my="sm" justifyContent="space-between" px="md">
       <Box justifyContent="center" mr="lg">
-        {item.thumbnail === "undefined" ? (
-          <Avatar
-            source={{ uri: item.thumbnail }}
-            bg={theme.colors.primary400}
-            size={40}
-            color={theme.colors.textdark}
-          />
-        ) : (
-          <Avatar
-            bg={theme.colors.primary400}
-            size={40}
-            color={theme.colors.textdark}
-          >
-            <BodyMainText>{getInitials(item.name)}</BodyMainText>
-          </Avatar>
-        )}
+        <AvatarIcon
+          uri={item.url_thumbnail}
+          label={item.firstName + item.lastName}
+        />
       </Box>
 
       <Box flex={1} justifyContent="center">
-        <BodyMainText textAlign="left">{item.name}</BodyMainText>
+        <SmallText textAlign="left">
+          {item.firstName + " " + item.lastName}
+        </SmallText>
       </Box>
 
       <Box justifyContent="center" alignItems="center">
-        {rightIcon}
+        {rightItem}
       </Box>
     </Box>
   );

@@ -2,7 +2,7 @@
   "main": "src/App.tsx",
   "scripts": {
     "start": "expo start",
-    "emu": "concurrently \"firebase emulators:start\" \"npm run seed\"",
+    "emu": "firebase emulators:start",
     "seed": "ts-node seed/dbseed.ts",
     "android": "expo start --android",
     "ios": "expo start --ios",

@@ -117,7 +117,11 @@ const MeetingCard = ({
 
           <Box row alignItems="center">
             {firstParticipants.map((part, index) => (
-              <AvatarIcon uri={part.url_thumbnail} label={part.username} />
+              <AvatarIcon
+                key={index}
+                uri={part.url_thumbnail}
+                label={part.username}
+              />
             ))}
             <TinyText textAlign="center" ml={4}>
               {leftovers ? `+${leftovers?.length}` : ""}

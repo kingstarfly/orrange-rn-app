@@ -65,7 +65,14 @@ function createPals() {
           .doc(user.uid)
           .collection("pals")
           .doc(users[prevIndex].uid),
-        { addedAt: faker.date.past().toISOString() } as PalFields
+        {
+          addedAt: faker.date.past().toISOString(),
+          uid: users[prevIndex].uid,
+          firstName: users[prevIndex].firstName,
+          lastName: users[prevIndex].lastName,
+          url_thumbnail: users[prevIndex].url_thumbnail,
+          username: users[prevIndex].username,
+        } as PalFields
       );
       batch.set(
         db
@@ -73,8 +80,16 @@ function createPals() {
           .doc(user.uid)
           .collection("pals")
           .doc(users[nextIndex].uid),
-        { addedAt: faker.date.past().toISOString() } as PalFields
+        {
+          addedAt: faker.date.past().toISOString(),
+          uid: users[nextIndex].uid,
+          firstName: users[nextIndex].firstName,
+          lastName: users[nextIndex].lastName,
+          url_thumbnail: users[nextIndex].url_thumbnail,
+          username: users[nextIndex].username,
+        } as PalFields
       );
+
       batch.commit();
     });
   } catch (error) {
@@ -96,6 +111,11 @@ function createPalRequests() {
         .doc(users[prevIndex].uid)
         .set({
           requestedAt: faker.date.past().toISOString(),
+          uid: user.uid,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          url_thumbnail: user.url_thumbnail,
+          username: user.username,
         } as PalRequestFields);
     });
   } catch (error) {

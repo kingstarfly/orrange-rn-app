@@ -9,6 +9,7 @@ import { Heading2, TinyText } from "components/StyledText";
 import { MeetingCardProps } from "../MeetingCard/MeetingCard";
 import { getAllMeetingDataForUser, getMeetingInfo } from "lib/api/meetup";
 import { compareAsc, format, parse, parseISO } from "date-fns";
+import { DUMMY_USER_ID } from "constants/mockdata";
 
 interface SectionData {
   title: string; // the month and year
@@ -23,9 +24,7 @@ const ConfirmedViewPlans = () => {
   React.useEffect(() => {
     const date_format_MMMM_yyyy = "MMMM yyyy";
     const fn = async () => {
-      const result = await getAllMeetingDataForUser(
-        "1737c57e-cd0a-487e-9963-4b46bad09a70"
-      );
+      const result = await getAllMeetingDataForUser(DUMMY_USER_ID);
 
       let myMap = new Map<string, MeetingCardProps[]>();
 

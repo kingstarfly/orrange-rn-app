@@ -151,6 +151,8 @@ function RootNavigator() {
     console.log("No userData so showing auth stack");
     return <AuthStackScreen />;
   } else {
+    console.log("Now there is auth data");
+    console.log(authData);
     if (!authData.userData.username) {
       return <SignUpStackScreen />;
     }

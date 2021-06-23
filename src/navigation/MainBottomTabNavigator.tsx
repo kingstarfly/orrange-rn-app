@@ -6,8 +6,9 @@ import ViewPlansNavigator from "./ViewPlansNavigator";
 import { PhosphorIcon } from "constants/Icons";
 import { theme } from "constants/theme";
 import { WINDOW_HEIGHT } from "react-native-magnus";
+import { MainBottomTabParamList } from "types/types";
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<MainBottomTabParamList>();
 
 function MainBottomTabNavigator() {
   return (

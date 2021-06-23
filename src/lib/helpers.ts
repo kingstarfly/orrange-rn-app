@@ -14,6 +14,9 @@ export const debounce = (func) => {
 };
 
 export const getInitials = (name: string) => {
+  if (!name) {
+    return null;
+  }
   const initials = name
     .split(" ")
     .map((str) => str[0])
