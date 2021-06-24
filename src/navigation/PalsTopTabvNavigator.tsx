@@ -6,6 +6,7 @@ import ViewPals from "screens/Pals/ViewPals";
 import AddPals from "screens/Pals/AddPals";
 import { Box, Text } from "react-native-magnus";
 import { createStackNavigator } from "@react-navigation/stack";
+import TopNavBar from "components/TopNavBar";
 
 const Stack = createStackNavigator<PalsStackParamList>();
 
@@ -54,7 +55,12 @@ function PalsStackNavigator() {
       <Stack.Screen
         name="ViewPals"
         component={ViewPals}
-        options={{ headerShown: false }}
+        options={({ route }) => ({
+          headerTitle: () => {
+            return <TopNavBar hideLogo />;
+          },
+          headerTitleAlign: "center",
+        })}
       />
       <Stack.Screen name="AddPals" component={AddPals} />
     </Stack.Navigator>

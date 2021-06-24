@@ -10,6 +10,7 @@ import { headerHeight } from "constants/Layout";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StackFrame } from "react-native/Libraries/Core/Devtools/parseErrorStack";
 import AppLogo from "components/AppLogo";
+import TopNavBar from "components/TopNavBar";
 
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator<ViewPlansTabParamList>();
@@ -76,7 +77,7 @@ function ViewPlansNavigator() {
         options={({ route }) => ({
           title: "Meetup Details",
           headerTitle: () => {
-            return <AppLogo />;
+            return <TopNavBar />;
           },
           headerTitleAlign: "center",
         })}
