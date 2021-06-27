@@ -58,6 +58,17 @@ export const TinyText: React.FC<TextProps> = ({ children, ...rest }) => {
   );
 };
 
+export const TinyItalicsText: React.FC<TextProps> = ({ children, ...rest }) => {
+  return (
+    <Text
+      {...rest}
+      style={{ fontFamily: "inter-light", fontStyle: "italic", fontSize: 11 }}
+    >
+      {children}
+    </Text>
+  );
+};
+
 // export const SmallText: React.FC<TextProps> = ({
 //   children,
 //   ...rest

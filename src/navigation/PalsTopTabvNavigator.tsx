@@ -56,9 +56,10 @@ function PalsStackNavigator() {
         name="ViewPals"
         component={ViewPals}
         options={({ route }) => ({
-          headerTitle: () => {
-            return <TopNavBar hideLogo />;
-          },
+          // headerTitle: () => {
+          //   return <TopNavBar hideLogo />;
+          // },
+          headerShown: false,
           headerTitleAlign: "center",
         })}
       />

@@ -3,12 +3,15 @@ import { useNavigation } from "@react-navigation/native";
 import Container from "components/Container";
 import SearchableList from "components/SearchableList";
 import SmallButton from "components/SmallButton";
+import { MediumText, TinyText } from "components/StyledText";
 import UserRow from "components/UserRow";
+import { PhosphorIcon } from "constants/Icons";
 import { DUMMY_USER_ID } from "constants/mockdata";
 import { theme } from "constants/theme";
 import { getPalRequests, getPals } from "lib/api/pals";
 import { getMockUsers } from "mockapi";
 import React, { useEffect, useState } from "react";
+import { TouchableOpacity } from "react-native";
 import { Box } from "react-native-magnus";
 import {
   MainBottomTabParamList,
@@ -70,16 +73,37 @@ const ViewPals = () => {
           </SmallButton>
         </Box>
       ) : null;
-    return <UserRow item={item} rightItem={rightItem} />;
+    return (
+      <UserRow
+        firstName={item.firstName}
+        lastName={item.lastName}
+        username={item.username}
+        avatar_url={item.url_thumbnail}
+        rightItem={rightItem}
+      />
+    );
   };
   return (
-    <Container avoidHeader>
-      <SearchableList<OtherUser>
-        data={[...palRequests, ...pals]}
-        inputPlaceholder="Search..."
-        isLoading={isLoading}
-        renderItem={renderItem}
-      />
+    <Container>
+      <Box row alignSelf="flex-end" my={20}>
+        <TouchableOpacity onPress={() => console.log("to add pals")}>
+          <MediumText color={theme.colors.primary700}>Add a Pal</MediumText>
+        </TouchableOpacity>
+
+        {/* <PhosphorIcon
+          name="user-plus"
+          color={theme.colors.textdark}
+          size={16}
+        /> */}
+      </Box>
+      <Box>
+        <SearchableList<OtherUser>
+          data={[...palRequests, ...pals]}
+          inputPlaceholder="Search for Pals"
+          isLoading={isLoading}
+          renderItem={renderItem}
+        />
+      </Box>
     </Container>
   );
 };

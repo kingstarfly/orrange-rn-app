@@ -71,9 +71,9 @@ export default SmallButton;
 
 const styles = StyleSheet.create({
   button: {
-    width: 60,
-    height: 25,
-    borderRadius: 3,
+    width: 63,
+    height: 28,
+    borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
   },
