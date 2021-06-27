@@ -3,9 +3,8 @@ import { useNavigation } from "@react-navigation/native";
 import Container from "components/Container";
 import SearchableList from "components/SearchableList";
 import SmallButton from "components/SmallButton";
-import { MediumText, TinyText } from "components/StyledText";
+import { MediumText } from "components/StyledText";
 import UserRow from "components/UserRow";
-import { PhosphorIcon } from "constants/Icons";
 import { DUMMY_USER_ID } from "constants/mockdata";
 import { theme } from "constants/theme";
 import { getPalRequests, getPals } from "lib/api/pals";
@@ -21,6 +20,7 @@ import {
   TootleUser,
   UserData,
 } from "types/types";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 const ViewPals = () => {
   const [pals, setPals] = useState<PalFields[]>([]);
@@ -73,6 +73,7 @@ const ViewPals = () => {
           </SmallButton>
         </Box>
       ) : null;
+
     return (
       <UserRow
         firstName={item.firstName}
@@ -83,6 +84,8 @@ const ViewPals = () => {
       />
     );
   };
+
+  const bottomTabBarHeight = useBottomTabBarHeight();
   return (
     <Container>
       <Box row alignSelf="flex-end" my={20}>
@@ -96,7 +99,7 @@ const ViewPals = () => {
           size={16}
         /> */}
       </Box>
-      <Box>
+      <Box mb={bottomTabBarHeight}>
         <SearchableList<OtherUser>
           data={[...palRequests, ...pals]}
           inputPlaceholder="Search for Pals"
