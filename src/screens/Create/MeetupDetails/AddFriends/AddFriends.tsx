@@ -6,23 +6,34 @@ import { getMockUsers } from "mockapi";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { setAllFriends } from "../../../../redux/slices/AllFriendsSlice";
 import { useWindowDimensions } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { CreateMeetupStackParamList } from "types/types";
 
 const AddFriends = (props: DivProps) => {
   const dispatch = useAppDispatch();
   const contacts = useAppSelector((state) => state.AllFriends.allFriends);
   const [isLoading, setIsLoading] = useState(true);
-  const { height, width } = useWindowDimensions();
 
   // todo obtain contacts from user first and put into state, account for loading time
+  const navigation =
+    useNavigation<
+      StackNavigationProp<CreateMeetupStackParamList, "MeetupDetails">
+    >();
+  const getContact = async () => {
+    const initialContacts = await getMockUsers();
+    dispatch(setAllFriends(initialContacts));
+  };
+
   useEffect(() => {
-    const getContact = async () => {
-      const initialContacts = await getMockUsers();
-      dispatch(setAllFriends(initialContacts));
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
-    };
     getContact();
+
+    const unsubscribe = navigation.addListener("focus", () => {
+      setIsLoading(true);
+      getContact().finally(() => {
+        setIsLoading(false);
+      });
+    });
   }, []);
 
   return (

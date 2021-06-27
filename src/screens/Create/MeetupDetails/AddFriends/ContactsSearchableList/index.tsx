@@ -15,9 +15,6 @@ interface ContactsSearchableList {
 
 const ContactsSearchableList = (props: ContactsSearchableList) => {
   const { isLoading } = props;
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
 
   const contacts = useAppSelector((state) => state.AllFriends.allFriends);
   const [filteredContacts, setFilteredContacts] = useState(contacts);

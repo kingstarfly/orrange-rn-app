@@ -30,23 +30,21 @@ const ViewPals = () => {
   const navigation =
     useNavigation<BottomTabNavigationProp<MainBottomTabParamList, "Pals">>();
 
+  const fetchPalsAndPalRequests = async () => {
+    const pals = await getPals(DUMMY_USER_ID);
+    const palRequests = await getPalRequests(DUMMY_USER_ID);
+
+    setPals(pals);
+    setPalRequests(palRequests);
+  };
+
   useEffect(() => {
-    const fetchPalsAndPalRequests = async () => {
-      setIsLoading(true);
-      const pals = await getPals(DUMMY_USER_ID);
-      const palRequests = await getPalRequests(DUMMY_USER_ID);
-      console.log(pals);
-      console.log(palRequests);
-
-      setPals(pals);
-      setPalRequests(palRequests);
-
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
-    };
     const unsubscribe = navigation.addListener("focus", () => {
-      fetchPalsAndPalRequests();
+      console.log("setting loading true");
+      setIsLoading(true);
+      fetchPalsAndPalRequests().finally(() => {
+        setIsLoading(false);
+      });
     });
 
     return unsubscribe;
