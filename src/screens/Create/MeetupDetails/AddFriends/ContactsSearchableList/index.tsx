@@ -54,7 +54,7 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
       data={filteredContacts}
       isLoading={isLoading}
       renderItem={renderItem}
-      inputPlaceholder="Add your pals..."
+      inputPlaceholder="Search your pals..."
     />
   );
 };

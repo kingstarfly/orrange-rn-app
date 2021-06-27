@@ -49,7 +49,7 @@ const MeetupDetails = ({
         onPress={() => navigation.push("SelectDates")}
         bg={theme.colors.primary400}
         position="absolute"
-        bottom={height * 0.05}
+        bottom={height * 0.03}
       >
         Confirm
       </StyledButton>

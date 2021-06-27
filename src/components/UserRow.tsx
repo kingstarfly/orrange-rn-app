@@ -22,10 +22,14 @@ const UserRow = ({
   username,
   rightItem,
 }: UserRowProps) => {
+  let fullName = firstName;
+  if (lastName) {
+    fullName = firstName + " " + lastName;
+  }
   return (
     <Box flexDir="row" my="sm" justifyContent="space-between" px="md">
       <Box justifyContent="center" mr="lg">
-        <AvatarIcon uri={avatar_url} label={firstName + " " + lastName} />
+        <AvatarIcon uri={avatar_url} label={fullName} />
       </Box>
 
       <Box
@@ -34,10 +38,12 @@ const UserRow = ({
         justifyContent="center"
         alignItems="flex-start"
       >
-        <SmallText textAlign="left">{firstName + " " + lastName}</SmallText>
-        <TinyItalicsText color={theme.colors.textgray400}>
-          @{username}
-        </TinyItalicsText>
+        <SmallText textAlign="left">{fullName}</SmallText>
+        {username && (
+          <TinyItalicsText color={theme.colors.textgray400}>
+            @{username}
+          </TinyItalicsText>
+        )}
       </Box>
 
       <Box justifyContent="center" alignItems="center">

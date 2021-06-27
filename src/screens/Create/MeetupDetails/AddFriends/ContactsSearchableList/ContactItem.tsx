@@ -47,8 +47,10 @@ const ContactItem = ({ item, clearSearchQuery }: ContactItemProps) => {
       style={{ borderRadius: 8 }}
     >
       <UserRow
-        item={item}
-        rightIcon={item.selected ? selectedIcon : unselectedIcon}
+        // item={item}
+        avatar_url={item.thumbnail}
+        firstName={item.name}
+        rightItem={item.selected ? selectedIcon : unselectedIcon}
       />
     </TouchableHighlight>
   );
