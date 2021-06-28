@@ -17,6 +17,8 @@ const SearchableList = <
   ItemProp extends {
     id?: string;
     uid?: string;
+    firstName?: string;
+    lastName?: string;
     name?: string;
     username?: string;
   }
@@ -37,6 +39,9 @@ const SearchableList = <
       return (
         !searchQuery ||
         user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (user?.firstName + " " + user?.lastName)
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
         user?.username?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     });

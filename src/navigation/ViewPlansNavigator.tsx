@@ -79,7 +79,7 @@ function ViewPlansNavigator() {
           headerTitle: () => {
             return <TopNavBar />;
           },
-          headerTitleAlign: "center",
+          headerTitleAlign: "left",
         })}
         component={InnerTabNavigator}
       />

@@ -30,7 +30,7 @@ const TopNavBar = ({ hideLogo }: Props) => {
       {!hideLogo && (
         <View
           style={{
-            alignSelf: "center",
+            alignSelf: "flex-start",
           }}
         >
           <AppLogo />
@@ -38,12 +38,17 @@ const TopNavBar = ({ hideLogo }: Props) => {
       )}
 
       <TouchableOpacity
+        // style={{
+        //   position: "absolute",
+        //   top: 10,
+        //   paddingBottom: 5, // the icon is not centered, this is the fix
+        //   right: 40,
+        //   // backgroundColor: "green",
+        // }}
         style={{
-          position: "absolute",
-          top: 10,
-          paddingBottom: 5, // the icon is not centered, this is the fix
-          right: 40,
-          // backgroundColor: "green",
+          alignSelf: "flex-start",
+          bottom: 15, // the icon is not centered, this is the fix
+          left: WINDOW_WIDTH * 0.25,
         }}
       >
         <PhosphorIcon name="envelope" color={theme.colors.textdark} size={40} />
