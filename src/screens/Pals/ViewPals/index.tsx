@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import Container from "components/Container";
 import SearchableList from "components/SearchableList";
 import SmallButton from "components/SmallButton";
-import { MediumText } from "components/StyledText";
+import { BodyTextRegular } from "components/StyledText";
 import UserRow from "components/UserRow";
 import { DUMMY_USER_ID } from "constants/mockdata";
 import { theme } from "constants/theme";
@@ -88,7 +88,9 @@ const ViewPals = () => {
     <Container>
       <Box row alignSelf="flex-end" my={20}>
         <TouchableOpacity onPress={() => console.log("to add pals")}>
-          <MediumText color={theme.colors.primary700}>Add a Pal</MediumText>
+          <BodyTextRegular color={theme.colors.primary700}>
+            Add a Pal
+          </BodyTextRegular>
         </TouchableOpacity>
 
         {/* <PhosphorIcon

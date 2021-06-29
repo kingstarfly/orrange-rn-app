@@ -28,7 +28,7 @@ import {
   WINDOW_HEIGHT,
   WINDOW_WIDTH,
 } from "react-native-magnus";
-import { Heading1, Heading3 } from "components/StyledText";
+import { Heading, Subheading } from "components/StyledText";
 import { theme } from "constants/theme";
 import LargeButton from "components/LargeButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -151,7 +151,7 @@ export default function LoginScreen() {
                 bg="white"
                 px="md"
               >
-                <Heading3>{callingCode}</Heading3>
+                <Subheading>{callingCode}</Subheading>
                 <Input
                   keyboardType={"phone-pad"}
                   placeholder="Phone number"

@@ -5,8 +5,8 @@ import Constants from "expo-constants";
 import "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
+import "firebase/storage";
 //import "firebase/functions";
-//import "firebase/storage";
 
 // Initialize Firebase
 export const firebaseConfig = {
@@ -25,6 +25,7 @@ if (firebase.apps.length === 0) {
 const database = firebase.database();
 const auth = firebase.auth();
 const firestore = firebase.firestore();
+const storage = firebase.storage();
 if (__DEV__) {
   console.log("Switching to local Firebase instance...");
   const origin =
@@ -34,4 +35,4 @@ if (__DEV__) {
 }
 const firebaseApp = firebase;
 
-export { database, auth, firestore, firebaseApp };
+export { database, auth, firestore, storage, firebaseApp };

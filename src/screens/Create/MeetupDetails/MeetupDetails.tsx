@@ -7,10 +7,9 @@ import { theme } from "constants/theme";
 import StyledButton from "components/StyledButton";
 import {
   CaptionText,
-  Heading1,
-  Heading2,
-  Heading3,
-  MediumText,
+  Heading,
+  Subheading,
+  BodyTextRegular,
 } from "components/StyledText";
 import { useWindowDimensions } from "react-native";
 import { StyledInput } from "components/StyledInput";
@@ -26,10 +25,10 @@ const MeetupDetails = ({
     <Container>
       <Box px={16} justifyContent="space-between" flex={1}>
         <Box py="2xl">
-          <Heading1>Create New Plan</Heading1>
+          <Heading>Create New Plan</Heading>
         </Box>
         <Box flex={1}>
-          <Heading3 opacity={0.5}>Name your meetup!</Heading3>
+          <Subheading opacity={0.5}>Name your meetup!</Subheading>
           <StyledInput
             px={0}
             py="sm"
@@ -40,7 +39,7 @@ const MeetupDetails = ({
         </Box>
 
         <Box flex={5} mb={height * 0.1}>
-          <Heading3 opacity={0.5}>Add your pals!</Heading3>
+          <Subheading opacity={0.5}>Add your pals!</Subheading>
           <AddFriends />
         </Box>
       </Box>

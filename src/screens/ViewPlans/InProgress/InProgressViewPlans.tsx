@@ -7,7 +7,7 @@ import { meetDataOne, meetingsData } from "constants/mockdata";
 import { SectionList } from "react-native";
 import { styles } from "./styles";
 import AddButton from "components/AddButton";
-import { Heading2 } from "components/StyledText";
+import { Subheading } from "components/StyledText";
 
 const InProgressViewPlans = () => {
   const renderItem = ({ item }) => {
@@ -21,9 +21,9 @@ const InProgressViewPlans = () => {
         keyExtractor={(item, index) => item.id}
         renderItem={renderItem}
         renderSectionHeader={({ section: { title } }) => (
-          <Heading2 textTransform="uppercase" mt={30}>
+          <Subheading textTransform="uppercase" mt={30}>
             {title}
-          </Heading2>
+          </Subheading>
         )}
       />
     </Container>

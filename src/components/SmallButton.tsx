@@ -8,7 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import { Box, WINDOW_WIDTH, ButtonProps } from "react-native-magnus";
-import { Heading3, MiniText } from "./StyledText";
+import { Subheading, MiniText } from "./StyledText";
 
 interface Props extends ButtonProps {
   colorTheme: "primary" | "plain";

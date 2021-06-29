@@ -8,7 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import { WINDOW_WIDTH } from "react-native-magnus";
-import { Heading3 } from "./StyledText";
+import { Subheading } from "./StyledText";
 
 interface LargeButtonProps extends ButtonProps {
   loading?: boolean;
@@ -41,7 +41,7 @@ const LargeButton: React.FC<LargeButtonProps> = ({
       onPress={onPress}
     >
       {!loading ? (
-        <Heading3 color={theme.colors.textlight}>{title}</Heading3>
+        <Subheading color={theme.colors.textlight}>{title}</Subheading>
       ) : (
         <ActivityIndicator size="large" color={theme.colors.textlight} />
       )}

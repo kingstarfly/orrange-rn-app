@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
 import AvatarIcon from "components/AvatarIcon";
-import { BodyHeading, SmallText, TinyText } from "components/StyledText";
+import { BodyTextMedium, SmallText, TinyText } from "components/StyledText";
 import { PhosphorIcon } from "constants/Icons";
 import { theme } from "constants/theme";
 import { format, isSameDay, parseISO } from "date-fns";
@@ -82,9 +82,9 @@ const MeetingCard = ({
         {accent && <Box h="100%" w={3} bg={theme.colors.primary700} mr={10} />}
         <Box row alignItems="center" justifyContent="space-between">
           <Box justifyContent="center" w={WINDOW_WIDTH * 0.6}>
-            <BodyHeading textAlignVertical="center" numberOfLines={1} mb={4}>
+            <BodyTextMedium textAlignVertical="center" numberOfLines={1} mb={4}>
               {meetingInfo.name}
-            </BodyHeading>
+            </BodyTextMedium>
 
             <Box justifyContent="center">
               <Box row mb={4} alignItems="center">

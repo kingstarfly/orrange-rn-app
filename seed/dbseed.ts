@@ -127,10 +127,13 @@ function createPalRequests() {
 const meetupNames = [
   "END OF SEM 2 PARTYYY",
   "Really long long long meet up name that is unnecessarily long. We probably want a hard cap.",
-  "Short one \u2728",
+  "short one \u2728",
   "\u2728 smile more \u2728\u2728",
+  "lorem ipsum lorem ipsum lorem ipsum",
+  "Delta Bravo Alpha lorem ipsum ",
+  "she said he said",
 ];
-const meetups = [...Array(4).keys()].map((val) => {
+const meetups = [...Array(7).keys()].map((val) => {
   let startTime = faker.date.future();
   let endTime = addHours(startTime, 10);
 

@@ -1,6 +1,6 @@
 import React from "react";
 import Container from "components/Container";
-import { Heading2, SmallText } from "components/StyledText";
+import { Subheading, SmallText } from "components/StyledText";
 import { RouteProp, useRoute } from "@react-navigation/core";
 import { AppStackParamList } from "types/types";
 
@@ -9,7 +9,7 @@ const DiscussDetailsScreen = () => {
   const { meetingInfo, participants, pendingParticipants } = route.params;
   return (
     <Container avoidHeader>
-      <Heading2>Plan Screen</Heading2>
+      <Subheading>Plan Screen</Subheading>
       <SmallText>{JSON.stringify(meetingInfo, null, 2)}</SmallText>
     </Container>
   );

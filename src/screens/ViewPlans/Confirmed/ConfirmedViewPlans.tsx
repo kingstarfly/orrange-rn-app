@@ -5,11 +5,12 @@ import { SectionList } from "react-native";
 import { styles } from "./styles";
 import { Button } from "react-native-magnus";
 import { useAuth } from "lib/auth";
-import { Heading2, TinyText } from "components/StyledText";
+import { Subheading, TinyText } from "components/StyledText";
 import { MeetingCardProps } from "../MeetingCard/MeetingCard";
 import { getAllMeetingDataForUser, getMeetingInfo } from "lib/api/meetup";
 import { compareAsc, format, parse, parseISO } from "date-fns";
 import { DUMMY_USER_ID } from "constants/mockdata";
+import { theme } from "constants/theme";
 
 interface SectionData {
   title: string; // the month and year
@@ -78,9 +79,9 @@ const ConfirmedViewPlans = () => {
           return <MeetingCard {...item} accent />;
         }}
         renderSectionHeader={({ section: { title } }) => (
-          <Heading2 textTransform="uppercase" mt={20}>
+          <Subheading textTransform="capitalize" mt={20}>
             {title}
-          </Heading2>
+          </Subheading>
         )}
       />
 

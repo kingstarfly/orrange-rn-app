@@ -5,7 +5,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Button, Div, Text, Input, Icon } from "react-native-magnus";
+import { Button, Div, Text, Input, Icon, Image } from "react-native-magnus";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "lib/auth";
@@ -16,47 +16,26 @@ import { useNavigation } from "@react-navigation/native";
 
 import Container from "components/Container";
 import LargeButton from "components/LargeButton";
-import { BodyMainText } from "components/StyledText";
+import { BodyTextRegular, Heading } from "components/StyledText";
 
 export default function YourInfo() {
   const navigation =
     useNavigation<StackNavigationProp<SignUpStackParamList, "YourInfo">>();
 
+  const width = useWindowDimensions().width;
+
+  const [imageUri, setImageUri] = useState(null);
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
+
   const onConfirmYourInfo = () => {
     if (!firstName || !lastName) {
       return alert("Please enter first and last name!");
     }
-    navigation.navigate("YourUsername", { firstName, lastName });
+    navigation.navigate("YourUsername", { firstName, lastName, imageUri });
   };
 
-  const width = useWindowDimensions().width;
-
-  const [image, setImage] = useState(null);
-  const [firstName, setFirstName] = useState(null);
-  const [lastName, setLastName] = useState(null);
-
   useEffect(() => {
-    //   async function isFirstLogin() {
-    //     const uid = authData.userData.uid;
-    //     const userDocument = await firestore
-    //       .collection("users")
-    //       .doc(String(uid))
-    //       .get();
-    //     if (userDocument.exists) {
-    //       console.log("found user document, is not first time user: ", uid);
-    //       navigation.navigate("MainBottomTabNavigator");
-    //     } else {
-    //       console.log(
-    //         "unable to find user document id, so is first time user,: ",
-    //         uid
-    //       );
-    //       setIsLoading(false);
-    //       return;
-    //     }
-    //   }
-
-    //   isFirstLogin();
-
     (async () => {
       if (Platform.OS !== "web") {
         const { status } =
@@ -70,9 +49,9 @@ export default function YourInfo() {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
     });
 
@@ -80,32 +59,42 @@ export default function YourInfo() {
 
     if (!result.cancelled) {
       //@ts-ignore
-      setImage(result.uri);
+      setImageUri(result.uri);
     }
   };
-
-  const authData = useAuth();
 
   return (
     <Container>
       <Div flex={1} justifyContent="center" alignItems="center">
         <Div row mb={100}>
-          <Div flex={2} ml={50} mr={20}>
-            <Text fontSize={40} mb={10}>
-              Your Info
-            </Text>
-            <Text fontSize={15}>Please enter your name and upload a photo</Text>
+          <Div flex={2}>
+            <Heading mb={24}>Your Info</Heading>
+            <BodyTextRegular>
+              Please enter your name and upload a photo
+            </BodyTextRegular>
           </Div>
           <Div flex={1}>
             <TouchableOpacity onPress={pickImage}>
-              <Icon
-                name="camera"
-                rounded="circle"
-                fontSize="5xl"
-                bg="#d1d1d1"
-                w={80}
-                h={80}
-              />
+              {imageUri ? (
+                <Image
+                  h={100}
+                  w={100}
+                  m={10}
+                  rounded="circle"
+                  source={{
+                    uri: imageUri,
+                  }}
+                />
+              ) : (
+                <Icon
+                  name="camera"
+                  rounded="circle"
+                  fontSize="5xl"
+                  bg="#d1d1d1"
+                  w={100}
+                  h={100}
+                />
+              )}
             </TouchableOpacity>
           </Div>
         </Div>

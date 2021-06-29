@@ -3,7 +3,7 @@ import { getInitials } from "lib/helpers";
 import React from "react";
 import { ImageSourcePropType, ImageURISource } from "react-native";
 import { Avatar, Box, Image } from "react-native-magnus";
-import { BodyMainText, TinyText } from "./StyledText";
+import { BodyTextRegular, TinyText } from "./StyledText";
 
 interface AvatarIcon {
   uri?: string;
@@ -29,7 +29,7 @@ const AvatarIcon: React.FC<AvatarIcon> = ({ uri, label }) => {
           size={40}
           color={theme.colors.textdark}
         >
-          <BodyMainText>{getInitials(label)}</BodyMainText>
+          <BodyTextRegular>{getInitials(label)}</BodyTextRegular>
         </Avatar>
       )}
       {/* <TinyText>{label}</TinyText> */}

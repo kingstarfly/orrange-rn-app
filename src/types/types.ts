@@ -80,6 +80,7 @@ export type SignUpStackParamList = {
   YourUsername: {
     firstName: string;
     lastName: string;
+    imageUri: any;
   };
 };
 

@@ -2,23 +2,7 @@ import * as React from "react";
 
 import { Text, TextProps } from "react-native-magnus";
 
-export const BodyMainText: React.FC<TextProps> = ({ children, ...rest }) => {
-  return (
-    <Text {...rest} style={{ fontFamily: "inter-regular", fontSize: 17 }}>
-      {children}
-    </Text>
-  );
-};
-
-export const BodyHeading: React.FC<TextProps> = ({ children, ...rest }) => {
-  return (
-    <Text {...rest} style={{ fontFamily: "inter-medium", fontSize: 18 }}>
-      {children}
-    </Text>
-  );
-};
-
-export const MediumText: React.FC<TextProps> = ({ children, ...rest }) => {
+export const BodyTextRegular: React.FC<TextProps> = ({ children, ...rest }) => {
   return (
     <Text {...rest} style={{ fontFamily: "inter-regular", fontSize: 16 }}>
       {children}
@@ -26,9 +10,17 @@ export const MediumText: React.FC<TextProps> = ({ children, ...rest }) => {
   );
 };
 
+export const BodyTextMedium: React.FC<TextProps> = ({ children, ...rest }) => {
+  return (
+    <Text {...rest} style={{ fontFamily: "inter-medium", fontSize: 16 }}>
+      {children}
+    </Text>
+  );
+};
+
 export const CaptionText: React.FC<TextProps> = ({ children, ...rest }) => {
   return (
-    <Text {...rest} style={{ fontFamily: "inter-regular", fontSize: 15 }}>
+    <Text {...rest} style={{ fontFamily: "inter-regular", fontSize: 14 }}>
       {children}
     </Text>
   );
@@ -36,7 +28,7 @@ export const CaptionText: React.FC<TextProps> = ({ children, ...rest }) => {
 
 export const SmallText: React.FC<TextProps> = ({ children, ...rest }) => {
   return (
-    <Text {...rest} style={{ fontFamily: "inter-regular", fontSize: 13 }}>
+    <Text {...rest} style={{ fontFamily: "inter-light", fontSize: 13 }}>
       {children}
     </Text>
   );
@@ -62,65 +54,24 @@ export const TinyItalicsText: React.FC<TextProps> = ({ children, ...rest }) => {
   return (
     <Text
       {...rest}
-      style={{ fontFamily: "inter-light", fontStyle: "italic", fontSize: 11 }}
+      style={{ fontFamily: "inter-light", fontStyle: "italic", fontSize: 10 }}
     >
       {children}
     </Text>
   );
 };
 
-// export const SmallText: React.FC<TextProps> = ({
-//   children,
-//   ...rest
-// }) => {
-//   return (
-//     <Text {...rest} style={{ fontFamily: "inter-regular", fontSize: 12 }}>
-//       {children}
-//     </Text>
-//   );
-// };
-
-// export const SubBodyLightText: React.FC<TextProps> = ({
-//   children,
-//   ...rest
-// }) => {
-//   return (
-//     <Text {...rest} style={{ fontFamily: "inter-light", fontSize: 12 }}>
-//       {children}
-//     </Text>
-//   );
-// };
-
-// export const SubBodyMediumText: React.FC<TextProps> = ({
-//   children,
-//   ...rest
-// }) => {
-//   return (
-//     <Text {...rest} style={{ fontFamily: "inter-medium", fontSize: 12 }}>
-//       {children}
-//     </Text>
-//   );
-// };
-
-export const Heading1: React.FC<TextProps> = ({ children, ...rest }) => {
+export const Heading: React.FC<TextProps> = ({ children, ...rest }) => {
   return (
-    <Text {...rest} style={{ fontFamily: "inter-medium", fontSize: 25 }}>
+    <Text {...rest} style={{ fontFamily: "inter-bold", fontSize: 20 }}>
       {children}
     </Text>
   );
 };
 
-export const Heading2: React.FC<TextProps> = ({ children, ...rest }) => {
+export const Subheading: React.FC<TextProps> = ({ children, ...rest }) => {
   return (
-    <Text style={{ fontFamily: "inter-medium", fontSize: 24 }} {...rest}>
-      {children}
-    </Text>
-  );
-};
-
-export const Heading3: React.FC<TextProps> = ({ children, ...rest }) => {
-  return (
-    <Text {...rest} style={{ fontFamily: "inter-medium", fontSize: 20 }}>
+    <Text style={{ fontFamily: "inter-medium", fontSize: 18 }} {...rest}>
       {children}
     </Text>
   );
