@@ -1,6 +1,12 @@
-import { TootleUser, NonTootleUser, USER_STATUS, Person } from "types/types";
+import {
+  TootleUser,
+  NonTootleUser,
+  USER_STATUS,
+  Person,
+  OtherUser,
+} from "types/types";
 
-export const getMockUsers = async (): Promise<TootleUser[]> => {
+export const getMockUsers = async (): Promise<OtherUser[]> => {
   const res = await (
     await fetch(`https://randomuser.me/api/?seed=foobar&results=20&`, {
       headers: {
@@ -9,15 +15,16 @@ export const getMockUsers = async (): Promise<TootleUser[]> => {
     })
   ).json();
   const results = res.results;
-  const contacts: TootleUser[] = results.map((person) => {
+  const contacts: OtherUser[] = results.map((person) => {
     return {
-      id: person.login.uuid,
-      name: person.name.first + " " + person.name.last,
-      thumbnail: person.picture.thumbnail,
+      uid: person.login.uuid,
+      firstName: person.name.first,
+      lastName: person.name.last,
+      username: person.name.first,
+      url_thumbnail: person.picture.thumbnail,
       selected: false,
-    } as TootleUser;
+    } as OtherUser;
   });
-
   return contacts;
 };
 

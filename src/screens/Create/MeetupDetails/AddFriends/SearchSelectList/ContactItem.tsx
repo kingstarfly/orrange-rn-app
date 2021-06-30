@@ -6,16 +6,17 @@ import { Icon } from "react-native-magnus";
 import { useAppDispatch } from "redux/hooks";
 import { toggleSelectedState } from "redux/slices/AllFriendsSlice";
 import { onSelectFriend } from "redux/slices/SelectedFriendsSlice";
-import { TootleUser } from "types/types";
+import { OtherUser } from "types/types";
 
 interface ContactItemProps {
-  item: TootleUser;
+  item: OtherUser;
   clearSearchQuery: () => void;
 }
 
 const ContactItem = ({ item, clearSearchQuery }: ContactItemProps) => {
   const dispatch = useAppDispatch();
-  const handleSelectContact = (contact: TootleUser) => {
+
+  const handleSelectContact = (contact: OtherUser) => {
     dispatch(toggleSelectedState(contact));
     dispatch(onSelectFriend(contact));
     clearSearchQuery();
@@ -48,8 +49,8 @@ const ContactItem = ({ item, clearSearchQuery }: ContactItemProps) => {
     >
       <UserRow
         // item={item}
-        avatar_url={item.thumbnail}
-        firstName={item.name}
+        avatar_url={item.url_thumbnail}
+        firstName={item.firstName}
         rightItem={item.selected ? selectedIcon : unselectedIcon}
       />
     </TouchableHighlight>

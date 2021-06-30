@@ -7,6 +7,23 @@ import { MutableRefObject } from "react";
 import { ImageSourcePropType } from "react-native";
 import { DotMarking, PeriodMarking } from "react-native-calendars";
 
+export interface Person {
+  status: USER_STATUS;
+  id: string;
+  name: string;
+  contactNumber: string;
+  thumbnail?: string;
+  selected?: boolean;
+}
+
+export interface TootleUser extends Person {
+  status: USER_STATUS.palRequestSent | USER_STATUS.notPal | USER_STATUS.isPal;
+}
+
+export interface NonTootleUser extends Person {
+  status: USER_STATUS.notOnApp | USER_STATUS.inviteSent;
+}
+
 export type UserData = {
   uid: string;
   firstName: string;
@@ -24,6 +41,7 @@ export type OtherUser = {
   lastName: string;
   username: string;
   url_thumbnail: string;
+  selected?: boolean;
 };
 
 export type PalFields = OtherUser & {
@@ -42,6 +60,7 @@ export type ParticipantFields = {
 };
 
 export type PreferredDuration = {
+  username: string;
   startAt: string;
   endAt: string;
 };
@@ -102,7 +121,7 @@ export type AppStackParamList = {
 
 export type CreateMeetupStackParamList = {
   MeetupDetails: undefined;
-  SelectDates: undefined;
+  SelectDates: { meetupName: string };
   SelectTime: undefined;
 };
 
@@ -137,6 +156,7 @@ export type TabTwoParamList = {
 
 export type cellProps = {
   start: Date;
+  count?: number;
   ref?: MutableRefObject<any>;
   isBottomMostCell?: boolean;
   isRightMostCell?: boolean;
@@ -153,21 +173,4 @@ export enum USER_STATUS {
   isPal, // is pal (note: this should not be here i guess?)
   notOnApp, // not on app, have not invited
   inviteSent, // not on app, invitation to join app sent
-}
-
-export interface Person {
-  status: USER_STATUS;
-  id: string;
-  name: string;
-  contactNumber: string;
-  thumbnail?: string;
-  selected?: boolean;
-}
-
-export interface TootleUser extends Person {
-  status: USER_STATUS.palRequestSent | USER_STATUS.notPal | USER_STATUS.isPal;
-}
-
-export interface NonTootleUser extends Person {
-  status: USER_STATUS.notOnApp | USER_STATUS.inviteSent;
 }

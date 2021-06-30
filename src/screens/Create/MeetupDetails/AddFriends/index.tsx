@@ -1,3 +1,3 @@
-import AddFriends from "./AddFriends";
+import PalsListSelect from "./PalsListSelect";
 
-export default AddFriends;
+export default PalsListSelect;

@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { Avatar } from "react-native-magnus";
-import { TootleUser } from "types/types";
+import { OtherUser } from "types/types";
 
 interface PalAvatarProps {
-  contact: TootleUser;
+  contact: OtherUser;
 }
 
 const PalAvatar = ({ contact }: PalAvatarProps) => {
@@ -13,7 +13,7 @@ const PalAvatar = ({ contact }: PalAvatarProps) => {
       shadow={10}
       size={40}
       source={{
-        uri: contact.thumbnail,
+        uri: contact.url_thumbnail,
       }}
       mx="sm"
     />

@@ -13,13 +13,17 @@ import {
 } from "components/StyledText";
 import { useWindowDimensions } from "react-native";
 import { StyledInput } from "components/StyledInput";
-import AddFriends from "./AddFriends";
+import PalsListSelect from "./AddFriends";
 
 const MeetupDetails = ({
   navigation,
 }: StackScreenProps<CreateMeetupStackParamList, "MeetupDetails">) => {
   const { width, height } = useWindowDimensions();
   const [name, setName] = useState("");
+
+  const handleConfirm = () => {
+    navigation.push("SelectDates", { meetupName: name });
+  };
 
   return (
     <Container>
@@ -28,24 +32,23 @@ const MeetupDetails = ({
           <Heading>Create New Plan</Heading>
         </Box>
         <Box flex={1}>
-          <Subheading opacity={0.5}>Name your meetup!</Subheading>
           <StyledInput
             px={0}
             py="sm"
-            placeholder="..."
+            placeholder="Name Your Meetup!"
             value={name}
             onChangeText={setName}
           />
         </Box>
 
         <Box flex={5} mb={height * 0.1}>
-          <Subheading opacity={0.5}>Add your pals!</Subheading>
-          <AddFriends />
+          <Subheading>Add your pals!</Subheading>
+          <PalsListSelect />
         </Box>
       </Box>
 
       <StyledButton
-        onPress={() => navigation.push("SelectDates")}
+        onPress={handleConfirm}
         bg={theme.colors.primary400}
         position="absolute"
         bottom={height * 0.03}

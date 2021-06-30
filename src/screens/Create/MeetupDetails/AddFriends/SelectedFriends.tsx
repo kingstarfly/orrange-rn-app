@@ -1,7 +1,7 @@
 import React from "react";
 import PalAvatar from "screens/Create/SelectTime/TimeGridSelector/PalAvatar";
 import { FlatList } from "react-native-gesture-handler";
-import { TootleUser } from "types/types";
+import { OtherUser, TootleUser } from "types/types";
 import { useAppSelector } from "redux/hooks";
 import { Box } from "react-native-magnus";
 
@@ -10,7 +10,7 @@ const SelectedFriends = () => {
     (state) => state.SelectedFriends.selectedFriends
   );
 
-  const renderItem = ({ item }: { item: TootleUser }) => (
+  const renderItem = ({ item }: { item: OtherUser }) => (
     <PalAvatar contact={item} />
   );
   return (
@@ -18,7 +18,7 @@ const SelectedFriends = () => {
       horizontal
       data={selectedContacts}
       renderItem={renderItem}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.uid}
     />
   );
 };

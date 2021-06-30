@@ -5,13 +5,22 @@ import { add, format } from "date-fns";
 import { Box, Text } from "react-native-magnus";
 import { cellProps } from "types/types";
 
-const GridHalfCell = ({ start }: cellProps) => {
+const colourIntensity = [
+  theme.colors.backgroundlight,
+  theme.colors.primary200,
+  theme.colors.primary300,
+  theme.colors.primary400,
+  theme.colors.primary500,
+  theme.colors.primary600,
+  theme.colors.primary700,
+  theme.colors.primary800,
+];
+
+const GridHalfCell = ({ start, count = 0 }: cellProps) => {
   let startTime = format(start, "HH:mm dd-MMM-yyyy");
   return (
     <Pressable onPress={() => console.log(startTime)}>
-      <Box bg={theme.colors.backgroundlight} h={20} w={80}>
-        <Text>{startTime}</Text>
-      </Box>
+      <Box bg={colourIntensity[count]} h={20} w={80} />
     </Pressable>
   );
 };

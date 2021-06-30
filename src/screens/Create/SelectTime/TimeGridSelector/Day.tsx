@@ -24,7 +24,6 @@ const Day = ({ date, startTime, endTime, isRightMostDay }: dayProps) => {
   }
 
   const dispatch = useAppDispatch();
-  const ref = useRef();
 
   return (
     <Box alignItems="center">

@@ -18,11 +18,7 @@ export async function getAllDurationsFromMeeting(
     .collection("participants")
     .get();
 
-  let durations: {
-    username: string;
-    startAt: string;
-    endAt: string;
-  }[] = [];
+  let durations: PreferredDuration[] = [];
   querySnapShot.forEach((doc) => {
     let participantDetails = doc.data() as ParticipantFields;
     participantDetails.preferredDurations.forEach((dur) => {
@@ -33,8 +29,6 @@ export async function getAllDurationsFromMeeting(
       });
     });
   });
-
-  console.log(durations);
   return durations;
 }
 /*

@@ -35,6 +35,9 @@ const SearchableList = <
   const [searchQuery, setSearchQuery] = useState("");
 
   const getFilteredUsers = (users: ItemProp[]) => {
+    if (!users) {
+      return [];
+    }
     let filtered = users.filter((user) => {
       return (
         !searchQuery ||

@@ -5,7 +5,7 @@ import { FlatList } from "react-native";
 import { Box, Icon, Input, Text } from "react-native-magnus";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { toggleSelectedState } from "redux/slices/AllFriendsSlice";
-import { TootleUser } from "types/types";
+import { OtherUser, TootleUser } from "types/types";
 import ContactItem from "./ContactItem";
 
 interface ContactsSearchableList {
@@ -13,18 +13,25 @@ interface ContactsSearchableList {
   isLoading: boolean;
 }
 
-const ContactsSearchableList = (props: ContactsSearchableList) => {
+const SearchSelectList = (props: ContactsSearchableList) => {
   const { isLoading } = props;
 
   const contacts = useAppSelector((state) => state.AllFriends.allFriends);
-  const [filteredContacts, setFilteredContacts] = useState(contacts);
+
+  const [filteredContacts, setFilteredContacts] = useState<OtherUser[]>();
+
   const [searchQuery, setSearchQuery] = useState("");
 
-  const getFilteredResults = (contacts: TootleUser[], searchQuery: string) => {
+  const getFilteredResults = (contacts: OtherUser[], searchQuery: string) => {
+    if (!contacts) {
+      return null;
+    }
     let filtered = contacts.filter((contact) => {
       return (
         !searchQuery ||
-        contact.name.toLowerCase().includes(searchQuery.toLowerCase())
+        (contact.firstName + " " + contact.lastName)
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
       );
     });
     setFilteredContacts(filtered);
@@ -38,13 +45,9 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
     setSearchQuery("");
   };
 
-  const renderItem = ({ item }: { item: TootleUser }) => (
+  const renderItem = ({ item }: { item: OtherUser }) => (
     <ContactItem item={item} clearSearchQuery={clearSearchQuery} />
   );
-
-  // const handleSearchInput = debounce((query: string) => {
-  //   setSearchQuery(query);
-  // });
 
   return (
     <SearchableList
@@ -56,4 +59,4 @@ const ContactsSearchableList = (props: ContactsSearchableList) => {
   );
 };
 
-export default ContactsSearchableList;
+export default SearchSelectList;

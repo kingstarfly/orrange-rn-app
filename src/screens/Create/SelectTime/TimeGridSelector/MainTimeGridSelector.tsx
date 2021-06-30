@@ -18,7 +18,15 @@ const MainTimeGridSelector = () => {
   const selected = useAppSelector((state) => state.DatePicker.selected);
 
   React.useEffect(() => {
-    getAllDurationsFromMeeting("5875d023-1173-40c4-a605-45fd88a8017c");
+    // TODO: Retrieve all user - timing information, and then flatten the data to get a list of objects with "time" (specific to half grid) mapped to count of overlap
+    const fetchDataAndFlatten = async () => {
+      const prefDurations = await getAllDurationsFromMeeting(
+        "5875d023-1173-40c4-a605-45fd88a8017c"
+      );
+      console.log("Fetching data and attempting to flatten");
+      console.log(prefDurations);
+    };
+    fetchDataAndFlatten();
   }, []);
 
   const dateStrings = Object.keys(selected);

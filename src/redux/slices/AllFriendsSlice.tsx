@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TootleUser } from "types/types";
+import { OtherUser, TootleUser } from "types/types";
 
 // Define a type for the slice state
 interface StateProps {
-  allFriends: TootleUser[];
+  allFriends: OtherUser[];
 }
 
 // Define the initial state using that type
@@ -15,10 +15,10 @@ export const AllFriendsSlice = createSlice({
   name: "AllFriends",
   initialState,
   reducers: {
-    toggleSelectedState: (state, action: PayloadAction<TootleUser>) => {
+    toggleSelectedState: (state, action: PayloadAction<OtherUser>) => {
       // Toggle the 'selected' key of the object in allFriends
       let indexToChange = state.allFriends.findIndex(
-        (elt) => elt.id === action.payload.id
+        (elt) => elt.uid === action.payload.uid
       );
 
       let before = state.allFriends.slice(0, indexToChange);
@@ -34,7 +34,7 @@ export const AllFriendsSlice = createSlice({
         ...after,
       ];
     },
-    setAllFriends: (state, action: PayloadAction<TootleUser[]>) => {
+    setAllFriends: (state, action: PayloadAction<OtherUser[]>) => {
       state.allFriends = action.payload;
     },
   },
