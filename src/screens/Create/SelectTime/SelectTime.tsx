@@ -6,8 +6,14 @@ import MainTimeGridSelector from "screens/Create/SelectTime/TimeGridSelector/Mai
 import StyledButton from "components/StyledButton";
 
 import { theme } from "constants/theme";
-import { CreateMeetupStackParamList } from "types/types";
+import {
+  CreateMeetupStackParamList,
+  DayTimings,
+  MeetupFields,
+} from "types/types";
 import { StackScreenProps } from "@react-navigation/stack";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { firestore } from "lib/firebase";
 
 const SelectTime = ({
   navigation,
@@ -29,10 +35,30 @@ const SelectTime = ({
     { "2021-07-16T12:30:00.000Z": 7 },
   ];
 
+  const route = useRoute<RouteProp<CreateMeetupStackParamList, "SelectTime">>();
+  const { meetupId } = route.params;
+
+  // on focus, query from firebase meetupTimings, to decide how to display the time grid.
+  const [meetupTimings, setMeetupTimings] = React.useState<DayTimings[]>();
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", async () => {
+      // do something
+      const meetupDoc = firestore.collection("meetups").doc(meetupId);
+      const query = await meetupDoc.get();
+      const timings = query.data().meetupTimings;
+      // console.log("Timings are:...");
+      // console.log(timings);
+      setMeetupTimings(timings);
+    });
+
+    return unsubscribe;
+  }, []);
+
   return (
     <Container avoidHeader>
       {/* Should take in an array of objects with all start times of each half grid as keys, then value is the count of overlap.  */}
-      <MainTimeGridSelector />
+      <MainTimeGridSelector meetupTimings={meetupTimings} />
 
       <Box
         position="absolute"

@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import { View } from "react-native";
 import { Box, Text } from "react-native-magnus";
 import { useAppDispatch } from "redux/hooks";
+import { StartTimeMapToNumber } from "types/types";
 import GridCell from "./GridCell";
 
 type dayProps = {
@@ -11,9 +12,16 @@ type dayProps = {
   startTime: number;
   endTime: number;
   isRightMostDay?: boolean;
+  timingsData: StartTimeMapToNumber;
 };
 
-const Day = ({ date, startTime, endTime, isRightMostDay }: dayProps) => {
+const Day = ({
+  date,
+  startTime,
+  endTime,
+  isRightMostDay,
+  timingsData,
+}: dayProps) => {
   // Get all periods by hour from startTime to endTime
 
   const dateStart = startOfDay(date);
@@ -45,14 +53,17 @@ const Day = ({ date, startTime, endTime, isRightMostDay }: dayProps) => {
       {/* For the below view, check for user taps (not drags). If tapped, create a new timeslot and display it. Actually should  check tap on each grid to know which timing was tapped. */}
 
       <Box>
-        {allStartTimes.map((start, index) => (
-          <GridCell
-            key={index}
-            start={start}
-            isRightMostCell={isRightMostDay}
-            isBottomMostCell={index === allStartTimes.length - 1}
-          />
-        ))}
+        {allStartTimes.map((start, index) => {
+          return (
+            <GridCell
+              key={index}
+              start={start}
+              timingsData={timingsData}
+              isRightMostCell={isRightMostDay}
+              isBottomMostCell={index === allStartTimes.length - 1}
+            />
+          );
+        })}
       </Box>
     </Box>
   );

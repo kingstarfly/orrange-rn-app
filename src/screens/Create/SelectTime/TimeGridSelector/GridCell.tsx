@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { theme } from "constants/theme";
 import { add, format } from "date-fns";
 import { Box, Text } from "react-native-magnus";
-import { cellProps } from "types/types";
+import { StartTimeMapToNumber } from "types/types";
 
 const colourIntensity = [
   theme.colors.backgroundlight,
@@ -16,7 +16,18 @@ const colourIntensity = [
   theme.colors.primary800,
 ];
 
-const GridHalfCell = ({ start, count = 0 }: cellProps) => {
+type CellProps = {
+  start: Date;
+  isBottomMostCell?: boolean;
+  isRightMostCell?: boolean;
+  timingsData: StartTimeMapToNumber;
+};
+
+type HalfCellProps = Pick<CellProps, "start"> & {
+  count: number;
+};
+
+const GridHalfCell = ({ start, count = 0 }: HalfCellProps) => {
   let startTime = format(start, "HH:mm dd-MMM-yyyy");
   return (
     <Pressable onPress={() => console.log(startTime)}>
@@ -25,9 +36,19 @@ const GridHalfCell = ({ start, count = 0 }: cellProps) => {
   );
 };
 
-const GridCell = ({ start, isRightMostCell, isBottomMostCell }: cellProps) => {
+const GridCell = ({
+  start,
+  isRightMostCell,
+  isBottomMostCell,
+  timingsData,
+}: CellProps) => {
   let middle = add(start, { minutes: 30 });
-  console.log(`${start.toISOString()}`);
+
+  const countA = timingsData?.[start.toISOString()];
+  const countB = timingsData?.[middle.toISOString()];
+
+  console.log(`Count A: ${countA}`);
+  console.log(`Count B: ${countB}`);
 
   return (
     <Box
@@ -37,8 +58,8 @@ const GridCell = ({ start, isRightMostCell, isBottomMostCell }: cellProps) => {
       borderRightWidth={isRightMostCell ? 1.5 : 0}
       borderBottomWidth={isBottomMostCell ? 1 : 0}
     >
-      <GridHalfCell start={start} />
-      <GridHalfCell start={middle} />
+      <GridHalfCell start={start} count={countA} />
+      <GridHalfCell start={middle} count={countB} />
     </Box>
   );
 };

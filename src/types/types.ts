@@ -78,6 +78,16 @@ export type SuggestionFields = {
   createdAt: string;
 };
 
+// key is the start times from 0000 to 2400 hrs in ISOstring for that day. Value is the number of people attending that timeslot. (interval is half hour)
+export type DayTimings = {
+  date: string;
+  startTimings: StartTimeMapToNumber;
+};
+
+export type StartTimeMapToNumber = {
+  [startTimeIso: string]: number;
+};
+
 export type MeetupFields = {
   id: string;
   createdBy: string;
@@ -85,6 +95,7 @@ export type MeetupFields = {
   activity: string;
   startAt: string;
   endAt: string;
+  meetupTimings?: DayTimings[];
 };
 
 export type AuthStackParamList = {
@@ -122,7 +133,7 @@ export type AppStackParamList = {
 export type CreateMeetupStackParamList = {
   MeetupDetails: undefined;
   SelectDates: { meetupName: string };
-  SelectTime: undefined;
+  SelectTime: { meetupId: string };
 };
 
 export type MainBottomTabParamList = {
@@ -152,15 +163,6 @@ export type TabOneParamList = {
 
 export type TabTwoParamList = {
   TabTwoScreen: undefined;
-};
-
-export type cellProps = {
-  start: Date;
-  count?: number;
-  ref?: MutableRefObject<any>;
-  isBottomMostCell?: boolean;
-  isRightMostCell?: boolean;
-  x?: number;
 };
 
 export type MarkedDates = {

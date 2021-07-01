@@ -1,5 +1,5 @@
 import { DATE_FORMAT } from "screens/Create/SelectDates/DatePicker";
-import { compareAsc, parse } from "date-fns";
+import { compareAsc, isSameDay, parse } from "date-fns";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -9,25 +9,20 @@ import Day from "./Day";
 import TimeLabels from "./TimeLabels";
 import { getAllDurationsFromMeeting } from "lib/api/meetup";
 import { parseISO } from "date-fns/esm";
+import { DayTimings } from "types/types";
 
 // !! default start and end time, subject to change
 export const START_TIME = 0;
 export const END_TIME = 24;
 
-const MainTimeGridSelector = () => {
+interface Props {
+  meetupTimings: DayTimings[];
+}
+
+const MainTimeGridSelector = ({ meetupTimings }: Props) => {
   const selected = useAppSelector((state) => state.DatePicker.selected);
 
-  React.useEffect(() => {
-    // TODO: Retrieve all user - timing information, and then flatten the data to get a list of objects with "time" (specific to half grid) mapped to count of overlap
-    const fetchDataAndFlatten = async () => {
-      const prefDurations = await getAllDurationsFromMeeting(
-        "5875d023-1173-40c4-a605-45fd88a8017c"
-      );
-      console.log("Fetching data and attempting to flatten");
-      console.log(prefDurations);
-    };
-    fetchDataAndFlatten();
-  }, []);
+  // todo: work through meetupTimings, to figure out how to display the correct color for each half grid.
 
   const dateStrings = Object.keys(selected);
   dateStrings.sort((a, b) => compareAsc(parseISO(a), parseISO(b)));
@@ -37,10 +32,15 @@ const MainTimeGridSelector = () => {
         <TimeLabels startTime={START_TIME} endTime={END_TIME} />
         <ScrollView horizontal>
           {dateStrings.map((dateString, index) => {
+            let theDate = parse(dateString, DATE_FORMAT, new Date());
+            let timingsData = meetupTimings?.find((dayTiming) =>
+              isSameDay(parseISO(dayTiming.date), theDate)
+            )?.startTimings;
             return (
               <Day
                 key={index}
-                date={parse(dateString, DATE_FORMAT, new Date())}
+                date={theDate}
+                timingsData={timingsData}
                 startTime={START_TIME}
                 endTime={END_TIME}
                 isRightMostDay={
