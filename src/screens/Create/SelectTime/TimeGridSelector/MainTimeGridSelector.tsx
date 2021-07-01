@@ -22,12 +22,13 @@ interface Props {
 const MainTimeGridSelector = ({ meetupTimings }: Props) => {
   const selected = useAppSelector((state) => state.DatePicker.selected);
 
-  // todo: work through meetupTimings, to figure out how to display the correct color for each half grid.
-
   const dateStrings = Object.keys(selected);
   dateStrings.sort((a, b) => compareAsc(parseISO(a), parseISO(b)));
   return (
-    <ScrollView style={styles.scrollViewContainer}>
+    <ScrollView
+      style={styles.scrollViewContainer}
+      showsVerticalScrollIndicator={false}
+    >
       <Box flexDir="row">
         <TimeLabels startTime={START_TIME} endTime={END_TIME} />
         <ScrollView horizontal>
@@ -59,9 +60,6 @@ export default MainTimeGridSelector;
 
 const styles = StyleSheet.create({
   scrollViewContainer: {
-    paddingLeft: 0,
-    paddingRight: 24,
-    marginBottom: 80,
     // backgroundColor: "red",
   },
 });

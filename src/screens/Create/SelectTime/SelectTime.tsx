@@ -1,6 +1,6 @@
 import React from "react";
-import { useWindowDimensions } from "react-native";
-import { Box, Text } from "react-native-magnus";
+import { ScrollView, StyleSheet, useWindowDimensions } from "react-native";
+import { Box, Text, WINDOW_HEIGHT } from "react-native-magnus";
 import Container from "components/Container";
 import MainTimeGridSelector from "screens/Create/SelectTime/TimeGridSelector/MainTimeGridSelector";
 import StyledButton from "components/StyledButton";
@@ -14,6 +14,8 @@ import {
 import { StackScreenProps } from "@react-navigation/stack";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { firestore } from "lib/firebase";
+import { Subheading } from "components/StyledText";
+import LargeButton from "components/LargeButton";
 
 const SelectTime = ({
   navigation,
@@ -57,32 +59,44 @@ const SelectTime = ({
 
   return (
     <Container avoidHeader>
-      {/* Should take in an array of objects with all start times of each half grid as keys, then value is the count of overlap.  */}
-      <MainTimeGridSelector meetupTimings={meetupTimings} />
+      <ScrollView style={styles.scrollViewContainer}>
+        <Box h={WINDOW_HEIGHT * 0.6}>
+          <MainTimeGridSelector meetupTimings={meetupTimings} />
+        </Box>
 
-      <Box
-        position="absolute"
-        bottom={25}
-        justifyContent="space-around"
-        flexDir="row"
-        w="100%"
-      >
-        <StyledButton
-          onPress={() => navigation.push("MeetupDetails")}
-          bg={theme.colors.gray5}
-        >
-          Skip for now
-        </StyledButton>
-
-        <StyledButton
-          onPress={() => navigation.push("MeetupDetails")}
-          bg={theme.colors.primary400}
-        >
-          Confirm
-        </StyledButton>
+        <Subheading>Add available time</Subheading>
+        {/* 
+    // todo: Integrate Chris' Date-time-selector component into common components, and add it here in this screen.
+    */}
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+        <Subheading>My timings</Subheading>
+      </ScrollView>
+      <Box alignItems="center" bottom={0} py={20} bg="transparent">
+        <LargeButton title="CONFIRM" onPress={() => console.log("Confirmed")} />
       </Box>
     </Container>
   );
 };
 
 export default SelectTime;
+
+const styles = StyleSheet.create({
+  scrollViewContainer: {
+    flex: 1,
+    // backgroundColor: "red",
+  },
+});
