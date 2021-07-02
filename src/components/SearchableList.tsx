@@ -73,6 +73,7 @@ const SearchableList = <
         keyExtractor={(item) => item.id || item.uid}
         renderItem={renderItem}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
+        showsVerticalScrollIndicator={false}
       />
     </Box>
   );

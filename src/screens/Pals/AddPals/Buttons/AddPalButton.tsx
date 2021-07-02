@@ -1,7 +1,5 @@
 import React from "react";
-import { SmallText } from "components/StyledText";
-import { PhosphorIcon } from "constants/Icons";
-import { theme } from "constants/theme";
+import { MiniText } from "components/StyledText";
 import { Box } from "react-native-magnus";
 
 const AddPalButton = () => {
@@ -14,12 +12,7 @@ const AddPalButton = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <SmallText pr={4}>Add pal</SmallText>
-      <PhosphorIcon
-        name="user-plus"
-        size={10}
-        color={theme.colors.textdark}
-      ></PhosphorIcon>
+      <MiniText>Add pal</MiniText>
     </Box>
   );
 };

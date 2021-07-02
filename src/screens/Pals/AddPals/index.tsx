@@ -1,92 +1,90 @@
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack/lib/typescript/src/types";
 import Container from "components/Container";
 import SearchableList from "components/SearchableList";
+import SmallButton from "components/SmallButton";
 import UserRow from "components/UserRow";
-import { theme } from "constants/theme";
-import { addPal, inviteContactToapp } from "lib/api/pals";
-import { getMockAddPals } from "mockapi";
+import { getAllNonPals, getSentPalRequests, requestAddPal } from "lib/api/pals";
+import { useAuth } from "lib/auth";
 import React, { useEffect, useState } from "react";
-import { Box, Button, Icon, Text } from "react-native-magnus";
-import { NonTootleUser, TootleUser, USER_STATUS, Person } from "types/types";
-import AddPalButton from "./Buttons/AddPalButton";
-import InviteSentButton from "./Buttons/InviteSentButton";
-import InviteTootleButton from "./Buttons/InviteTootleButton";
-import RequestedPalButton from "./Buttons/RequestedPalButton";
+import { OtherUser, PalsStackParamList, UserData } from "types/types";
 
 const AddPals = () => {
-  const [pals, setPals] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [nonPals, setNonPals] = useState<OtherUser[]>([]);
+  const [sentRequests, setSentRequests] = useState<OtherUser[]>([]);
+
+  const [isListLoading, setIsListLoading] = useState(false);
+  const authData = useAuth();
+  const navigation =
+    useNavigation<StackNavigationProp<PalsStackParamList, "AddPals">>();
+
+  // retrieve all users from database, also include current friends. To display "friends" indicator.
+  const fetchAllNonPalsAndPendingRequests = async () => {
+    const nonPalUsers = await getAllNonPals(authData.userData.uid);
+    const pending = await getSentPalRequests(authData.userData.uid);
+    setNonPals(nonPalUsers);
+    setSentRequests(pending);
+  };
   useEffect(() => {
-    const getContact = async () => {
-      setIsLoading(true);
-      const initialPals = await getMockAddPals();
-      setPals(initialPals);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
-    };
-    getContact();
+    const unsubscribe = navigation.addListener("focus", () => {
+      setIsListLoading(true);
+      fetchAllNonPalsAndPendingRequests().finally(() => {
+        setIsListLoading(false);
+      });
+    });
+
+    return unsubscribe;
   }, []);
 
-  const renderItem = ({ item }: { item: Person }) => {
-    const { status } = item;
-    let rightComponent: JSX.Element;
+  const handleAddButtonClick = async (
+    currentUser: UserData,
+    targetUser: OtherUser
+  ) => {
+    await requestAddPal(currentUser, targetUser);
+    setSentRequests((prev) => [...prev, targetUser]); // quick client side update
+  };
 
-    switch (status) {
-      case USER_STATUS.notOnApp:
-        rightComponent = (
-          <Button
-            p="none"
-            bg={theme.colors.primary400}
-            underlayColor={theme.colors.primary200}
-            onPress={() => inviteContactToapp(item as NonTootleUser)}
-          >
-            <InviteTootleButton />
-          </Button>
-        );
-        break;
-      case USER_STATUS.inviteSent:
-        rightComponent = <InviteSentButton />;
-        break;
-      case USER_STATUS.notPal:
-        rightComponent = (
-          <Button
-            p="none"
-            bg={theme.colors.primary400}
-            underlayColor={theme.colors.primary200}
-            onPress={() =>
-              addPal(
-                {
-                  id: "123",
-                  name: "test_current_user",
-                  contactNumber: "123123",
-                },
-                item as TootleUser
-              )
-            }
-          >
-            <AddPalButton />
-          </Button>
-        );
-        break;
-      case USER_STATUS.palRequestSent:
-        rightComponent = <RequestedPalButton />;
-        break;
+  const renderItem = ({ item: otherUser }: { item: OtherUser }) => {
+    let rightComponent = (
+      <SmallButton
+        onPress={() => handleAddButtonClick(authData.userData, otherUser)}
+        colorTheme="primary"
+      >
+        Add
+      </SmallButton>
+    );
 
-      default:
-        break;
+    if (sentRequests?.find((sentReq) => sentReq.uid === otherUser.uid)) {
+      rightComponent = (
+        <SmallButton
+          onPress={() => console.log("Accepted")}
+          disabled
+          colorTheme="plain"
+        >
+          Sent
+        </SmallButton>
+      );
     }
-    return <UserRow item={item} rightIcon={rightComponent} />;
+
+    return (
+      <UserRow
+        avatar_url={otherUser.url_thumbnail}
+        firstName={otherUser.firstName}
+        lastName={otherUser.lastName}
+        username={otherUser.username}
+        rightItem={rightComponent}
+      />
+    );
   };
 
   return (
-    <Container>
+    <Container avoidHeader>
       <SearchableList
-        data={pals}
+        data={nonPals}
         inputPlaceholder="Search..."
-        isLoading={isLoading}
+        isLoading={isListLoading}
         renderItem={renderItem}
       />
-      {/* <AddButton to="MeetupDetails" /> */}
     </Container>
   );
 };

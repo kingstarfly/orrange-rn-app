@@ -1,28 +1,25 @@
 import { theme } from "constants/theme";
 import React from "react";
-import {
-  // ButtonProps,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-  Pressable,
-} from "react-native";
-import { Box, WINDOW_WIDTH, ButtonProps } from "react-native-magnus";
-import { Subheading, MiniText } from "./StyledText";
+import { TouchableOpacity, StyleSheet, ActivityIndicator } from "react-native";
+import { MiniText } from "./StyledText";
 
-interface Props extends ButtonProps {
+interface Props {
+  onPress: () => Promise<any> | void;
   colorTheme: "primary" | "plain";
   loading?: boolean;
   mr?: number;
+  disabled?: boolean;
 }
 
 const SmallButton: React.FC<Props> = ({
   onPress,
-  loading,
   colorTheme,
   children,
+  disabled,
   mr = 0,
 }) => {
+  const [isLoading, setIsLoading] = React.useState(false);
+
   let backgroundColor;
   let textColor;
   let borderWidth = 0;
@@ -43,9 +40,12 @@ const SmallButton: React.FC<Props> = ({
     default:
       break;
   }
-  if (loading) {
-    backgroundColor = theme.colors.primary200;
-  }
+
+  const handleOnPress = async () => {
+    setIsLoading(true);
+    await onPress();
+    setIsLoading(false);
+  };
   return (
     <TouchableOpacity
       style={{
@@ -55,13 +55,13 @@ const SmallButton: React.FC<Props> = ({
         borderWidth: borderWidth,
         borderColor: borderColor,
       }}
-      disabled={loading}
-      onPress={onPress}
+      disabled={disabled}
+      onPress={() => handleOnPress()}
     >
-      {!loading ? (
+      {!isLoading ? (
         <MiniText color={textColor}>{children}</MiniText>
       ) : (
-        <ActivityIndicator size="large" color={theme.colors.textlight} />
+        <ActivityIndicator size="small" color={theme.colors.textlight} />
       )}
     </TouchableOpacity>
   );

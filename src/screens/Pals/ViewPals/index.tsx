@@ -7,28 +7,35 @@ import { BodyTextRegular } from "components/StyledText";
 import UserRow from "components/UserRow";
 import { DUMMY_USER_ID } from "constants/mockdata";
 import { theme } from "constants/theme";
-import { getPalRequests, getPals } from "lib/api/pals";
-import { getMockUsers } from "mockapi";
+import {
+  acceptPalRequest,
+  deletePalRequest,
+  getPalRequests,
+  getPals,
+} from "lib/api/pals";
+
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Box } from "react-native-magnus";
 import {
-  MainBottomTabParamList,
   OtherUser,
   PalFields,
   PalRequestFields,
-  TootleUser,
+  PalsStackParamList,
   UserData,
 } from "types/types";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { useAuth } from "lib/auth";
 
 const ViewPals = () => {
   const [pals, setPals] = useState<PalFields[]>([]);
   const [palRequests, setPalRequests] = useState<PalRequestFields[]>([]);
 
+  const authData = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const navigation =
-    useNavigation<BottomTabNavigationProp<MainBottomTabParamList, "Pals">>();
+    useNavigation<StackNavigationProp<PalsStackParamList, "ViewPals">>();
 
   const fetchPalsAndPalRequests = async () => {
     const pals = await getPals(DUMMY_USER_ID);
@@ -50,21 +57,45 @@ const ViewPals = () => {
     return unsubscribe;
   }, []);
 
+  const handleAcceptPress = async (
+    currentUser: UserData,
+    requester: OtherUser
+  ) => {
+    console.log("Accepted");
+    try {
+      await acceptPalRequest(currentUser, requester);
+      setPalRequests((prev) => prev.filter((req) => req.uid !== requester.uid));
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const handleDeletePress = async (
+    currentUser: UserData,
+    requester: OtherUser
+  ) => {
+    console.log("Deleted");
+    try {
+      await deletePalRequest(currentUser, requester);
+      setPalRequests((prev) => prev.filter((req) => req.uid !== requester.uid));
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   const renderItem = ({ item, index }: { item: OtherUser; index: number }) => {
     let rightItem =
       index < palRequests.length ? (
         <Box row justifyContent="flex-end" alignItems="center">
           <SmallButton
-            onPress={() => console.log("Accepted")}
-            loading={false}
+            onPress={() => handleAcceptPress(authData.userData, item)}
             colorTheme="primary"
             mr={8}
           >
             Accept
           </SmallButton>
           <SmallButton
-            onPress={() => console.log("Deleted")}
-            loading={false}
+            onPress={() => handleDeletePress(authData.userData, item)}
             colorTheme="plain"
           >
             Delete
@@ -87,7 +118,7 @@ const ViewPals = () => {
   return (
     <Container>
       <Box row alignSelf="flex-end" my={20}>
-        <TouchableOpacity onPress={() => console.log("to add pals")}>
+        <TouchableOpacity onPress={() => navigation.navigate("AddPals")}>
           <BodyTextRegular color={theme.colors.primary700}>
             Add a Pal
           </BodyTextRegular>

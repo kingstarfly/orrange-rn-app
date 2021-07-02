@@ -1,12 +1,12 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CreateMeetupStackNavigator from "./CreateMeetupStackNavigator";
-import PalsTopTabvNavigator from "./PalsTopTabvNavigator";
 import ViewPlansNavigator from "./ViewPlansNavigator";
 import { PhosphorIcon } from "constants/Icons";
 import { theme } from "constants/theme";
 import { WINDOW_HEIGHT } from "react-native-magnus";
 import { MainBottomTabParamList } from "types/types";
+import PalsStackNavigator from "./PalsStackNavigator";
 
 const Tab = createBottomTabNavigator<MainBottomTabParamList>();
 
@@ -55,7 +55,7 @@ function MainBottomTabNavigator() {
       />
       <Tab.Screen
         name="Pals"
-        component={PalsTopTabvNavigator}
+        component={PalsStackNavigator}
         options={{
           tabBarIcon: ({ focused, size, color }) => {
             let iconName = focused ? "users-fill" : "users";
