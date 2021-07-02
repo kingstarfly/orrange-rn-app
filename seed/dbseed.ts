@@ -41,6 +41,8 @@ const users = [...Array(10).keys()].map(
     } as UserData)
 );
 
+users[0].uid = "DUMMY_USER_ID";
+
 function initialiseUsers() {
   try {
     users.forEach((user) => {
@@ -103,19 +105,19 @@ function createPalRequests() {
   try {
     users.forEach((user, userIndex) => {
       let prevIndex =
-        userIndex <= 1 ? users.length - 2 + userIndex : userIndex - 2;
-
+        userIndex <= 1 ? userIndex - 2 + users.length - 1 : userIndex - 2;
+      const requester = users[prevIndex];
       db.collection("users")
         .doc(user.uid)
         .collection("incomingPalRequests")
-        .doc(users[prevIndex].uid)
+        .doc(requester.uid)
         .set({
           requestedAt: faker.date.past().toISOString(),
-          uid: user.uid,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          url_thumbnail: user.url_thumbnail,
-          username: user.username,
+          uid: requester.uid,
+          firstName: requester.firstName,
+          lastName: requester.lastName,
+          url_thumbnail: requester.url_thumbnail,
+          username: requester.username,
         } as PalRequestFields);
     });
   } catch (error) {
@@ -162,7 +164,7 @@ let today = new Date();
 function addParticipants() {
   try {
     meetups.forEach((meetup, meetupIndex) => {
-      users.slice(8).forEach(async (user, userIndex) => {
+      users.slice(0, 8).forEach(async (user, userIndex) => {
         await db
           .collection("meetups")
           .doc(meetup.id)

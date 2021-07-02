@@ -9,6 +9,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import Container from "components/Container";
 import LargeButton from "components/LargeButton";
 import * as ImageManipulator from "expo-image-manipulator";
+import { DUMMY_USER_ID } from "constants/mockdata";
+import { DB } from "lib/api/dbtypes";
 
 export default function YourUsername() {
   const route = useRoute<RouteProp<SignUpStackParamList, "YourUsername">>();
@@ -82,7 +84,7 @@ export default function YourUsername() {
     }
 
     //check if username is not taken
-    await firestore
+    firestore
       .collection("users")
       .where("username", "==", username)
       .get()
@@ -92,15 +94,27 @@ export default function YourUsername() {
           return alert("Username is already taken!");
         } else {
           console.log("Username is unique! Continuing to next page");
-          authData.updateUserInfo({
-            uid: authData.userData.uid,
-            firstName: firstName,
-            lastName: lastName,
-            username: username,
-            contact: phoneNumber,
-            url_original: url_original,
-            url_thumbnail: url_thumbnail,
-          } as UserData);
+
+          // !! TODO CHANGE THIS: Doing this to mock user
+          // authData.updateUserInfo({
+          //   uid: authData.userData.uid,
+          //   firstName: firstName,
+          //   lastName: lastName,
+          //   username: username,
+          //   contact: phoneNumber,
+          //   url_original: url_original,
+          //   url_thumbnail: url_thumbnail,
+          // } as UserData);
+
+          firestore
+            .collection(DB.USERS)
+            .doc(DUMMY_USER_ID)
+            .get()
+            .then((doc) => {
+              console.log("Dummy user data is here");
+              console.log(doc.data());
+              authData.updateUserInfo(doc.data() as UserData);
+            });
         }
       });
   };

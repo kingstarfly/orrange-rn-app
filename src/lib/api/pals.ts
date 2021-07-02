@@ -1,4 +1,5 @@
 import { firestore } from "lib/firebase";
+import { convertUserToPal } from "lib/helpers";
 import {
   NonTootleUser,
   OtherUser,
@@ -50,14 +51,15 @@ export const acceptPalRequest = async (
     .doc(currentUser.uid)
     .collection(DB.PALS)
     .doc(requester.uid)
-    .set(requester);
+    .set(convertUserToPal(requester));
 
   await firestore
     .collection(DB.USERS)
     .doc(requester.uid)
     .collection(DB.PALS)
     .doc(currentUser.uid)
-    .set(currentUser);
+    .set(convertUserToPal(currentUser));
+
   // 2. For currentUser, remove document from incomingPalRequests
   await firestore
     .collection(DB.USERS)

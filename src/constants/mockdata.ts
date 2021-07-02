@@ -1,4 +1,4 @@
-export const DUMMY_USER_ID = "1737c57e-cd0a-487e-9963-4b46bad09a70";
+export const DUMMY_USER_ID = "DUMMY_USER_ID";
 
 export const meetDataOne = {
   id: "1",

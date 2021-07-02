@@ -25,7 +25,8 @@ const ConfirmedViewPlans = () => {
   React.useEffect(() => {
     const date_format_MMMM_yyyy = "MMMM yyyy";
     const fn = async () => {
-      const result = await getAllMeetingDataForUser(DUMMY_USER_ID);
+      console.log(`getting meeting data for ${authData.userData.uid}`);
+      const result = await getAllMeetingDataForUser(authData.userData.uid);
 
       let myMap = new Map<string, MeetingCardProps[]>();
 

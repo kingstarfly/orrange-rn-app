@@ -65,6 +65,7 @@ const ViewPals = () => {
     try {
       await acceptPalRequest(currentUser, requester);
       setPalRequests((prev) => prev.filter((req) => req.uid !== requester.uid));
+      setPals((prev) => [{ ...requester, addedAt: null }, ...prev]);
     } catch (error) {
       alert(error);
     }
