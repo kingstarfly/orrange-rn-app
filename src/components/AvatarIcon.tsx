@@ -1,7 +1,6 @@
 import { theme } from "constants/theme";
 import { getInitials } from "lib/helpers";
 import React from "react";
-<<<<<<< HEAD
 import { ImageSourcePropType, ImageURISource } from "react-native";
 import { Avatar, Box, Image } from "react-native-magnus";
 import { BodyTextRegular, TinyText } from "./StyledText";

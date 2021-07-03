@@ -54,20 +54,7 @@ const DiscussDetailsScreen = () => {
 
   return (
     <Container avoidHeader>
-<<<<<<< HEAD
-      <Subheading>Plan Screen</Subheading>
-      <SmallText>{JSON.stringify(meetingInfo, null, 2)}</SmallText>
-=======
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
-      )}
+      
       <RBSheet
         ref={refRBSheet}
         closeOnDragDown={false}
@@ -88,6 +75,7 @@ const DiscussDetailsScreen = () => {
           </Button>
         </Div>
       </RBSheet>
+      
       <Div row pb={divPadding}>
         <Text fontSize={fontSize}>Party-cipants🎊</Text>
         <TouchableOpacity>
@@ -111,12 +99,38 @@ const DiscussDetailsScreen = () => {
         <Text fontSize={fontSize}>When should we meet?</Text>
         <Icon name="calendar" fontSize={fontSize} color="black" pl={iconPadding}/>
       </Div>
+      
+      <Div pb={divPadding}>
 
-      <Div row alignItems="center" pb={divPadding}>
-        <Input onFocus={showDatepicker} placeholder="Add a date!" w={windowWidth * 0.4} mr={iconPadding} fontSize={fontSize * 0.75} value={date.toString()}/>
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode="date"
+          is24Hour={true}
+          display="default"
+          onChange={onChange}
+        />
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode="time"
+          is24Hour={true}
+          display="default"
+          onChange={onChange}
+        />
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode="time"
+          is24Hour={true}
+          display="default"
+          onChange={onChange}
+        />
+      
+        {/* <Input onFocus={showDatepicker} placeholder="Add a date!" w={windowWidth * 0.4} mr={iconPadding} fontSize={fontSize * 0.75} value={date.toString()}/>
         <Input onFocus={showTimepicker} placeholder="Start" w={windowWidth * 0.2} mr={iconPadding} fontSize={fontSize * 0.75}/>
         <Text mr={iconPadding}>-</Text>
-        <Input onFocus={showTimepicker} placeholder="End" w={windowWidth * 0.2} fontSize={fontSize * 0.75}/>
+        <Input onFocus={showTimepicker} placeholder="End" w={windowWidth * 0.2} fontSize={fontSize * 0.75}/> */}
       </Div>
 
       <Div row alignItems="center" pb={divPadding}>
@@ -146,7 +160,6 @@ const DiscussDetailsScreen = () => {
           <Text fontSize={fontSize} color="white">CONFIRM</Text>
         </Button>
       </Div>
->>>>>>> dc9788b (Initial discuss details sreen)
     </Container>
   );
 };
