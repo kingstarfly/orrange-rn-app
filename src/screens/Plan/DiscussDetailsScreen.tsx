@@ -123,8 +123,8 @@ const DiscussDetailsScreen = () => {
           />
         </Div>
 
-        <Div row alignItems="center" flex={0.2}>
-          <Text textAlign="center" fontSize={fontSize * 0.75}>to</Text>
+        <Div row alignItems="center" flex={0.4}>
+          <Text textAlign="center" fontSize={fontSize * 0.75} px={iconPadding}> to</Text>
         </Div>
 
         <Div flex={1}>
