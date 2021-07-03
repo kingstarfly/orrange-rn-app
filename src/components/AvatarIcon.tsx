@@ -8,15 +8,17 @@ import { BodyTextRegular, TinyText } from "./StyledText";
 interface AvatarIcon {
   uri?: string;
   label?: string;
+  radius?: number;
+  px?: number;
 }
 
-const AvatarIcon: React.FC<AvatarIcon> = ({ uri, label }) => {
+const AvatarIcon: React.FC<AvatarIcon> = ({ uri, label , radius=50, px=5}) => {
   return (
     <Box>
       {uri ? (
         <Image
-          h={50}
-          w={50}
+          h={radius}
+          w={radius}
           rounded="circle"
           borderWidth={2}
           borderColor="white"
