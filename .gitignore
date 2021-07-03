@@ -15,3 +15,5 @@ web-build/
 firebase-debug.log*
 firestore-debug.log*
 ui-debug.log*
+
+package-lock.json
