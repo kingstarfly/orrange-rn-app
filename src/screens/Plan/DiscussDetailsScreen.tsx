@@ -26,7 +26,7 @@ const DiscussDetailsScreen = () => {
     refRBSheet.current.open()
   }
 
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
 
@@ -83,15 +83,15 @@ const DiscussDetailsScreen = () => {
         </TouchableOpacity>
       </Div>
       
-      <Div row pb={divPadding}>
+      <Div row pb={divPadding} justifyContent="space-evenly">
         <TouchableOpacity onLongPress={openModal}>
-          <AvatarIcon radius={70} label="Chris" source={{uri: "https://picsum.photos/200"}}/>
+          <AvatarIcon radius={70} label="Chris" uri="https://picsum.photos/200"/>
         </TouchableOpacity>
         <TouchableOpacity onLongPress={openModal}>
-          <AvatarIcon radius={70} label="Chris" source={{uri: "https://picsum.photos/200"}}/>
+          <AvatarIcon radius={70} label="Chris" uri= "https://picsum.photos/200"/>
         </TouchableOpacity>
         <TouchableOpacity onLongPress={openModal}>
-          <AvatarIcon radius={70} label="Chris" source={{uri: "https://picsum.photos/200"}}/>
+          <AvatarIcon radius={70} label="Chris" uri="https://picsum.photos/200"/>
         </TouchableOpacity>
       </Div>
 
@@ -137,11 +137,6 @@ const DiscussDetailsScreen = () => {
             onChange={onChange}
           />
         </Div>
-      
-        {/* <Input onFocus={showDatepicker} placeholder="Add a date!" w={windowWidth * 0.4} mr={iconPadding} fontSize={fontSize * 0.75} value={date.toString()}/>
-        <Input onFocus={showTimepicker} placeholder="Start" w={windowWidth * 0.2} mr={iconPadding} fontSize={fontSize * 0.75}/>
-        
-        <Input onFocus={showTimepicker} placeholder="End" w={windowWidth * 0.2} fontSize={fontSize * 0.75}/> */}
       </Div>
 
       <Div row alignItems="center" pb={divPadding}>
