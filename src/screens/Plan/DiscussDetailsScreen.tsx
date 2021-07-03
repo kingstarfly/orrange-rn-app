@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useWindowDimensions, TouchableOpacity, Platform, View } from "react-native";
+import { useWindowDimensions, TouchableOpacity, Platform } from "react-native";
 import Container from "components/Container";
 import { Subheading, SmallText } from "components/StyledText";
 import { RouteProp, useRoute } from "@react-navigation/core";
