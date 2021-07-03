@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useWindowDimensions, TouchableOpacity, Platform } from "react-native";
+import { useWindowDimensions, TouchableOpacity, Platform, View } from "react-native";
 import Container from "components/Container";
 import { Subheading, SmallText } from "components/StyledText";
 import { RouteProp, useRoute } from "@react-navigation/core";
@@ -100,36 +100,47 @@ const DiscussDetailsScreen = () => {
         <Icon name="calendar" fontSize={fontSize} color="black" pl={iconPadding}/>
       </Div>
       
-      <Div pb={divPadding}>
+      <Div row justifyContent="space-between" pb={divPadding}>
+        <Div flex={1.3}>
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode="date"
+            is24Hour={true}
+            display="default"
+            onChange={onChange}
+          />
+        </Div>
 
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode="date"
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode="time"
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode="time"
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
+        <Div flex={0.8}>
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode="time"
+            is24Hour={true}
+            display="default"
+            onChange={onChange}
+          />
+        </Div>
+
+        <Div row alignItems="center" flex={0.2}>
+          <Text textAlign="center" fontSize={fontSize * 0.75}>to</Text>
+        </Div>
+
+        <Div flex={1}>
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode="time"
+            is24Hour={true}
+            display="default"
+            onChange={onChange}
+          />
+        </Div>
       
         {/* <Input onFocus={showDatepicker} placeholder="Add a date!" w={windowWidth * 0.4} mr={iconPadding} fontSize={fontSize * 0.75} value={date.toString()}/>
         <Input onFocus={showTimepicker} placeholder="Start" w={windowWidth * 0.2} mr={iconPadding} fontSize={fontSize * 0.75}/>
-        <Text mr={iconPadding}>-</Text>
+        
         <Input onFocus={showTimepicker} placeholder="End" w={windowWidth * 0.2} fontSize={fontSize * 0.75}/> */}
       </Div>
 
