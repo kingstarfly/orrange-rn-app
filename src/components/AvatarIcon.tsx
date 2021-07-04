@@ -1,24 +1,31 @@
 import { theme } from "constants/theme";
 import { getInitials } from "lib/helpers";
 import React from "react";
-import { ImageSourcePropType, ImageURISource } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import { Avatar, Box, Image } from "react-native-magnus";
-import { BodyTextRegular, TinyText } from "./StyledText";
+import { BodyTextRegular, CaptionText } from "./StyledText";
+import { LinearGradient } from "expo-linear-gradient";
+import MaskedView from "@react-native-community/masked-view";
 
 interface AvatarIcon {
   uri?: string;
   label?: string;
-  radius?: number;
-  px?: number;
+  diameter?: number;
+  withLabel?: boolean;
 }
 
-const AvatarIcon: React.FC<AvatarIcon> = ({ uri, label , radius=50, px=5}) => {
+const AvatarIcon: React.FC<AvatarIcon> = ({
+  uri,
+  label,
+  withLabel,
+  diameter = 50,
+}) => {
   return (
     <Box>
       {uri ? (
         <Image
-          h={radius}
-          w={radius}
+          h={diameter}
+          w={diameter}
           rounded="circle"
           borderWidth={2}
           borderColor="white"
@@ -34,7 +41,23 @@ const AvatarIcon: React.FC<AvatarIcon> = ({ uri, label , radius=50, px=5}) => {
           <BodyTextRegular>{getInitials(label)}</BodyTextRegular>
         </Avatar>
       )}
-      {/* <TinyText>{label}</TinyText> */}
+      {withLabel && (
+        <MaskedView
+          maskElement={
+            <LinearGradient
+              style={StyleSheet.absoluteFill}
+              colors={["rgba(255,255,255,1)", "rgba(255,255,255,0)"]}
+              locations={[0.8, 1]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            />
+          }
+        >
+          <CaptionText maxW={diameter} numberOfLines={1} ellipsizeMode="clip">
+            {label}
+          </CaptionText>
+        </MaskedView>
+      )}
     </Box>
   );
 };

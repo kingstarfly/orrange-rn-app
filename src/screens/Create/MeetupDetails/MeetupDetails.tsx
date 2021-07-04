@@ -12,7 +12,7 @@ import {
   BodyTextRegular,
 } from "components/StyledText";
 import { useWindowDimensions } from "react-native";
-import { StyledInput } from "components/StyledInput";
+import { UnderlinedInput } from "components/StyledInput";
 import PalsListSelect from "./AddFriends";
 
 const MeetupDetails = ({
@@ -32,7 +32,7 @@ const MeetupDetails = ({
           <Heading>Create New Plan</Heading>
         </Box>
         <Box flex={1}>
-          <StyledInput
+          <UnderlinedInput
             px={0}
             py="sm"
             placeholder="Name Your Meetup!"

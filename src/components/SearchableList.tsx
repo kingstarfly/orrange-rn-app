@@ -5,6 +5,7 @@ import { View } from "react-native";
 import { FlatList, ListRenderItem } from "react-native";
 import { Box, Icon, Input, Text } from "react-native-magnus";
 import Loading from "./Loading";
+import { SearchInput } from "./StyledInput";
 
 interface SearchableListProps<ItemProp> {
   data: ItemProp[];
@@ -53,18 +54,11 @@ const SearchableList = <
 
   return (
     <Box justifyContent="flex-end">
-      <Input
-        placeholder={inputPlaceholder}
-        py="lg"
-        mb="md"
-        focusBorderColor="blue700"
-        prefix={<Icon name="search" color="gray900" fontFamily="Feather" />}
-        borderColor={theme.colors.linegray}
-        borderWidth={2}
-        onChangeText={setSearchQuery}
+      <SearchInput
+        inputPlaceholder={inputPlaceholder}
         value={searchQuery}
-        fontFamily="inter-regular"
-        fontSize={16}
+        onChangeText={setSearchQuery}
+        showPrefix
       />
 
       <FlatList

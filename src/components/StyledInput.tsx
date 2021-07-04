@@ -2,8 +2,9 @@ import React from "react";
 import { theme } from "constants/theme";
 import { Input } from "react-native-magnus";
 import { InputProps } from "react-native-magnus";
+import { PhosphorIcon } from "constants/Icons";
 
-export const StyledInput = (props: InputProps) => {
+export const UnderlinedInput = (props: InputProps) => {
   return (
     <Input
       borderTopWidth={0}
@@ -20,6 +21,48 @@ export const StyledInput = (props: InputProps) => {
       fontSize={17}
       fontFamily="inter-regular"
       textAlignVertical="bottom"
+    />
+  );
+};
+
+interface SearchInputProps extends InputProps {
+  inputPlaceholder: string;
+  onChangeText: (text: string) => void;
+  value: string;
+  showPrefix?: boolean;
+}
+export const SearchInput = ({
+  inputPlaceholder,
+  onChangeText,
+  value,
+  showPrefix,
+  ...rest
+}: SearchInputProps) => {
+  return (
+    <Input
+      h={32}
+      py={0}
+      px={20}
+      my={0}
+      textAlignVertical="center"
+      placeholder={inputPlaceholder}
+      focusBorderColor="blue700"
+      prefix={
+        showPrefix && (
+          <PhosphorIcon
+            name="magnifying-glass"
+            color={theme.colors.textgray200}
+            size={14}
+          />
+        )
+      }
+      borderColor={theme.colors.linegray}
+      borderWidth={1.5}
+      onChangeText={onChangeText}
+      value={value}
+      fontFamily="inter-regular"
+      fontSize={13}
+      {...rest}
     />
   );
 };
