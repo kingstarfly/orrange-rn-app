@@ -24,7 +24,6 @@ import LoginScreen from "screens/Authentication/LoginScreen";
 import VerificationScreen from "screens/Authentication/VerificationScreen";
 
 import MainBottomTabNavigator from "./MainBottomTabNavigator";
-import ContactsScreen from "screens/Contacts/ContactsScreen";
 import { useAuth } from "lib/auth";
 import DiscussDetailsScreen from "screens/Plan/DiscussDetailsScreen";
 import { headerHeight } from "constants/Layout";
@@ -34,6 +33,7 @@ import YourInfoScreen from "screens/Authentication/YourInfoScreen";
 import { PhosphorIcon } from "constants/Icons";
 import Loading from "components/Loading";
 import { auth } from "firebase-admin";
+import InviteContacts from "screens/InviteContacts";
 
 export default function Navigation({
   colorScheme,
@@ -121,7 +121,7 @@ const AppStackScreen = () => (
     />
     <AppStack.Screen
       name="Contacts"
-      component={ContactsScreen}
+      component={InviteContacts}
       options={{ title: "" }}
     />
     <AppStack.Screen

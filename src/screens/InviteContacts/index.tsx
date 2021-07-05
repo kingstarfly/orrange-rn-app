@@ -4,7 +4,7 @@ import Container from "components/Container";
 import SearchableList from "components/SearchableList";
 import UserRow from "components/UserRow";
 import { theme } from "constants/theme";
-import { addPal, getAllNonPals, inviteContactToapp } from "lib/api/pals";
+import { getAllNonPals, inviteContactToapp } from "lib/api/pals";
 import { useAuth } from "lib/auth";
 import { getMockAddPals } from "mockapi";
 import React, { useEffect, useState } from "react";
@@ -24,7 +24,7 @@ const InviteContacts = () => {
   // retrieve all users from database, also include current friends. To display "friends" indicator.
   const fetchAllNonPals = async () => {
     const nonPalUsers = await getAllNonPals(authData.userData.uid);
-    setNonPals(nonPalUsers);
+    // setNonPals(nonPalUsers);
   };
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
