@@ -1,16 +1,10 @@
-import {
-  useWindowDimensions,
-  View,
-  Platform,
-  ActivityIndicator,
-} from "react-native";
+import { useWindowDimensions, Platform } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Button, Div, Text, Input, Icon, Image } from "react-native-magnus";
+import { Div, Input, Icon, Image } from "react-native-magnus";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
-import { useAuth } from "lib/auth";
-import { firestore } from "lib/firebase";
-import { AppStackParamList, SignUpStackParamList } from "types/types";
+
+import { SignUpStackParamList } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 
@@ -18,9 +12,11 @@ import Container from "components/Container";
 import LargeButton from "components/LargeButton";
 import { BodyTextRegular, Heading } from "components/StyledText";
 
-export default function YourInfo() {
+export default function YourInfoScreen() {
   const navigation =
-    useNavigation<StackNavigationProp<SignUpStackParamList, "YourInfo">>();
+    useNavigation<
+      StackNavigationProp<SignUpStackParamList, "YourInfoScreen">
+    >();
 
   const width = useWindowDimensions().width;
 
@@ -32,7 +28,11 @@ export default function YourInfo() {
     if (!firstName || !lastName) {
       return alert("Please enter first and last name!");
     }
-    navigation.navigate("YourUsername", { firstName, lastName, imageUri });
+    navigation.navigate("YourUsernameScreen", {
+      firstName,
+      lastName,
+      imageUri,
+    });
   };
 
   useEffect(() => {

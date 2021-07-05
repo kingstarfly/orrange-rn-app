@@ -106,8 +106,8 @@ export type AuthStackParamList = {
 };
 
 export type SignUpStackParamList = {
-  YourInfo: undefined;
-  YourUsername: {
+  YourInfoScreen: undefined;
+  YourUsernameScreen: {
     firstName: string;
     lastName: string;
     imageUri: any;

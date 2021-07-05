@@ -4,7 +4,6 @@
  *
  */
 import React from "react";
-
 import {
   NavigationContainer,
   DefaultTheme,
@@ -13,9 +12,6 @@ import {
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ColorSchemeName } from "react-native";
-
-import NotFoundScreen from "../screens/NotFoundScreen";
-
 import {
   AppStackParamList,
   AuthStackParamList,
@@ -23,8 +19,6 @@ import {
 } from "../types/types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { theme } from "constants/theme";
-
-import TestScreen from "screens/TestScreen";
 
 import LoginScreen from "screens/Authentication/LoginScreen";
 import VerificationScreen from "screens/Authentication/VerificationScreen";
@@ -35,10 +29,8 @@ import { useAuth } from "lib/auth";
 import DiscussDetailsScreen from "screens/Plan/DiscussDetailsScreen";
 import { headerHeight } from "constants/Layout";
 import FinalDetailsScreen from "screens/Plan/FinalDetailsScreen";
-import YourUsername from "screens/Authentication/YourUsername";
-import YourInfo from "screens/Authentication/YourInfo";
-import StartScreen from "screens/Authentication/StartScreen";
-import { firebaseApp, firestore } from "lib/firebase";
+import YourUsername from "screens/Authentication/YourUsernameScreen";
+import YourInfoScreen from "screens/Authentication/YourInfoScreen";
 import { PhosphorIcon } from "constants/Icons";
 import Loading from "components/Loading";
 import { auth } from "firebase-admin";
@@ -77,16 +69,16 @@ const AuthStackScreen = () => (
 const SignUpStack = createStackNavigator<SignUpStackParamList>();
 const SignUpStackScreen = () => (
   <SignUpStack.Navigator
-    initialRouteName="YourInfo"
+    initialRouteName="YourInfoScreen"
     screenOptions={{ headerShown: false }}
   >
     <SignUpStack.Screen
-      name="YourInfo"
-      component={YourInfo}
+      name="YourInfoScreen"
+      component={YourInfoScreen}
       options={{ headerShown: false }}
     />
     <SignUpStack.Screen
-      name="YourUsername"
+      name="YourUsernameScreen"
       component={YourUsername}
       options={{ headerShown: false }}
     />

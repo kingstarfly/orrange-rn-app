@@ -13,9 +13,12 @@ import { DUMMY_USER_ID } from "constants/mockdata";
 import { DB } from "lib/api/dbtypes";
 
 export default function YourUsername() {
-  const route = useRoute<RouteProp<SignUpStackParamList, "YourUsername">>();
+  const route =
+    useRoute<RouteProp<SignUpStackParamList, "YourUsernameScreen">>();
   const navigation =
-    useNavigation<StackNavigationProp<SignUpStackParamList, "YourUsername">>();
+    useNavigation<
+      StackNavigationProp<SignUpStackParamList, "YourUsernameScreen">
+    >();
   const authData = useAuth();
 
   const phoneNumber = authData.userData.contact;
