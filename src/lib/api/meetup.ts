@@ -1,4 +1,5 @@
 import { meetingsData } from "constants/mockdata";
+import { compareAsc, formatISO, parseISO } from "date-fns";
 import { firestore } from "lib/firebase";
 import { MeetingCardProps } from "screens/ViewPlans/MeetingCard/MeetingCard";
 import {
@@ -6,8 +7,10 @@ import {
   ParticipantFields,
   PendingParticipantFields,
   PreferredDuration,
+  SuggestionFields,
   UserData,
 } from "types/types";
+import { DB } from "./dbtypes";
 
 export async function getAllDurationsFromMeeting(
   meetupId: string
@@ -129,3 +132,67 @@ export async function getAllMeetingDataForUser(
   });
   return allMeetingData;
 }
+
+export const getSuggestions = async (meetupId: string) => {
+  const snapshot = await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.SUGGESTIONS)
+    .get();
+  let suggestions: SuggestionFields[] = [];
+
+  snapshot.forEach((doc) => suggestions.push(doc.data() as SuggestionFields));
+
+  // order by ascending date
+  suggestions.sort((a, b) =>
+    compareAsc(parseISO(a.createdAt), parseISO(b.createdAt))
+  );
+
+  return suggestions;
+};
+
+export const toggleLike = async (
+  meetupId: string,
+  suggestionId: string,
+  userId: string
+) => {
+  const doc = firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.SUGGESTIONS)
+    .doc(suggestionId);
+  const a = await doc.get();
+  const oldData = a.data() as SuggestionFields;
+
+  const index = oldData.likedBy.findIndex((e) => e === userId);
+
+  if (index !== -1) {
+    oldData.likedBy.splice(index, 1);
+  } else {
+    oldData.likedBy.push(userId);
+  }
+
+  await doc.set(oldData);
+};
+
+export const addSuggestion = async (
+  meetupId: string,
+  userId: string,
+  content: string
+) => {
+  const doc = firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.SUGGESTIONS)
+    .doc();
+
+  const newSuggestion: SuggestionFields = {
+    createdAt: new Date().toISOString(),
+    content: content,
+    id: doc.id,
+    likedBy: [userId],
+    ownerUid: userId,
+  };
+
+  await doc.set(newSuggestion);
+};

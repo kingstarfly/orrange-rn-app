@@ -2,54 +2,37 @@ import React, { useState, useRef } from "react";
 import {
   useWindowDimensions,
   TouchableOpacity,
-  Platform,
   Pressable,
   ScrollView,
 } from "react-native";
 import Container from "components/Container";
-import {
-  Subheading,
-  SmallText,
-  BodyTextRegular,
-  CaptionText,
-  MiniText,
-  Heading,
-} from "components/StyledText";
+import { Subheading, CaptionText, Heading } from "components/StyledText";
 import { RouteProp, useRoute } from "@react-navigation/core";
-import { AppStackParamList } from "types/types";
-import {
-  Text,
-  Div,
-  Button,
-  Icon,
-  Input,
-  WINDOW_WIDTH,
-  WINDOW_HEIGHT,
-} from "react-native-magnus";
+import { AppStackParamList, SuggestionFields } from "types/types";
+import { Div, WINDOW_HEIGHT } from "react-native-magnus";
 import AvatarIcon from "components/AvatarIcon";
 import RBSheet from "react-native-raw-bottom-sheet";
-import { format } from "date-fns";
-import HeaderComponent from "./Components/HeaderComponent";
+import HeaderComponent from "./Components/SectionHeaderComponent";
 import { theme } from "constants/theme";
-import DateTimeRowComponent from "./Components/DateTimeRowComponent";
-import HeartCountComponent from "./Components/HeartCountComponent";
+import DateTimeRowComponent from "../../components/DateTimeRowComponent";
 import SuggestionRowComponent from "./Components/SuggestionRowComponent";
 import { PhosphorIcon } from "constants/Icons";
-import { SearchInput, UnderlinedInput } from "components/StyledInput";
+import { SearchInput } from "components/StyledInput";
 import LargeButton from "components/LargeButton";
-import { View } from "react-native";
+import { addSuggestion, getSuggestions, toggleLike } from "lib/api/meetup";
+import { useAuth } from "lib/auth";
+import MeetupNameHeaderComponent from "./Components/MeetupNameHeaderComponent";
 
 const DiscussDetailsScreen = () => {
   const route = useRoute<RouteProp<AppStackParamList, "DiscussDetails">>();
   const { meetingInfo, participants, pendingParticipants } = route.params;
+  const authData = useAuth();
 
-  const [suggestion, setSuggestion] = React.useState("");
+  const [newSuggestion, setNewSuggestion] = React.useState("");
+  const [suggestions, setSuggestions] = React.useState<SuggestionFields[]>([]);
 
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
-  const fontSize = 30;
-  const iconPadding = 10;
-  var heartColour = "#F78826";
   const divPadding = 20;
 
   const refRBSheet = useRef(null);
@@ -58,6 +41,56 @@ const DiscussDetailsScreen = () => {
     refRBSheet.current.open();
   };
 
+  const fetchSuggestions = async () => {
+    const suggestions = await getSuggestions(meetingInfo.id);
+    setSuggestions(suggestions);
+  };
+  React.useEffect(() => {
+    fetchSuggestions();
+  }, [meetingInfo]);
+
+  const handleSuggestionOnPress = async (suggestionId: string) => {
+    // update front end so we can avoid refreshing page
+    setSuggestions((prev) => {
+      const suggestionIndex = prev.findIndex((s) => s.id === suggestionId);
+      const suggestion = prev[suggestionIndex];
+      const prevSuggestions = prev.slice(0, suggestionIndex);
+      const afterSuggestions = prev.slice(suggestionIndex + 1);
+
+      const index = suggestion.likedBy.findIndex(
+        (uid) => uid === authData.userData.uid
+      );
+      if (index !== -1) {
+        suggestion.likedBy.splice(index, 1);
+      } else {
+        suggestion.likedBy.push(authData.userData.uid);
+      }
+      return [...prevSuggestions, suggestion, ...afterSuggestions];
+    });
+
+    // call back end
+    await toggleLike(meetingInfo.id, suggestionId, authData.userData.uid);
+  };
+
+  const handleAddSuggestion = async (content: string) => {
+    if (!content) {
+      return;
+    }
+    // // client side updating
+    // const newSuggestion: SuggestionFields = {
+    //   createdAt: new Date().toISOString(),
+    //   content: content,
+    //   id: "no_id", // user cannot unlike his suggestion, so we dont need id to be real
+    //   likedBy: [authData.userData.uid],
+    //   ownerUid: authData.userData.uid,
+    // };
+    // setSuggestions((prev) => [...prev, newSuggestion]);
+    setNewSuggestion("");
+
+    // call back end
+    await addSuggestion(meetingInfo.id, authData.userData.uid, content);
+    await fetchSuggestions();
+  };
   return (
     <Container avoidHeader>
       <RBSheet
@@ -65,14 +98,6 @@ const DiscussDetailsScreen = () => {
         closeOnDragDown={false}
         closeOnPressMask={true}
         height={windowHeight * 0.15}
-        // customStyles={{
-        //   wrapper: {
-        //     backgroundColor: "transparent",
-        //   },
-        //   draggableIcon: {
-        //     backgroundColor: "#000",
-        //   },
-        // }}
       >
         <TouchableOpacity>
           <Div
@@ -99,6 +124,8 @@ const DiscussDetailsScreen = () => {
           </Div>
         </TouchableOpacity>
       </RBSheet>
+
+      <MeetupNameHeaderComponent title={meetingInfo.name} mb={24} />
 
       <Div mb={divPadding}>
         <HeaderComponent
@@ -131,8 +158,6 @@ const DiscussDetailsScreen = () => {
         </Div>
       </Div>
 
-      {/* <MiniText>{JSON.stringify(participants, null, 2)}</MiniText> */}
-
       <Div mb={divPadding}>
         <HeaderComponent
           title="My timings"
@@ -153,14 +178,25 @@ const DiscussDetailsScreen = () => {
       <Div mb={divPadding}>
         <HeaderComponent title="What should we do?" />
         <Div>
-          <SuggestionRowComponent title="I'm kim?" />
+          <ScrollView style={{ maxHeight: WINDOW_HEIGHT * 0.3 }}>
+            {suggestions.map((suggestion, index) => (
+              <SuggestionRowComponent
+                key={index}
+                suggestion={suggestion}
+                onPress={async () =>
+                  await handleSuggestionOnPress(suggestion.id)
+                }
+              />
+            ))}
+          </ScrollView>
 
           <Div row alignItems="center" justifyContent="space-between">
             <SearchInput
-              value={suggestion}
-              onChangeText={setSuggestion}
+              value={newSuggestion}
+              onChangeText={setNewSuggestion}
               inputPlaceholder="Add a suggestion!"
               w={windowWidth * 0.7}
+              maxLength={24}
             />
 
             <TouchableOpacity
@@ -168,6 +204,7 @@ const DiscussDetailsScreen = () => {
                 flex: 1,
                 alignItems: "center",
               }}
+              onPress={() => handleAddSuggestion(newSuggestion)}
             >
               <PhosphorIcon
                 size={30}

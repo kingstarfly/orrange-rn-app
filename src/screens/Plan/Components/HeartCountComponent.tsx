@@ -6,15 +6,22 @@ import { TouchableOpacity } from "react-native";
 import { Div } from "react-native-magnus";
 
 interface Props {
+  onPress: () => void;
   count?: number;
   filled?: boolean;
+  disabled?: boolean;
 }
 
-const HeartCountComponent = ({ count = 0, filled = false }: Props) => {
+const HeartCountComponent = ({
+  onPress,
+  count = 0,
+  filled = false,
+  disabled = false,
+}: Props) => {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress} disabled={disabled}>
       <Div row alignItems="center" mr={8}>
-        <CaptionText color={theme.colors.primary800} mr={4}>
+        <CaptionText color={theme.colors.primary800} w={15} textAlign="center">
           {count}
         </CaptionText>
         <PhosphorIcon

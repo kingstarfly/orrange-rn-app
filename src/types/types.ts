@@ -72,6 +72,7 @@ export type PendingParticipantFields = {
 };
 
 export type SuggestionFields = {
+  id: string;
   ownerUid: string;
   likedBy: string[];
   content: string;

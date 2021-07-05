@@ -4,7 +4,10 @@ import { theme } from "constants/theme";
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Badge, WINDOW_WIDTH } from "react-native-magnus";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import AppLogo from "./AppLogo";
 import Container from "./Container";
 import { SmallText } from "./StyledText";
@@ -16,13 +19,17 @@ interface Props {
 
 const TopNavBar = ({ hideLogo }: Props) => {
   const BadgedIcon = withBadge(1)(PhosphorIcon);
+  const { top } = useSafeAreaInsets();
+
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         flexDirection: "row",
+        paddingTop: top,
         width: WINDOW_WIDTH,
         // backgroundColor: "red",
+        height: headerHeight,
         justifyContent: "center",
         alignItems: "center",
       }}
@@ -53,7 +60,7 @@ const TopNavBar = ({ hideLogo }: Props) => {
       >
         <PhosphorIcon name="envelope" color={theme.colors.textdark} size={40} />
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

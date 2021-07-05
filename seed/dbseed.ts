@@ -220,12 +220,14 @@ function createSuggestions() {
   const END = 6;
   try {
     meetups.forEach((meetup, meetupIndex) => {
+      const docId = faker.datatype.uuid();
       users.slice(START, END + 1).forEach((user, userIndex) => {
         db.collection("meetups")
           .doc(meetup.id)
           .collection("suggestions")
-          .doc(user.uid)
+          .doc(docId)
           .set({
+            id: docId,
             ownerUid: user.uid,
             likedBy: users
               .slice(START + userIndex, END + 1)
