@@ -96,12 +96,8 @@ const AppStackScreen = () => (
         shadowOpacity: 0,
         height: headerHeight,
       },
+
       headerTintColor: theme.colors.textdark,
-      headerTitleStyle: {
-        fontFamily: "inter-regular",
-        textAlignVertical: "center",
-        marginHorizontal: 0,
-      },
       headerTransparent: true,
       headerBackTitleVisible: false,
       headerBackAllowFontScaling: true,

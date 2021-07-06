@@ -1,9 +1,10 @@
 import { meetingsData } from "constants/mockdata";
 import { compareAsc, formatISO, parseISO } from "date-fns";
-import { firestore } from "lib/firebase";
+import { firebaseApp, firestore } from "lib/firebase";
 import { MeetingCardProps } from "screens/ViewPlans/MeetingCard/MeetingCard";
 import {
   MeetupFields,
+  OtherUser,
   ParticipantFields,
   PendingParticipantFields,
   PreferredDuration,
@@ -195,4 +196,68 @@ export const addSuggestion = async (
   };
 
   await doc.set(newSuggestion);
+};
+
+export const getMeetupTimings = async (meetupId: string) => {
+  const doc = await firestore.collection(DB.MEETUPS).doc(meetupId).get();
+  const { meetupTimings } = doc.data() as MeetupFields;
+  return meetupTimings;
+};
+
+export const getPreferredDurations = async (
+  meetupId: string,
+  userId: string
+) => {
+  const doc = await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PARTICIPANTS)
+    .doc(userId)
+    .get();
+
+  const { preferredDurations } = doc.data() as ParticipantFields;
+  return preferredDurations;
+};
+
+export const createMeetup = async (
+  meetupDetails: MeetupFields,
+  selectedUsers: OtherUser[],
+  currentUser: UserData
+) => {
+  const meetupId = meetupDetails.id;
+  const meetupDoc = firestore.collection(DB.MEETUPS).doc(meetupId);
+
+  // Basic fields in meetup
+  await meetupDoc.set(meetupDetails);
+
+  // Add Pending Participants to meetup
+  selectedUsers.forEach(async (pal) => {
+    await meetupDoc
+      .collection(DB.PENDING_PARTICIPANTS)
+      .doc(pal.uid)
+      .set({
+        requestedAt: new Date().toISOString(),
+        username: pal.username,
+        url_thumbnail: pal.url_thumbnail,
+      } as PendingParticipantFields);
+  });
+
+  // Add user as participant
+  await meetupDoc
+    .collection(DB.PARTICIPANTS)
+    .doc(currentUser.uid)
+    .set({
+      isHost: true,
+      preferredDurations: [],
+      url_thumbnail: currentUser.url_thumbnail,
+      username: currentUser.username,
+    } as ParticipantFields);
+
+  // Add meetup id to user's data
+  await firestore
+    .collection(DB.USERS)
+    .doc(currentUser.uid)
+    .update({
+      meetup_ids: firebaseApp.firestore.FieldValue.arrayUnion(meetupId),
+    });
 };

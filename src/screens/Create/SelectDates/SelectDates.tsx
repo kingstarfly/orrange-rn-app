@@ -1,4 +1,4 @@
-import { StackScreenProps } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import DatePicker, { DATE_FORMAT } from "screens/Create/SelectDates/DatePicker";
 import StyledButton from "components/StyledButton";
 import { theme } from "constants/theme";
@@ -7,24 +7,28 @@ import { useWindowDimensions } from "react-native";
 import { Box, Button, Text } from "react-native-magnus";
 import Container from "components/Container";
 import {
+  AppStackParamList,
   CreateMeetupStackParamList,
   DayTimings,
   MeetupFields,
-  MeetupTimings,
   PendingParticipantFields,
 } from "types/types";
 import { firestore } from "lib/firebase";
 import { useAppSelector } from "redux/hooks";
 import uuid from "react-native-uuid";
 import { useAuth } from "lib/auth";
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { addMinutes, parse, parseISO, startOfDay } from "date-fns";
+import { createMeetup } from "lib/api/meetup";
 
-const SelectDates = ({
-  navigation,
-}: StackScreenProps<CreateMeetupStackParamList, "SelectDates">) => {
+const SelectDates = () => {
   const { width, height } = useWindowDimensions();
 
+  // Workaround for typescript error?
+  const navigation =
+    useNavigation<
+      StackNavigationProp<AppStackParamList, "MainBottomTabNavigator">
+    >();
   const route =
     useRoute<RouteProp<CreateMeetupStackParamList, "SelectDates">>();
   const { meetupName } = route.params;
@@ -37,16 +41,17 @@ const SelectDates = ({
   const selectedDates = useAppSelector((state) => state.DatePicker.selected);
 
   const handleConfirmButtonClick = async () => {
-    const id = uuid.v4() as string;
-    const meetupDoc = firestore.collection("meetups").doc(id);
+    // obtain id from firestore
+    const meetupDoc = firestore.collection("meetups").doc();
+    const id = meetupDoc.id;
 
+    // construct meetupTimings
     let meetupTimings = [];
     Object.keys(selectedDates).forEach((isoDate) => {
       const startOfDate = startOfDay(parse(isoDate, DATE_FORMAT, new Date()));
       let startTimingsArr = [...Array(24 * 2).keys()].map((val) =>
         addMinutes(startOfDate, 30 * val).toISOString()
       );
-
       let startTimingsObj = {};
       for (let i = 0; i < startTimingsArr.length; i++) {
         startTimingsObj[startTimingsArr[i]] = 0;
@@ -57,6 +62,8 @@ const SelectDates = ({
       };
       meetupTimings.push(dayTimings);
     });
+
+    // construct meetupDetails
     const meetupDetails = {
       id: id,
       createdBy: authData.userData.uid,
@@ -67,19 +74,21 @@ const SelectDates = ({
       meetupTimings: meetupTimings,
     } as MeetupFields;
 
-    await meetupDoc.set(meetupDetails);
-    selectedContacts.forEach(async (pal) => {
-      await meetupDoc
-        .collection("pendingParticipants")
-        .doc(pal.uid)
-        .set({
-          requestedAt: new Date().toISOString(),
-          username: pal.username,
-          url_thumbnail: pal.url_thumbnail,
-        } as PendingParticipantFields);
-    });
-    navigation.push("SelectTime", {
-      meetupId: id,
+    // use all information, and create new meetup in firestore
+    await createMeetup(meetupDetails, selectedContacts, authData.userData);
+
+    // Replace navigation history, (home page --> Discuss details)
+    navigation.reset({
+      index: 1,
+      routes: [
+        { name: "MainBottomTabNavigator" },
+        {
+          name: "DiscussDetails",
+          params: {
+            meetupId: id,
+          },
+        },
+      ],
     });
   };
   return (

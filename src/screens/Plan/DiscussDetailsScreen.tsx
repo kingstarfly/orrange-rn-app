@@ -8,7 +8,13 @@ import {
 import Container from "components/Container";
 import { Subheading, CaptionText, Heading } from "components/StyledText";
 import { RouteProp, useRoute } from "@react-navigation/core";
-import { AppStackParamList, SuggestionFields } from "types/types";
+import {
+  AppStackParamList,
+  MeetupFields,
+  ParticipantFields,
+  PendingParticipantFields,
+  SuggestionFields,
+} from "types/types";
 import { Div, WINDOW_HEIGHT } from "react-native-magnus";
 import AvatarIcon from "components/AvatarIcon";
 import RBSheet from "react-native-raw-bottom-sheet";
@@ -19,17 +25,36 @@ import SuggestionRowComponent from "./Components/SuggestionRowComponent";
 import { PhosphorIcon } from "constants/Icons";
 import { SearchInput } from "components/StyledInput";
 import LargeButton from "components/LargeButton";
-import { addSuggestion, getSuggestions, toggleLike } from "lib/api/meetup";
+import {
+  addSuggestion,
+  getMeetingInfo,
+  getParticipants,
+  getPendingParticipants,
+  getSuggestions,
+  toggleLike,
+} from "lib/api/meetup";
 import { useAuth } from "lib/auth";
 import MeetupNameHeaderComponent from "./Components/MeetupNameHeaderComponent";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import Loading from "components/Loading";
 
 const DiscussDetailsScreen = () => {
   const route = useRoute<RouteProp<AppStackParamList, "DiscussDetails">>();
-  const { meetingInfo, participants, pendingParticipants } = route.params;
+  const { meetupId } = route.params;
+  const navigation =
+    useNavigation<StackNavigationProp<AppStackParamList, "DiscussDetails">>();
   const authData = useAuth();
 
   const [newSuggestion, setNewSuggestion] = React.useState("");
   const [suggestions, setSuggestions] = React.useState<SuggestionFields[]>([]);
+
+  const [meetingInfo, setMeetingInfo] = React.useState<MeetupFields>();
+  const [participants, setParticipants] = React.useState<ParticipantFields[]>();
+  const [pendingParticipants, setPendingParticipants] =
+    React.useState<PendingParticipantFields[]>();
+
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
@@ -45,6 +70,30 @@ const DiscussDetailsScreen = () => {
     const suggestions = await getSuggestions(meetingInfo.id);
     setSuggestions(suggestions);
   };
+
+  const fetchMeetupDetails = async () => {
+    setIsLoading(true);
+
+    const a = await getMeetingInfo(meetupId);
+    const b = await getParticipants(meetupId);
+    const c = await getPendingParticipants(meetupId);
+
+    setMeetingInfo(a);
+    setParticipants(b);
+    setPendingParticipants(c);
+
+    setIsLoading(false);
+  };
+
+  // Need to fetch required data from firestore here, just by using meetupId
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", async () => {
+      await fetchMeetupDetails();
+    });
+
+    return unsubscribe;
+  }, [meetupId]);
+
   React.useEffect(() => {
     fetchSuggestions();
   }, [meetingInfo]);
@@ -91,6 +140,13 @@ const DiscussDetailsScreen = () => {
     await addSuggestion(meetingInfo.id, authData.userData.uid, content);
     await fetchSuggestions();
   };
+  if (isLoading || !meetingInfo) {
+    return (
+      <Container avoidHeader>
+        <Loading />
+      </Container>
+    );
+  }
   return (
     <Container avoidHeader>
       <RBSheet

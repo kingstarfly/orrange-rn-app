@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 import { theme } from "constants/theme";
-import { Pressable } from "react-native";
+import { Pressable, TouchableOpacity } from "react-native";
 import { Div } from "react-native-magnus";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { BodyTextRegular, MiniText } from "components/StyledText";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
+import { PhosphorIcon } from "constants/Icons";
 
 interface Props {
   start: Date;
   end: Date;
+  rightButtonType?: RightButtonType;
 }
 
-const DateTimeRowComponent = ({ start, end }: Props) => {
+type RightButtonType = "add" | "delete" | "default";
+
+const DateTimeRowComponent = ({ start, end, rightButtonType }: Props) => {
   const [fromDate, setFromDate] = useState(start);
   const [fromMode, setFromMode] = useState("date");
   const [showFromDateTimePicker, setShowFromDateTimePicker] = useState(false);
@@ -115,12 +119,29 @@ const DateTimeRowComponent = ({ start, end }: Props) => {
             <MiniText>{format(toDate, "HH:mm")}</MiniText>
           </Div>
         </Pressable>
+        {rightButtonType && rightButtonType !== "default" && (
+          <TouchableOpacity
+            style={{
+              marginLeft: 8,
+            }}
+          >
+            {rightButtonType === "add" ? (
+              <PhosphorIcon
+                name="plus-circle"
+                color={theme.colors.textdark}
+                size={24}
+              />
+            ) : (
+              <PhosphorIcon
+                name="minus-circle-fill"
+                color={theme.colors.red}
+                size={24}
+              />
+            )}
+          </TouchableOpacity>
+        )}
       </Div>
 
-      {/* <Input onFocus={showDatepicker} placeholder="Add a date!" w={windowWidth * 0.4} mr={iconPadding} fontSize={fontSize * 0.75} value={date.toString()}/>
-<Input onFocus={showTimepicker} placeholder="Start" w={windowWidth * 0.2} mr={iconPadding} fontSize={fontSize * 0.75}/>
-
-<Input onFocus={showTimepicker} placeholder="End" w={windowWidth * 0.2} fontSize={fontSize * 0.75}/> */}
       {showFromDateTimePicker && (
         <DateTimePicker
           value={fromDate}

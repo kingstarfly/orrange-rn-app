@@ -9,70 +9,62 @@ import { Subheading, TinyText } from "components/StyledText";
 import { MeetingCardProps } from "../MeetingCard/MeetingCard";
 import { getAllMeetingDataForUser, getMeetingInfo } from "lib/api/meetup";
 import { compareAsc, format, parse, parseISO } from "date-fns";
-import { DUMMY_USER_ID } from "constants/mockdata";
-import { theme } from "constants/theme";
+import { useNavigation } from "@react-navigation/native";
+import { ViewPlansTabParamList } from "types/types";
+import Loading from "components/Loading";
+import { formatDataForSectionListConfirmed } from "../helper";
+import { MaterialTopTabNavigationProp } from "@react-navigation/material-top-tabs";
 
-interface SectionData {
+export interface ViewPlansSectionData {
   title: string; // the month and year
   data: MeetingCardProps[];
 }
 
 const ConfirmedViewPlans = () => {
   const authData = useAuth();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [meetingsData, setMeetingsData] = React.useState<
+    ViewPlansSectionData[]
+  >([]);
 
-  const [meetingsData, setMeetingsData] = React.useState<SectionData[]>([]);
-
+  const navigation =
+    useNavigation<
+      MaterialTopTabNavigationProp<ViewPlansTabParamList, "Confirmed">
+    >();
   React.useEffect(() => {
-    const date_format_MMMM_yyyy = "MMMM yyyy";
-    const fn = async () => {
-      console.log(`getting meeting data for ${authData.userData.uid}`);
+    const unsubscribe = navigation.addListener("focus", async () => {
+      setIsLoading(true);
+
+      // console.log(`getting meeting data for ${authData.userData.uid}`);
       const result = await getAllMeetingDataForUser(authData.userData.uid);
-
-      let myMap = new Map<string, MeetingCardProps[]>();
-
-      result.map((props) => {
-        const { meetingInfo, participants, pendingParticipants, accent } =
-          props;
-        let month_year = format(
-          parseISO(meetingInfo.startAt),
-          date_format_MMMM_yyyy
-        );
-
-        if (myMap.has(month_year)) {
-          myMap.set(month_year, [...myMap.get(month_year), props]);
-        } else {
-          myMap.set(month_year, [props]);
-        }
-      });
-
-      let output: SectionData[] = [];
-      myMap.forEach((value, key) => {
-        output.push({
-          title: key,
-          data: value,
-        });
-      });
-      output.sort((a, b) =>
-        compareAsc(
-          parse(a.title, date_format_MMMM_yyyy, new Date()),
-          parse(b.title, date_format_MMMM_yyyy, new Date())
-        )
-      );
+      // console.log("Got all meetings already");
+      const output = formatDataForSectionListConfirmed(result);
       setMeetingsData(output);
-    };
-    fn();
-    // (async () => {
-    //   console.log("TESTTESTTEST");
-    //   const res = await getMeetingInfo("e408619f-2395-453f-993a-46ab465c0f52");
-    //   console.log(res);
-    // })();
-    // retrieve all data for meetings related to this user here. worry about lazy fetching in future
-    // getAllMeetingDataForUser(authData.userData.uid);
-  }, []);
+      setIsLoading(false);
+    });
 
+    return unsubscribe;
+  }, []);
+  // React.useEffect(() => {
+  // (async () => {
+  //   console.log("TESTTESTTEST");
+  //   const res = await getMeetingInfo("e408619f-2395-453f-993a-46ab465c0f52");
+  //   console.log(res);
+  // })();
+  // retrieve all data for meetings related to this user here. worry about lazy fetching in future
+  // getAllMeetingDataForUser(authData.userData.uid);
+  // }, []);
+
+  if (isLoading) {
+    return (
+      <Container>
+        <Loading />
+      </Container>
+    );
+  }
   return (
     <Container>
-      <SectionList<MeetingCardProps, SectionData>
+      <SectionList<MeetingCardProps, ViewPlansSectionData>
         style={styles.scrollViewContainer}
         sections={meetingsData} // enter data here
         keyExtractor={(item, index) => item.meetingInfo.id}

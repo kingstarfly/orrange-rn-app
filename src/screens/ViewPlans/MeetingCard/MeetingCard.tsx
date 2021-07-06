@@ -46,15 +46,30 @@ const MeetingCard = ({
     leftovers = participants.slice(NUM_PROFILES);
   }
 
-  const start_datetime = parseISO(meetingInfo.startAt);
-  const end_datetime = parseISO(meetingInfo.endAt);
+  let timeContent;
+  let activityContent;
 
-  // obtain the date of meeting 21st Feb 2021
-  let start_date_string = format(start_datetime, "d/M/yy");
-  let end_date_string = format(end_datetime, "d/M/yy");
-  // obtain start time and end time formatted
-  let start_time_string = format(start_datetime, "h:mmaaa");
-  let end_time_string = format(end_datetime, "h:mmaaa");
+  if (meetingInfo.startAt && meetingInfo.endAt) {
+    let start_datetime = parseISO(meetingInfo.startAt);
+    let end_datetime = parseISO(meetingInfo.endAt);
+
+    // obtain the date of meeting 21st Feb 2021
+    let start_date_string = format(start_datetime, "d/M/yy");
+    let end_date_string = format(end_datetime, "d/M/yy");
+
+    // obtain start time and end time formatted
+    let start_time_string = format(start_datetime, "h:mmaaa");
+    let end_time_string = format(end_datetime, "h:mmaaa");
+
+    activityContent = meetingInfo.activity;
+    timeContent = `${start_time_string} ${
+      !isSameDay(parseISO(meetingInfo.startAt), parseISO(meetingInfo.endAt)) &&
+      start_date_string
+    } - ${end_time_string} ${end_date_string}`;
+  } else {
+    activityContent = "To be confirmed";
+    timeContent = "To be confirmed";
+  }
 
   let participants_string = firstParticipants
     .map((part) => part.username)
@@ -64,20 +79,11 @@ const MeetingCard = ({
     <TouchableOpacity
       onPress={() => {
         navigation.push("DiscussDetails", {
-          meetingInfo,
-          participants,
-          pendingParticipants,
+          meetupId: meetingInfo.id,
         });
       }}
     >
-      <Box
-        row
-        alignItems="center"
-        // alignSelf="stretch"
-        // justifyContent="space-between"
-        my={8}
-        // bg="red400"
-      >
+      <Box row alignItems="center" my={8}>
         {/* The accent */}
         {accent && <Box h="100%" w={3} bg={theme.colors.primary700} mr={10} />}
         <Box row alignItems="center" justifyContent="space-between">
@@ -94,7 +100,7 @@ const MeetingCard = ({
                   name="activity"
                 />
                 <SmallText numberOfLines={1} maxW={WINDOW_WIDTH * 0.45} ml={8}>
-                  {meetingInfo.activity}
+                  {activityContent}
                 </SmallText>
               </Box>
               <Box row alignItems="center">
@@ -103,14 +109,7 @@ const MeetingCard = ({
                   size={16}
                   name="clock"
                 />
-                <SmallText ml={8}>
-                  {start_time_string}{" "}
-                  {!isSameDay(
-                    parseISO(meetingInfo.startAt),
-                    parseISO(meetingInfo.endAt)
-                  ) && start_date_string}{" "}
-                  - {end_time_string} {end_date_string}
-                </SmallText>
+                <SmallText ml={8}>{timeContent}</SmallText>
               </Box>
             </Box>
           </Box>
@@ -124,7 +123,7 @@ const MeetingCard = ({
               />
             ))}
             <TinyText textAlign="center" ml={4}>
-              {leftovers ? `+${leftovers?.length}` : ""}
+              {leftovers ? `+${leftovers.length}` : ""}
             </TinyText>
           </Box>
         </Box>

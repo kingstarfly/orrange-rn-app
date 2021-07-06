@@ -120,9 +120,7 @@ export type AppStackParamList = {
   TestScreen: undefined;
 
   DiscussDetails: {
-    meetingInfo: MeetupFields;
-    participants: ParticipantFields[];
-    pendingParticipants: PendingParticipantFields[];
+    meetupId: string;
   };
   FinalDetails: {
     meeting: MeetupFields;
@@ -151,19 +149,6 @@ export type ViewPlansTabParamList = {
 export type PalsStackParamList = {
   ViewPals: undefined;
   AddPals: undefined;
-};
-
-export type BottomTabParamList = {
-  TabOne: undefined;
-  TabTwo: undefined;
-};
-
-export type TabOneParamList = {
-  TabOneScreen: undefined;
-};
-
-export type TabTwoParamList = {
-  TabTwoScreen: undefined;
 };
 
 export type MarkedDates = {
