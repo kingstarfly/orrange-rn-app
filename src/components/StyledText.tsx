@@ -26,14 +26,6 @@ export const CaptionText: React.FC<TextProps> = ({ children, ...rest }) => {
   );
 };
 
-export const SmallText: React.FC<TextProps> = ({ children, ...rest }) => {
-  return (
-    <Text {...rest} style={{ fontFamily: "inter-light", fontSize: 13 }}>
-      {children}
-    </Text>
-  );
-};
-
 export const MiniText: React.FC<TextProps> = ({ children, ...rest }) => {
   return (
     <Text {...rest} style={{ fontFamily: "inter-semibold", fontSize: 12 }}>

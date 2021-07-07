@@ -27,7 +27,7 @@ const SuggestionRowComponent = ({ suggestion, onPress }: Props) => {
       />
       <Div
         row
-        bg={liked ? theme.colors.primary300 : "transparent"}
+        // bg={liked ? theme.colors.primary300 : "transparent"}
         px={8}
         rounded={10}
         alignItems="center"

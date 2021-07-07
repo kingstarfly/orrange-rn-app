@@ -13,6 +13,7 @@ import {
   MeetupFields,
   ParticipantFields,
   PendingParticipantFields,
+  PreferredDuration,
   SuggestionFields,
 } from "types/types";
 import { Div, WINDOW_HEIGHT } from "react-native-magnus";
@@ -30,6 +31,7 @@ import {
   getMeetingInfo,
   getParticipants,
   getPendingParticipants,
+  getPreferredDurations,
   getSuggestions,
   toggleLike,
 } from "lib/api/meetup";
@@ -38,6 +40,7 @@ import MeetupNameHeaderComponent from "./Components/MeetupNameHeaderComponent";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Loading from "components/Loading";
+import { parseISO } from "date-fns";
 
 const DiscussDetailsScreen = () => {
   const route = useRoute<RouteProp<AppStackParamList, "DiscussDetails">>();
@@ -53,8 +56,13 @@ const DiscussDetailsScreen = () => {
   const [participants, setParticipants] = React.useState<ParticipantFields[]>();
   const [pendingParticipants, setPendingParticipants] =
     React.useState<PendingParticipantFields[]>();
+  const [preferredDurations, setPreferredDurations] =
+    React.useState<PreferredDuration[]>();
 
   const [isLoading, setIsLoading] = React.useState(false);
+  const [suggestionLoading, setSuggestionLoading] = React.useState(false);
+  const [preferredDurationLoading, setPreferredDurationLoading] =
+    React.useState(false);
 
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
@@ -67,8 +75,10 @@ const DiscussDetailsScreen = () => {
   };
 
   const fetchSuggestions = async () => {
+    setSuggestionLoading(true);
     const suggestions = await getSuggestions(meetingInfo.id);
     setSuggestions(suggestions);
+    setSuggestionLoading(false);
   };
 
   const fetchMeetupDetails = async () => {
@@ -85,6 +95,17 @@ const DiscussDetailsScreen = () => {
     setIsLoading(false);
   };
 
+  const fetchPreferredDurations = async () => {
+    setPreferredDurationLoading(true);
+    const durations = await getPreferredDurations(
+      meetupId,
+      authData.userData.uid
+    );
+
+    setPreferredDurations(durations);
+    setPreferredDurationLoading(false);
+  };
+
   // Need to fetch required data from firestore here, just by using meetupId
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
@@ -96,6 +117,7 @@ const DiscussDetailsScreen = () => {
 
   React.useEffect(() => {
     fetchSuggestions();
+    fetchPreferredDurations();
   }, [meetingInfo]);
 
   const handleSuggestionOnPress = async (suggestionId: string) => {
@@ -187,89 +209,127 @@ const DiscussDetailsScreen = () => {
         <HeaderComponent
           title="🎊 Party-cipants"
           rightComponent={
-            <CaptionText onPress={() => console.log("Pressed")}>
-              Add Pals
-            </CaptionText>
+            <TouchableOpacity>
+              <PhosphorIcon
+                name="user-circle-plus"
+                color={theme.colors.textdark}
+                size={28}
+              />
+            </TouchableOpacity>
           }
         />
         <Div row mb={divPadding}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {participants.map((participant, index) => {
-              return (
-                <Pressable
-                  key={index}
-                  onLongPress={openModal}
-                  style={{ marginRight: 8 }}
-                >
-                  <AvatarIcon
-                    diameter={45}
-                    label={participant.username}
-                    uri={participant.url_thumbnail}
-                    withLabel
-                  />
-                </Pressable>
-              );
-            })}
+            {[
+              ...participants.map((participant, index) => {
+                return (
+                  <Pressable
+                    key={index}
+                    onLongPress={openModal}
+                    style={{ marginRight: 16 }}
+                  >
+                    <AvatarIcon
+                      diameter={60}
+                      label={participant.username}
+                      uri={participant.url_thumbnail}
+                      withLabel
+                      isHost={participant.isHost}
+                      showBorder={!!participant.preferredDurations}
+                    />
+                  </Pressable>
+                );
+              }),
+              ...pendingParticipants.map((pending, index2) => {
+                return (
+                  <Pressable
+                    key={index2}
+                    onLongPress={openModal}
+                    style={{ marginRight: 16 }}
+                  >
+                    <AvatarIcon
+                      diameter={60}
+                      label={pending.username}
+                      uri={pending.url_thumbnail}
+                      withLabel
+                      blurred
+                    />
+                  </Pressable>
+                );
+              }),
+            ]}
           </ScrollView>
         </Div>
       </Div>
 
       <Div mb={divPadding}>
-        <HeaderComponent
-          title="My timings"
-          rightComponent={
-            <Pressable onPress={() => console.log("on edit handle")}>
-              <CaptionText>Edit</CaptionText>
-            </Pressable>
-          }
-        />
-        <Div>
-          {/* 
-// TODO: map this component for each timing currently
-*/}
-          <DateTimeRowComponent start={new Date()} end={new Date()} />
-        </Div>
+        <HeaderComponent title="When should we meet?" />
+        {!preferredDurationLoading ? (
+          preferredDurations ? (
+            <Div>
+              {preferredDurations?.map((preferredDuration, index) => {
+                return (
+                  <DateTimeRowComponent
+                    key={index}
+                    start={parseISO(preferredDuration.startAt)}
+                    end={parseISO(preferredDuration.endAt)}
+                  />
+                );
+              })}
+            </Div>
+          ) : (
+            <Div alignItems="center">
+              <CaptionText>You have not entered a time</CaptionText>
+            </Div>
+          )
+        ) : (
+          <Loading />
+        )}
       </Div>
 
       <Div mb={divPadding}>
         <HeaderComponent title="What should we do?" />
-        <Div>
-          <ScrollView style={{ maxHeight: WINDOW_HEIGHT * 0.3 }}>
-            {suggestions.map((suggestion, index) => (
-              <SuggestionRowComponent
-                key={index}
-                suggestion={suggestion}
-                onPress={async () =>
-                  await handleSuggestionOnPress(suggestion.id)
-                }
-              />
-            ))}
-          </ScrollView>
 
-          <Div row alignItems="center" justifyContent="space-between">
-            <SearchInput
-              value={newSuggestion}
-              onChangeText={setNewSuggestion}
-              inputPlaceholder="Add a suggestion!"
-              w={windowWidth * 0.7}
-              maxLength={24}
-            />
+        {!suggestionLoading ? (
+          <Div>
+            <ScrollView style={{ maxHeight: WINDOW_HEIGHT * 0.3 }}>
+              {suggestions.map((suggestion, index) => (
+                <SuggestionRowComponent
+                  key={index}
+                  suggestion={suggestion}
+                  onPress={async () =>
+                    await handleSuggestionOnPress(suggestion.id)
+                  }
+                />
+              ))}
+            </ScrollView>
 
-            <TouchableOpacity
-              style={{
-                flex: 1,
-                alignItems: "center",
-              }}
-              onPress={() => handleAddSuggestion(newSuggestion)}
-            >
-              <PhosphorIcon
-                size={30}
-                name="plus-circle"
-                color={theme.colors.textdark}
+            <Div row alignItems="center" justifyContent="space-between">
+              <SearchInput
+                value={newSuggestion}
+                onChangeText={setNewSuggestion}
+                inputPlaceholder="Add a suggestion!"
+                w={windowWidth * 0.7}
+                maxLength={24}
               />
-            </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                }}
+                onPress={() => handleAddSuggestion(newSuggestion)}
+              >
+                <PhosphorIcon
+                  size={30}
+                  name="plus-circle"
+                  color={theme.colors.textdark}
+                />
+              </TouchableOpacity>
+            </Div>
           </Div>
-        </Div>
+        ) : (
+          <Loading />
+        )}
       </Div>
 
       <Div position="absolute" bottom={WINDOW_HEIGHT * 0.05} alignSelf="center">

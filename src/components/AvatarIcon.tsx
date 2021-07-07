@@ -3,15 +3,20 @@ import { getInitials } from "lib/helpers";
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Avatar, Box, Image } from "react-native-magnus";
-import { BodyTextRegular, CaptionText } from "./StyledText";
+import { BodyTextRegular, CaptionText, MiniText, TinyText } from "./StyledText";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-community/masked-view";
+import { PhosphorIcon } from "constants/Icons";
+import { color } from "react-native-reanimated";
 
 interface AvatarIcon {
   uri?: string;
   label?: string;
   diameter?: number;
   withLabel?: boolean;
+  blurred?: boolean;
+  isHost?: boolean;
+  showBorder?: boolean;
 }
 
 const AvatarIcon: React.FC<AvatarIcon> = ({
@@ -19,7 +24,11 @@ const AvatarIcon: React.FC<AvatarIcon> = ({
   label,
   withLabel,
   diameter = 50,
+  blurred,
+  isHost,
+  showBorder,
 }) => {
+  const FADE_OPACITY = 0.3;
   return (
     <Box>
       {uri ? (
@@ -27,21 +36,18 @@ const AvatarIcon: React.FC<AvatarIcon> = ({
           h={diameter}
           w={diameter}
           rounded="circle"
-          borderWidth={2}
-          borderColor="white"
           source={{ uri }}
           shadow={1}
+          borderWidth={showBorder && 3}
+          borderColor={showBorder && theme.colors.green}
+          style={blurred && { opacity: FADE_OPACITY }}
         />
       ) : (
-        <Avatar
-          bg={theme.colors.primary400}
-          size={40}
-          color={theme.colors.textdark}
-        >
+        <Avatar bg={theme.colors.red} size={0} color={theme.colors.textdark}>
           <BodyTextRegular>{getInitials(label)}</BodyTextRegular>
         </Avatar>
       )}
-      {withLabel && (
+      {/* {withLabel && (
         <MaskedView
           maskElement={
             <LinearGradient
@@ -56,7 +62,29 @@ const AvatarIcon: React.FC<AvatarIcon> = ({
           <CaptionText maxW={diameter} numberOfLines={1} ellipsizeMode="clip">
             {label}
           </CaptionText>
-        </MaskedView>
+        </MaskedView> 
+        
+      )}
+        */}
+      {withLabel && (
+        <Box row alignItems="center">
+          {isHost && (
+            <PhosphorIcon
+              name="crown-simple-fill"
+              color={theme.colors.primary500}
+              size={12}
+            />
+          )}
+          <MiniText
+            maxW={isHost ? diameter - 14 : diameter}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            opacity={blurred ? FADE_OPACITY : 1}
+            ml={isHost ? 2 : 0}
+          >
+            {label}
+          </MiniText>
+        </Box>
       )}
     </Box>
   );
