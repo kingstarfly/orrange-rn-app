@@ -10,7 +10,7 @@
     "splash": {
       "image": "./src/assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#fddfc4"
+      "backgroundColor": "#f9f9f9"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,7 +24,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
-        "backgroundColor": "#fddfc4"
+        "backgroundColor": "#f9f9f9"
       },
       "softwareKeyboardLayoutMode": "pan"
     },
