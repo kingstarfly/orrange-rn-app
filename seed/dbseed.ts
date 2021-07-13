@@ -141,7 +141,8 @@ const meetups = [...Array(7).keys()].map((val) => {
 
   return {
     id: faker.datatype.uuid(),
-    createdBy: users[val].uid,
+    creatorId: users[val].uid,
+    creatorUsername: users[val].username,
     name: meetupNames[val],
     activity: meetupNames[val],
     startAt: startTime.toISOString(),
@@ -233,7 +234,7 @@ function createSuggestions() {
               .slice(START + userIndex, END + 1)
               .map((user) => user.uid),
             content: faker.lorem.words(6),
-            createdAt: faker.date.recent(30).toString(),
+            createdAt: faker.date.recent(30).toISOString(),
           } as SuggestionFields);
       });
     });

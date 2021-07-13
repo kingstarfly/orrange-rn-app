@@ -41,6 +41,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Loading from "components/Loading";
 import { parseISO } from "date-fns";
+import { userData } from "constants/mockdata";
 
 const DiscussDetailsScreen = () => {
   const route = useRoute<RouteProp<AppStackParamList, "DiscussDetails">>();
@@ -291,7 +292,7 @@ const DiscussDetailsScreen = () => {
 
         {!suggestionLoading ? (
           <Div>
-            <ScrollView style={{ maxHeight: WINDOW_HEIGHT * 0.3 }}>
+            <ScrollView style={{ maxHeight: WINDOW_HEIGHT * 0.26 }}>
               {suggestions.map((suggestion, index) => (
                 <SuggestionRowComponent
                   key={index}
@@ -332,14 +333,20 @@ const DiscussDetailsScreen = () => {
         )}
       </Div>
 
-      <Div position="absolute" bottom={WINDOW_HEIGHT * 0.05} alignSelf="center">
+      <Div alignSelf="center"></Div>
+      {meetingInfo.creatorId === authData.userData.uid ? (
         <LargeButton
           onPress={() => {
             console.log("Confirmed");
           }}
           title="CONFIRM"
         />
-      </Div>
+      ) : (
+        <CaptionText
+          textAlign="center"
+          children={`Waiting for ${meetingInfo.creatorUsername} to confirm...`}
+        />
+      )}
     </Container>
   );
 };

@@ -75,6 +75,7 @@ const ConfirmedViewPlans = () => {
             {title}
           </Subheading>
         )}
+        showsVerticalScrollIndicator={false}
       />
 
       <Button onPress={() => authData.signOut()}>Sign out</Button>

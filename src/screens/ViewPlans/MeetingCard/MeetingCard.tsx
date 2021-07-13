@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
 import AvatarIcon from "components/AvatarIcon";
-import { BodyTextMedium, SmallText, TinyText } from "components/StyledText";
+import { BodyTextMedium, CaptionText, TinyText } from "components/StyledText";
 import { PhosphorIcon } from "constants/Icons";
 import { theme } from "constants/theme";
 import { format, isSameDay, parseISO } from "date-fns";
@@ -62,9 +62,10 @@ const MeetingCard = ({
     let end_time_string = format(end_datetime, "h:mmaaa");
 
     activityContent = meetingInfo.activity;
-    timeContent = `${start_time_string} ${
-      !isSameDay(parseISO(meetingInfo.startAt), parseISO(meetingInfo.endAt)) &&
-      start_date_string
+    timeContent = `${start_time_string}${
+      !isSameDay(parseISO(meetingInfo.startAt), parseISO(meetingInfo.endAt))
+        ? " " + start_date_string
+        : ""
     } - ${end_time_string} ${end_date_string}`;
   } else {
     activityContent = "To be confirmed";
@@ -86,8 +87,14 @@ const MeetingCard = ({
       <Box row alignItems="center" my={8}>
         {/* The accent */}
         {accent && <Box h="100%" w={3} bg={theme.colors.primary700} mr={10} />}
-        <Box row alignItems="center" justifyContent="space-between">
-          <Box justifyContent="center" w={WINDOW_WIDTH * 0.6}>
+        <Box
+          row
+          alignItems="center"
+          justifyContent="space-between"
+          bg="red200"
+          w="100%"
+        >
+          <Box justifyContent="center" w={WINDOW_WIDTH * 0.5} bg="blue200">
             <BodyTextMedium textAlignVertical="center" numberOfLines={1} mb={4}>
               {meetingInfo.name}
             </BodyTextMedium>
@@ -99,9 +106,13 @@ const MeetingCard = ({
                   size={16}
                   name="activity"
                 />
-                <SmallText numberOfLines={1} maxW={WINDOW_WIDTH * 0.45} ml={8}>
+                <CaptionText
+                  numberOfLines={1}
+                  maxW={WINDOW_WIDTH * 0.42}
+                  ml={8}
+                >
                   {activityContent}
-                </SmallText>
+                </CaptionText>
               </Box>
               <Box row alignItems="center">
                 <PhosphorIcon
@@ -109,12 +120,18 @@ const MeetingCard = ({
                   size={16}
                   name="clock"
                 />
-                <SmallText ml={8}>{timeContent}</SmallText>
+                <CaptionText ml={8}>{timeContent}</CaptionText>
               </Box>
             </Box>
           </Box>
 
-          <Box row alignItems="center">
+          <Box
+            row
+            justifyContent="flex-end"
+            alignItems="center"
+            bg="green200"
+            pr={12}
+          >
             {firstParticipants.map((part, index) => (
               <AvatarIcon
                 key={index}
@@ -122,7 +139,7 @@ const MeetingCard = ({
                 label={part.username}
               />
             ))}
-            <TinyText textAlign="center" ml={4}>
+            <TinyText textAlign="center">
               {leftovers ? `+${leftovers.length}` : ""}
             </TinyText>
           </Box>

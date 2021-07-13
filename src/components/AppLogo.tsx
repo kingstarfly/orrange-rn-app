@@ -4,7 +4,15 @@ import { Image } from "react-native";
 import { Text } from "react-native";
 
 const AppLogo = () => {
-  return <Image source={WordLogo} style={{ width: 512, height: 118 }} />;
+  const HEIGHT = 118;
+  const WIDTH = 512;
+
+  return (
+    <Image
+      source={WordLogo}
+      style={{ height: 24, aspectRatio: WIDTH / HEIGHT }}
+    />
+  );
 };
 
 export default AppLogo;

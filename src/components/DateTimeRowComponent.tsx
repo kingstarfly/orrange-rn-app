@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { theme } from "constants/theme";
 import { Pressable, TouchableOpacity } from "react-native";
-import { Div } from "react-native-magnus";
+import { Div, WINDOW_WIDTH } from "react-native-magnus";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { BodyTextRegular, MiniText } from "components/StyledText";
 import { format, parseISO } from "date-fns";
@@ -63,8 +63,8 @@ const DateTimeRowComponent = ({ start, end, rightButtonType }: Props) => {
       <Div
         borderColor={theme.colors.linegray}
         borderWidth={1}
-        w={150}
-        h={30}
+        w={WINDOW_WIDTH * 0.5}
+        py={4}
         rounded={5}
         justifyContent="center"
         alignItems="center"

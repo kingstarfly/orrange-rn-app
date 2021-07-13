@@ -91,7 +91,8 @@ export type StartTimeMapToNumber = {
 
 export type MeetupFields = {
   id: string;
-  createdBy: string;
+  creatorId: string;
+  creatorUsername: string;
   name: string;
   activity: string;
   startAt: string;

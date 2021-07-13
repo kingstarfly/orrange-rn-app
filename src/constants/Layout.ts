@@ -3,7 +3,7 @@ import { Dimensions } from "react-native";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-export const headerHeight = 70;
+export const headerHeight = 90;
 
 export default {
   window: {
