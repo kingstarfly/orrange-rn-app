@@ -3,9 +3,9 @@ import Container from "components/Container";
 import MeetingCard from "screens/ViewPlans/MeetingCard";
 import { SectionList } from "react-native";
 import { styles } from "./styles";
-import { Button } from "react-native-magnus";
+import { Box, Button } from "react-native-magnus";
 import { useAuth } from "lib/auth";
-import { Subheading } from "components/StyledText";
+import { BodyTextRegular, Subheading } from "components/StyledText";
 import { MeetingCardProps } from "../MeetingCard/MeetingCard";
 import { getAllMeetingDataForUser, getMeetingInfo } from "lib/api/meetup";
 import { useNavigation } from "@react-navigation/native";
@@ -62,6 +62,12 @@ const ConfirmedViewPlans = () => {
     );
   }
 
+  const listEmptyComponent = (
+    <Box justifyContent="center" alignItems="center">
+      <BodyTextRegular>You have no confirmed plans!</BodyTextRegular>
+    </Box>
+  );
+
   return (
     <Container>
       <SectionList<MeetingCardProps, ViewPlansSectionData>
@@ -79,6 +85,7 @@ const ConfirmedViewPlans = () => {
         showsVerticalScrollIndicator={false}
         onRefresh={onRefresh}
         refreshing={refreshing}
+        ListEmptyComponent={listEmptyComponent}
       />
 
       <Button onPress={() => authData.signOut()}>Sign out</Button>

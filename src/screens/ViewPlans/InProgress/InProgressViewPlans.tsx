@@ -7,7 +7,7 @@ import { meetingsData } from "constants/mockdata";
 import { FlatList, SectionList } from "react-native";
 import { styles } from "./styles";
 
-import { Subheading } from "components/StyledText";
+import { BodyTextRegular, Subheading } from "components/StyledText";
 import { useAuth } from "lib/auth";
 import { MeetingCardProps } from "../MeetingCard/MeetingCard";
 import { useNavigation } from "@react-navigation/native";
@@ -64,6 +64,12 @@ const InProgressViewPlans = () => {
       </Container>
     );
   }
+
+  const listEmptyComponent = (
+    <Box justifyContent="center" alignItems="center">
+      <BodyTextRegular>You have no plans in progress!</BodyTextRegular>
+    </Box>
+  );
   return (
     <Container>
       <FlatList<MeetingCardProps>
@@ -73,6 +79,7 @@ const InProgressViewPlans = () => {
         renderItem={renderItem}
         onRefresh={onRefresh}
         refreshing={isLoading}
+        ListEmptyComponent={listEmptyComponent}
       />
     </Container>
   );
