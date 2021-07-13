@@ -66,7 +66,8 @@ const SelectDates = () => {
     // construct meetupDetails
     const meetupDetails = {
       id: id,
-      createdBy: authData.userData.uid,
+      creatorId: authData.userData.uid,
+      creatorUsername: authData.userData.username,
       name: meetupName,
       activity: null, // null refers to unconfirmed
       startAt: null,

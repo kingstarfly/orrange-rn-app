@@ -19,6 +19,7 @@ export interface MeetingCardProps {
   meetingInfo: MeetupFields;
   participants: ParticipantFields[];
   pendingParticipants: PendingParticipantFields[];
+  isConfirmed?: boolean;
   accent?: boolean;
 }
 const NUM_PROFILES = 2;
@@ -28,6 +29,7 @@ const MeetingCard = ({
   participants,
   pendingParticipants,
   accent,
+  isConfirmed,
 }: MeetingCardProps) => {
   if (!meetingInfo) {
     return null;
@@ -79,9 +81,15 @@ const MeetingCard = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.push("DiscussDetails", {
-          meetupId: meetingInfo.id,
-        });
+        if (isConfirmed) {
+          navigation.push("FinalDetails", {
+            meetupId: meetingInfo.id,
+          });
+        } else {
+          navigation.push("DiscussDetails", {
+            meetupId: meetingInfo.id,
+          });
+        }
       }}
     >
       <Box row alignItems="center" my={8}>

@@ -64,7 +64,9 @@
     "react-native-webview": "11.2.3",
     "react-redux": "^7.2.4",
     "validate-color": "^2.1.1",
-    "expo-linear-gradient": "~9.1.0"
+    "expo-linear-gradient": "~9.1.0",
+    "expo-calendar": "~9.1.2",
+    "expo-localization": "~10.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

@@ -97,6 +97,7 @@ export type MeetupFields = {
   activity: string;
   startAt: string;
   endAt: string;
+  isConfirmed: boolean;
   meetupTimings?: DayTimings[];
 };
 
@@ -124,7 +125,8 @@ export type AppStackParamList = {
     meetupId: string;
   };
   FinalDetails: {
-    meeting: MeetupFields;
+    meetupId: string;
+    // meeting: MeetupFields;
   };
   MainBottomTabNavigator: undefined;
   Contacts: undefined;

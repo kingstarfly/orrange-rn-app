@@ -6,5 +6,5 @@ export enum DB {
   SENT_PAL_REQUESTS = "sentPalRequests",
   SUGGESTIONS = "suggestions",
   PARTICIPANTS = "participants",
-  PENDING_PARTICIPANTS = "pending_participants",
+  PENDING_PARTICIPANTS = "pendingParticipants",
 }

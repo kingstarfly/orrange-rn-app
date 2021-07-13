@@ -28,23 +28,33 @@ const InProgressViewPlans = () => {
     useNavigation<
       MaterialTopTabNavigationProp<ViewPlansTabParamList, "InProgress">
     >();
+
+  const fetchInProgressPlans = React.useCallback(async () => {
+    setIsLoading(true);
+    // console.log(`getting meeting data for ${authData.userData.uid}`);
+    const result = await getAllMeetingDataForUser(authData.userData.uid);
+    // console.log("Got all meetings already");
+    const output = formatDataForFlatListInProgress(result);
+    setMeetingsData(output);
+    setIsLoading(false);
+  }, [authData.userData.uid]);
+
+  const onRefresh = React.useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await fetchInProgressPlans();
+    } catch (error) {
+      console.error(error);
+    }
+    setIsLoading(false);
+  }, []);
+
   React.useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", async () => {
-      setIsLoading(true);
-
-      // console.log(`getting meeting data for ${authData.userData.uid}`);
-      const result = await getAllMeetingDataForUser(authData.userData.uid);
-      // console.log("Got all meetings already");
-      const output = formatDataForFlatListInProgress(result);
-      setMeetingsData(output);
-      setIsLoading(false);
-    });
-
-    return unsubscribe;
+    fetchInProgressPlans();
   }, []);
 
   const renderItem = ({ item }) => {
-    return <MeetingCard {...item} accent />;
+    return <MeetingCard {...item} accent isConfirmed={false} />;
   };
 
   if (isLoading) {
@@ -61,6 +71,8 @@ const InProgressViewPlans = () => {
         style={styles.scrollViewContainer}
         keyExtractor={(item, index) => item.meetingInfo.id}
         renderItem={renderItem}
+        onRefresh={onRefresh}
+        refreshing={isLoading}
       />
     </Container>
   );

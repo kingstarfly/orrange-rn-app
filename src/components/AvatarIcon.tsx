@@ -38,8 +38,8 @@ const AvatarIcon: React.FC<AvatarIcon> = ({
           rounded="circle"
           source={{ uri }}
           shadow={1}
-          borderWidth={showBorder && 3}
-          borderColor={showBorder && theme.colors.green}
+          borderWidth={showBorder ? 3 : 0}
+          borderColor={theme.colors.green}
           style={blurred && { opacity: FADE_OPACITY }}
         />
       ) : (
@@ -67,7 +67,7 @@ const AvatarIcon: React.FC<AvatarIcon> = ({
       )}
         */}
       {withLabel && (
-        <Box row alignItems="center">
+        <Box row alignItems="center" justifyContent="center">
           {isHost && (
             <PhosphorIcon
               name="crown-simple-fill"

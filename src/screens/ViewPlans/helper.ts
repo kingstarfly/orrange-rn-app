@@ -11,8 +11,8 @@ export function formatDataForSectionListConfirmed(
 
   propsArray.map((props) => {
     const { meetingInfo, participants, pendingParticipants, accent } = props;
-    const { activity, endAt, startAt } = meetingInfo;
-    if (!activity || !endAt || !startAt) {
+    const { activity, endAt, startAt, isConfirmed } = meetingInfo;
+    if (!isConfirmed || !activity || !endAt || !startAt) {
       // this is an in progress meetup
       return;
     }
@@ -50,8 +50,8 @@ export function formatDataForFlatListInProgress(
 ) {
   const inProgressData = propsArray.filter((props) => {
     const { meetingInfo, participants, pendingParticipants, accent } = props;
-    const { activity, endAt, startAt } = meetingInfo;
-    return !activity || !endAt || !startAt;
+    const { activity, endAt, startAt, isConfirmed } = meetingInfo;
+    return !isConfirmed || !activity || !endAt || !startAt;
   });
 
   return inProgressData;

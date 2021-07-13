@@ -147,6 +147,7 @@ const meetups = [...Array(7).keys()].map((val) => {
     activity: meetupNames[val],
     startAt: startTime.toISOString(),
     endAt: endTime.toISOString(),
+    isConfirmed: true,
   } as MeetupFields;
 });
 

@@ -1,4 +1,3 @@
-import { meetingsData } from "constants/mockdata";
 import { compareAsc, formatISO, parseISO } from "date-fns";
 import { firebaseApp, firestore } from "lib/firebase";
 import { MeetingCardProps } from "screens/ViewPlans/MeetingCard/MeetingCard";
@@ -17,9 +16,9 @@ export async function getAllDurationsFromMeeting(
   meetupId: string
 ): Promise<PreferredDuration[]> {
   const querySnapShot = await firestore
-    .collection("meetups")
+    .collection(DB.MEETUPS)
     .doc(meetupId)
-    .collection("participants")
+    .collection(DB.PENDING_PARTICIPANTS)
     .get();
 
   let durations: PreferredDuration[] = [];
@@ -51,9 +50,9 @@ export const getParticipants = async (meetupId: string) => {
   const participants: ParticipantFields[] = [];
 
   const querySnapshot = await firestore
-    .collection("meetups")
+    .collection(DB.MEETUPS)
     .doc(meetupId)
-    .collection("participants")
+    .collection(DB.PARTICIPANTS)
     .get();
 
   querySnapshot.forEach((doc) => {
@@ -66,9 +65,9 @@ export const getPendingParticipants = async (meetupId: string) => {
   const pendingParticipants: PendingParticipantFields[] = [];
 
   const querySnapshot = await firestore
-    .collection("meetups")
+    .collection(DB.MEETUPS)
     .doc(meetupId)
-    .collection("pendingParticipants")
+    .collection(DB.PENDING_PARTICIPANTS)
     .get();
 
   querySnapshot.forEach((doc) => {

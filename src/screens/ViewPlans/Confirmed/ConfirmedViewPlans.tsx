@@ -22,6 +22,7 @@ export interface ViewPlansSectionData {
 const ConfirmedViewPlans = () => {
   const authData = useAuth();
   const [isLoading, setIsLoading] = React.useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
   const [meetingsData, setMeetingsData] = React.useState<
     ViewPlansSectionData[]
   >([]);
@@ -30,29 +31,28 @@ const ConfirmedViewPlans = () => {
     useNavigation<
       MaterialTopTabNavigationProp<ViewPlansTabParamList, "Confirmed">
     >();
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", async () => {
-      setIsLoading(true);
 
-      // console.log(`getting meeting data for ${authData.userData.uid}`);
-      const result = await getAllMeetingDataForUser(authData.userData.uid);
-      // console.log("Got all meetings already");
-      const output = formatDataForSectionListConfirmed(result);
-      setMeetingsData(output);
-      setIsLoading(false);
-    });
+  const fetchConfirmedPlans = React.useCallback(async () => {
+    setIsLoading(true);
+    const result = await getAllMeetingDataForUser(authData.userData.uid);
+    const output = formatDataForSectionListConfirmed(result);
+    setMeetingsData(output);
+    setIsLoading(false);
+  }, [authData.userData.uid]);
 
-    return unsubscribe;
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await fetchConfirmedPlans();
+    } catch (error) {
+      console.error(error);
+    }
+    setRefreshing(false);
   }, []);
-  // React.useEffect(() => {
-  // (async () => {
-  //   console.log("TESTTESTTEST");
-  //   const res = await getMeetingInfo("e408619f-2395-453f-993a-46ab465c0f52");
-  //   console.log(res);
-  // })();
-  // retrieve all data for meetings related to this user here. worry about lazy fetching in future
-  // getAllMeetingDataForUser(authData.userData.uid);
-  // }, []);
+
+  React.useEffect(() => {
+    fetchConfirmedPlans();
+  }, []);
 
   if (isLoading) {
     return (
@@ -61,6 +61,7 @@ const ConfirmedViewPlans = () => {
       </Container>
     );
   }
+
   return (
     <Container>
       <SectionList<MeetingCardProps, ViewPlansSectionData>
@@ -68,7 +69,7 @@ const ConfirmedViewPlans = () => {
         sections={meetingsData} // enter data here
         keyExtractor={(item, index) => item.meetingInfo.id}
         renderItem={({ item }) => {
-          return <MeetingCard {...item} accent />;
+          return <MeetingCard {...item} accent isConfirmed={true} />;
         }}
         renderSectionHeader={({ section: { title } }) => (
           <Subheading textTransform="capitalize" mt={20}>
@@ -76,6 +77,8 @@ const ConfirmedViewPlans = () => {
           </Subheading>
         )}
         showsVerticalScrollIndicator={false}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
       />
 
       <Button onPress={() => authData.signOut()}>Sign out</Button>

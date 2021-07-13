@@ -75,14 +75,14 @@ const DiscussDetailsScreen = () => {
     refRBSheet.current.open();
   };
 
-  const fetchSuggestions = async () => {
+  const fetchSuggestions = React.useCallback(async () => {
     setSuggestionLoading(true);
     const suggestions = await getSuggestions(meetingInfo.id);
     setSuggestions(suggestions);
     setSuggestionLoading(false);
-  };
+  }, [meetingInfo]);
 
-  const fetchMeetupDetails = async () => {
+  const fetchMeetupDetails = React.useCallback(async () => {
     setIsLoading(true);
 
     const a = await getMeetingInfo(meetupId);
@@ -94,9 +94,9 @@ const DiscussDetailsScreen = () => {
     setPendingParticipants(c);
 
     setIsLoading(false);
-  };
+  }, [meetupId]);
 
-  const fetchPreferredDurations = async () => {
+  const fetchPreferredDurations = React.useCallback(async () => {
     setPreferredDurationLoading(true);
     const durations = await getPreferredDurations(
       meetupId,
@@ -105,7 +105,7 @@ const DiscussDetailsScreen = () => {
 
     setPreferredDurations(durations);
     setPreferredDurationLoading(false);
-  };
+  }, [meetupId, authData.userData.uid]);
 
   // Need to fetch required data from firestore here, just by using meetupId
   React.useEffect(() => {
@@ -148,15 +148,6 @@ const DiscussDetailsScreen = () => {
     if (!content) {
       return;
     }
-    // // client side updating
-    // const newSuggestion: SuggestionFields = {
-    //   createdAt: new Date().toISOString(),
-    //   content: content,
-    //   id: "no_id", // user cannot unlike his suggestion, so we dont need id to be real
-    //   likedBy: [authData.userData.uid],
-    //   ownerUid: authData.userData.uid,
-    // };
-    // setSuggestions((prev) => [...prev, newSuggestion]);
     setNewSuggestion("");
 
     // call back end
@@ -333,20 +324,21 @@ const DiscussDetailsScreen = () => {
         )}
       </Div>
 
-      <Div alignSelf="center"></Div>
-      {meetingInfo.creatorId === authData.userData.uid ? (
-        <LargeButton
-          onPress={() => {
-            console.log("Confirmed");
-          }}
-          title="CONFIRM"
-        />
-      ) : (
-        <CaptionText
-          textAlign="center"
-          children={`Waiting for ${meetingInfo.creatorUsername} to confirm...`}
-        />
-      )}
+      <Div alignSelf="center">
+        {meetingInfo.creatorId === authData.userData.uid ? (
+          <LargeButton
+            onPress={() => {
+              console.log("Confirmed");
+            }}
+            title="CONFIRM"
+          />
+        ) : (
+          <CaptionText
+            textAlign="center"
+            children={`Waiting for ${meetingInfo.creatorUsername} to confirm...`}
+          />
+        )}
+      </Div>
     </Container>
   );
 };

@@ -1,8 +1,7 @@
-import { SmallText, TinyItalicsText } from "components/StyledText";
-import { theme } from "constants/theme";
-
 import React from "react";
 import { Avatar, Box, Button, Icon, Text } from "react-native-magnus";
+import { CaptionText, TinyItalicsText } from "components/StyledText";
+import { theme } from "constants/theme";
 
 import AvatarIcon from "./AvatarIcon";
 
@@ -38,7 +37,7 @@ const UserRow = ({
         justifyContent="center"
         alignItems="flex-start"
       >
-        <SmallText textAlign="left">{fullName}</SmallText>
+        <CaptionText textAlign="left">{fullName}</CaptionText>
         {username && (
           <TinyItalicsText color={theme.colors.textgray400}>
             @{username}
