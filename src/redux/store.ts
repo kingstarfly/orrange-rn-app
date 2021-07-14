@@ -1,13 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import AllFriendsReducer from "redux/slices/AllFriendsSlice";
-import SelectedFriendsReducer from "redux/slices/SelectedFriendsSlice";
 import DatePickerReducer from "redux/slices/DatePickerSlice";
 import GridInfoReducer from "./GridInfoSlice";
+import SelectedPalsReducer from "redux/slices/SelectedPalsSlice";
 
 const store = configureStore({
   reducer: {
     DatePicker: DatePickerReducer,
-    SelectedFriends: SelectedFriendsReducer,
+    SelectedPals: SelectedPalsReducer,
     AllFriends: AllFriendsReducer,
     GridInfo: GridInfoReducer,
   },

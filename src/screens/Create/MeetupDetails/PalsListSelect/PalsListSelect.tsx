@@ -11,14 +11,14 @@ import PalAvatar from "screens/Plan/SelectTime/TimeGridSelector/PalAvatar";
 import { SearchInput } from "components/StyledInput";
 import { StyleSheet, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
-import { onSelectFriend } from "redux/slices/SelectedFriendsSlice";
+import { onSelectPal, clearSelectedPals } from "redux/slices/SelectedPalsSlice";
 
 const PalsListSelect = (props: DivProps) => {
   const [pals, setPals] = React.useState<OtherUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const selectedPals = useAppSelector(
-    (state) => state.SelectedFriends.selectedFriends
+    (state) => state.SelectedPals.selectedPals
   );
 
   // todo obtain contacts from user first and put into state, account for loading time
@@ -83,7 +83,7 @@ const PalsListSelect = (props: DivProps) => {
                 onSelectItem={(pal: OtherUser) => {
                   if (!pal.selected) {
                     // setSelectedPals((old) => [...old, pal]);
-                    dispatch(onSelectFriend(pal));
+                    dispatch(onSelectPal(pal));
                     setPals((old) => {
                       const ind = old.findIndex((e) => e.uid === pal.uid);
                       return [
@@ -99,7 +99,7 @@ const PalsListSelect = (props: DivProps) => {
                     // setSelectedPals((old) =>
                     //   old.filter((e) => e.uid !== pal.uid)
                     // );
-                    dispatch(onSelectFriend(pal));
+                    dispatch(onSelectPal(pal));
                     setPals((old) => {
                       const ind = old.findIndex((e) => e.uid === pal.uid);
                       return [

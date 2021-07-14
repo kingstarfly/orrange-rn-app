@@ -3,9 +3,6 @@ import { theme } from "constants/theme";
 import React from "react";
 import { TouchableHighlight } from "react-native";
 import { Icon } from "react-native-magnus";
-import { useAppDispatch } from "redux/hooks";
-import { toggleSelectedState } from "redux/slices/AllFriendsSlice";
-import { onSelectFriend } from "redux/slices/SelectedFriendsSlice";
 import { OtherUser } from "types/types";
 
 interface ContactItemProps {

@@ -33,12 +33,12 @@ const SelectDates = () => {
     useRoute<RouteProp<CreateMeetupStackParamList, "SelectDates">>();
   const { meetupName } = route.params;
 
-  const authData = useAuth();
-  const selectedContacts = useAppSelector(
-    (state) => state.SelectedFriends.selectedFriends
+  const selectedPals = useAppSelector(
+    (state) => state.SelectedPals.selectedPals
   );
-
   const selectedDates = useAppSelector((state) => state.DatePicker.selected);
+
+  const authData = useAuth();
 
   const handleConfirmButtonClick = async () => {
     // obtain id from firestore
@@ -76,7 +76,9 @@ const SelectDates = () => {
     } as MeetupFields;
 
     // use all information, and create new meetup in firestore
-    await createMeetup(meetupDetails, selectedContacts, authData.userData);
+    await createMeetup(meetupDetails, selectedPals, authData.userData);
+
+    // Clear redux information of selected friends and selected dates
 
     // Replace navigation history, (home page --> Discuss details)
     navigation.reset({
