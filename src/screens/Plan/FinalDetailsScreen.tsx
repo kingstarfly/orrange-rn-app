@@ -86,9 +86,6 @@ const FinalDetailsScreen = () => {
     const calendars = await Calendar.getCalendarsAsync(
       Calendar.EntityTypes.EVENT
     );
-    console.log("Here are all your calendars:");
-    console.log({ calendars });
-
     let calId: string;
 
     for (let cal of calendars) {
@@ -144,7 +141,6 @@ const FinalDetailsScreen = () => {
       ownerAccount: "personal",
       accessLevel: Calendar.CalendarAccessLevel.OWNER,
     });
-    console.log(`Your new calendar ID is: ${newCalendarID}`);
     return newCalendarID;
   }
 
@@ -234,7 +230,6 @@ const FinalDetailsScreen = () => {
       <Div position="absolute" alignSelf="center" bottom={0.05 * WINDOW_HEIGHT}>
         <LargeButton
           onPress={() => {
-            console.log("Add to Calendar");
             handleCreateEvent();
           }}
           title="ADD TO CALENDAR"
