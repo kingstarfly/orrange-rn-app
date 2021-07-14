@@ -89,7 +89,7 @@ export default function LoginScreen() {
         });
       })
       .catch((err) => {
-        console.log("Error verifying phone number", err);
+        console.error("Error verifying phone number", err);
         setLoading(false);
       });
   };

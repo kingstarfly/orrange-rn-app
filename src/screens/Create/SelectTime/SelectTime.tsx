@@ -68,7 +68,6 @@ const SelectTime = ({
 
       // get data to render the datetimerow picker
       const resp = await getPreferredDurations(meetupId, authData.userData.uid);
-      console.log(resp);
       setPreferredDurations(resp);
     });
 

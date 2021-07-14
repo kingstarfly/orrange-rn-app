@@ -134,9 +134,6 @@ const DatePicker = ({ selectedDates, setSelectedDates }: Props) => {
       setSelectedDates(new_selected); // changing to use redux
     }
   };
-  React.useEffect(() => {
-    console.log(selectedDates);
-  }, [selectedDates]);
 
   return (
     <Box alignSelf="stretch" px={16}>
@@ -172,9 +169,9 @@ const DatePicker = ({ selectedDates, setSelectedDates }: Props) => {
           handleOnDayPress(day);
         }}
         // Handler which gets executed on day long press. Default = undefined
-        onDayLongPress={(day) => {
-          console.log("selected day", day);
-        }}
+        // onDayLongPress={(day) => {
+        //   console.log("selected day", day);
+        // }}
         // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
         monthFormat={"yyyy MMMM"}
         // Handler which gets executed when visible month changes in calendar. Default = undefined

@@ -4,7 +4,7 @@ import StyledButton from "components/StyledButton";
 import { theme } from "constants/theme";
 import React from "react";
 import { useWindowDimensions } from "react-native";
-import { Box, Button, Text } from "react-native-magnus";
+import { Box, Button, Text, WINDOW_HEIGHT } from "react-native-magnus";
 import Container from "components/Container";
 import {
   AppStackParamList,
@@ -22,6 +22,7 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { addMinutes, parse, parseISO, startOfDay } from "date-fns";
 import { createMeetup } from "lib/api/meetup";
 import { clearSelectedPals } from "redux/slices/SelectedPalsSlice";
+import LargeButton from "components/LargeButton";
 
 const SelectDates = () => {
   const { width, height } = useWindowDimensions();
@@ -118,14 +119,9 @@ const SelectDates = () => {
         />
       </Box>
 
-      <StyledButton
-        onPress={handleConfirmButtonClick}
-        bg={theme.colors.primary400}
-        position="absolute"
-        bottom={25}
-      >
-        Confirm
-      </StyledButton>
+      <Box bottom={WINDOW_HEIGHT * 0.02} position="absolute" alignSelf="center">
+        <LargeButton onPress={handleConfirmButtonClick} title="Create" />
+      </Box>
     </Container>
   );
 };

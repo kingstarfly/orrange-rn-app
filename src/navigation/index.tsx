@@ -136,15 +136,15 @@ const AppStackScreen = () => (
 function RootNavigator() {
   const authData = useAuth();
   if (!authData.userData) {
-    console.log("No userData so showing auth stack");
+    // console.log("No userData so showing auth stack");
     return <AuthStackScreen />;
   } else {
-    console.log("Now there is auth data");
-    console.log(authData);
+    // console.log("Now there is auth data");
+    // console.log(authData);
     if (!authData.userData.username) {
       return <SignUpStackScreen />;
     }
-    console.log(authData.userData.uid);
+    // console.log(authData.userData.uid);
     return <AppStackScreen />;
   }
 }

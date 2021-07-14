@@ -28,7 +28,7 @@ export const SelectedPalsSlice = createSlice({
       }
     },
     clearSelectedPals: (state) => {
-      console.log("Cleared Selected pals");
+      // console.log("Cleared Selected pals");
       return initialState;
     },
   },

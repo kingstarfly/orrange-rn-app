@@ -87,7 +87,6 @@ export async function getAllMeetingDataForUser(
   });
 
   if (meetupIds.length === 0) {
-    console.log("No meetups");
     return null;
   }
 

@@ -85,8 +85,7 @@ function useProvideAuth() {
       let user = await handleUser(userCredential.user);
       // AsyncStorage.setItem("@AuthData", JSON.stringify(user)); // TODO: check if this actually works because state changes might not have taken place
     } catch (err) {
-      console.log("useAuth verify failed");
-      console.log(err);
+      console.error("useAuth verify failed ", err);
     }
   };
 

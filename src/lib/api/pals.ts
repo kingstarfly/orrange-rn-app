@@ -33,18 +33,12 @@ export const requestAddPal = async (
     .collection(DB.SENT_PAL_REQUESTS)
     .doc(targetUser.uid)
     .set(targetUser);
-  console.log(
-    `${currentUser.username} has requested ${targetUser.username} as a pal!`
-  );
 };
 
 export const acceptPalRequest = async (
   currentUser: UserData,
   requester: OtherUser
 ) => {
-  console.log(
-    `userA: ${currentUser.username} has accepted userB: ${requester.username} as a pal!`
-  );
   // 1. For both users, add each other to pals collection
   await firestore
     .collection(DB.USERS)

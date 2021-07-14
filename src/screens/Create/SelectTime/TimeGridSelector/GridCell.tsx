@@ -29,11 +29,7 @@ type HalfCellProps = Pick<CellProps, "start"> & {
 
 const GridHalfCell = ({ start, count = 0 }: HalfCellProps) => {
   let startTime = format(start, "HH:mm dd-MMM-yyyy");
-  return (
-    <Pressable onPress={() => console.log(startTime)}>
-      <Box bg={colourIntensity[count]} h={20} w={80} />
-    </Pressable>
-  );
+  return <Box bg={colourIntensity[count]} h={20} w={80} />;
 };
 
 const GridCell = ({

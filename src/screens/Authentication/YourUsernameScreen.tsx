@@ -43,7 +43,7 @@ export default function YourUsername() {
         resolve(xhr.response);
       };
       xhr.onerror = function (e) {
-        console.log(e);
+        console.error(e);
         reject(new TypeError("Network request failed"));
       };
       xhr.responseType = "blob";
@@ -100,7 +100,6 @@ export default function YourUsername() {
       .where("username", "==", username)
       .get()
       .then((querySnapshot) => {
-        console.log("other users with the same username: ", querySnapshot.size);
         if (querySnapshot.size != 0) {
           return alert("Username is already taken!");
         } else {
@@ -120,8 +119,6 @@ export default function YourUsername() {
             .doc(DUMMY_USER_ID)
             .get()
             .then((doc) => {
-              console.log("Dummy user data is here");
-              console.log(doc.data());
               authData.updateUserInfo(doc.data() as UserData);
             });
         }

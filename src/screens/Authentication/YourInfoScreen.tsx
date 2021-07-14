@@ -55,8 +55,6 @@ export default function YourInfoScreen() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       //@ts-ignore
       setImageUri(result.uri);

@@ -58,9 +58,7 @@ const MeetupDetails = ({
       </Box>
 
       <Box bottom={WINDOW_HEIGHT * 0.02} position="absolute" alignSelf="center">
-        <LargeButton onPress={handleConfirm} title="Confirm">
-          Confirm
-        </LargeButton>
+        <LargeButton onPress={handleConfirm} title="Next" />
       </Box>
     </Container>
   );
