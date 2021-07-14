@@ -7,6 +7,7 @@ const Loading = () => {
       style={{
         flex: 1,
         justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <ActivityIndicator color={"#000"} animating={true} size="large" />

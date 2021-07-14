@@ -1,5 +1,13 @@
 import { useWindowDimensions, View } from "react-native";
-import { Button, Div, Text, Input } from "react-native-magnus";
+import {
+  Button,
+  Div,
+  Text,
+  Input,
+  Overlay,
+  WINDOW_WIDTH,
+  WINDOW_HEIGHT,
+} from "react-native-magnus";
 import React, { useState } from "react";
 import { firestore, auth, storage } from "lib/firebase";
 import { useAuth } from "lib/auth";
@@ -11,6 +19,8 @@ import LargeButton from "components/LargeButton";
 import * as ImageManipulator from "expo-image-manipulator";
 import { DUMMY_USER_ID } from "constants/mockdata";
 import { DB } from "lib/api/dbtypes";
+import Loading from "components/Loading";
+import { theme } from "constants/theme";
 
 export default function YourUsername() {
   const route =
@@ -24,6 +34,7 @@ export default function YourUsername() {
   const phoneNumber = authData.userData.contact;
   const { firstName, lastName, imageUri } = route.params;
   const [username, setUsername] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   async function uploadImageAsync(uri: string, folder: string) {
     const blob = await new Promise((resolve, reject) => {
@@ -54,6 +65,7 @@ export default function YourUsername() {
   const onConfirmYourUsername = async () => {
     if (!username) return alert("Please enter a username!");
 
+    setIsLoading(true);
     let thumbnailUri = null;
     let url_original = null;
     let url_thumbnail = null;
@@ -71,10 +83,6 @@ export default function YourUsername() {
         console.error(error);
       }
     }
-
-    console.log("image and thumbnail uris");
-    console.log(imageUri);
-    console.log(thumbnailUri);
 
     if (imageUri && thumbnailUri) {
       try {
@@ -96,8 +104,6 @@ export default function YourUsername() {
         if (querySnapshot.size != 0) {
           return alert("Username is already taken!");
         } else {
-          console.log("Username is unique! Continuing to next page");
-
           // !! TODO CHANGE THIS: Doing this to mock user
           // authData.updateUserInfo({
           //   uid: authData.userData.uid,
@@ -120,6 +126,8 @@ export default function YourUsername() {
             });
         }
       });
+
+    setIsLoading(false);
   };
 
   const width = useWindowDimensions().width;
@@ -145,6 +153,18 @@ export default function YourUsername() {
 
         <LargeButton title="NEXT" onPress={onConfirmYourUsername} />
       </Div>
+      <Overlay
+        justifyContent="center"
+        alignItems="center"
+        visible={isLoading}
+        overlayColor="black"
+        bg={theme.colors.backgroundlight}
+        overlayOpacity={0.65}
+      >
+        <Div h={WINDOW_HEIGHT * 0.3} w={WINDOW_WIDTH * 0.7}>
+          <Loading />
+        </Div>
+      </Overlay>
     </Container>
   );
 }
