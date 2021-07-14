@@ -10,16 +10,18 @@ import {
   AppStackParamList,
   CreateMeetupStackParamList,
   DayTimings,
+  MarkedDates,
   MeetupFields,
   PendingParticipantFields,
 } from "types/types";
 import { firestore } from "lib/firebase";
-import { useAppSelector } from "redux/hooks";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
 import uuid from "react-native-uuid";
 import { useAuth } from "lib/auth";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { addMinutes, parse, parseISO, startOfDay } from "date-fns";
 import { createMeetup } from "lib/api/meetup";
+import { clearSelectedPals } from "redux/slices/SelectedPalsSlice";
 
 const SelectDates = () => {
   const { width, height } = useWindowDimensions();
@@ -33,14 +35,15 @@ const SelectDates = () => {
     useRoute<RouteProp<CreateMeetupStackParamList, "SelectDates">>();
   const { meetupName } = route.params;
 
+  const dispatch = useAppDispatch();
   const selectedPals = useAppSelector(
     (state) => state.SelectedPals.selectedPals
   );
-  const selectedDates = useAppSelector((state) => state.DatePicker.selected);
+  const [selectedDates, setSelectedDates] = React.useState<MarkedDates>({});
 
   const authData = useAuth();
 
-  const handleConfirmButtonClick = async () => {
+  const handleConfirmButtonClick = React.useCallback(async () => {
     // obtain id from firestore
     const meetupDoc = firestore.collection("meetups").doc();
     const id = meetupDoc.id;
@@ -78,7 +81,11 @@ const SelectDates = () => {
     // use all information, and create new meetup in firestore
     await createMeetup(meetupDetails, selectedPals, authData.userData);
 
-    // Clear redux information of selected friends and selected dates
+    // Clear local state of selected dates
+    setSelectedDates({});
+
+    // Clear redux information of selected pals
+    dispatch(clearSelectedPals());
 
     // Replace navigation history, (home page --> Discuss details)
     navigation.reset({
@@ -93,7 +100,7 @@ const SelectDates = () => {
         },
       ],
     });
-  };
+  }, []);
   return (
     <Container>
       <Text
@@ -105,7 +112,10 @@ const SelectDates = () => {
         Which days do you wish to meet on?
       </Text>
       <Box flex={1} alignItems="center">
-        <DatePicker />
+        <DatePicker
+          selectedDates={selectedDates}
+          setSelectedDates={setSelectedDates}
+        />
       </Box>
 
       <StyledButton

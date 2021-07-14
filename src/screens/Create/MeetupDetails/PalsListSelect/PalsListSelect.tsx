@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Box, DivProps, Text } from "react-native-magnus";
+import { Box, DivProps } from "react-native-magnus";
 import { getMockUsers } from "mockapi";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { CreateMeetupStackParamList, OtherUser } from "types/types";
-import SearchableList from "components/SearchableList";
 import ContactItem from "./ContactItem";
 import { FlatList } from "react-native-gesture-handler";
 import PalAvatar from "screens/Plan/SelectTime/TimeGridSelector/PalAvatar";
 import { SearchInput } from "components/StyledInput";
 import { StyleSheet, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
-import { onSelectPal, clearSelectedPals } from "redux/slices/SelectedPalsSlice";
+import { onSelectPal } from "redux/slices/SelectedPalsSlice";
 
 const PalsListSelect = (props: DivProps) => {
   const [pals, setPals] = React.useState<OtherUser[]>([]);

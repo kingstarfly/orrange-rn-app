@@ -7,9 +7,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { theme } from "constants/theme";
 
 import { LocaleConfig } from "react-native-calendars";
-import { setSelectedDates } from "redux/slices/DatePickerSlice";
-
-import { useAppDispatch, useAppSelector } from "redux/hooks";
+import { MarkedDates } from "types/types";
 
 LocaleConfig.locales["en"] = {
   monthNames: [
@@ -56,18 +54,20 @@ LocaleConfig.defaultLocale = "en";
 
 export const DATE_FORMAT = "yyyy-MM-dd";
 
-const DatePicker = () => {
-  const selected = useAppSelector((state) => state.DatePicker.selected);
-  const dispatch = useAppDispatch();
+interface Props {
+  selectedDates: MarkedDates;
+  setSelectedDates: (dates: MarkedDates) => void;
+}
 
+const DatePicker = ({ selectedDates, setSelectedDates }: Props) => {
   const handleOnDayPress = (day: DateObject) => {
     let d = parse(day.dateString, DATE_FORMAT, new Date());
     let ytd = format(subDays(d, 1), DATE_FORMAT);
     let tmr = format(addDays(d, 1), DATE_FORMAT);
 
-    if (day.dateString in selected) {
-      let { [day.dateString]: tmp, ...new_selected } = selected;
-      if (ytd in selected) {
+    if (day.dateString in selectedDates) {
+      let { [day.dateString]: tmp, ...new_selected } = selectedDates;
+      if (ytd in selectedDates) {
         // make ytd's endingDay false
         const { [ytd]: tmp, ...rest } = new_selected;
         new_selected = {
@@ -79,7 +79,7 @@ const DatePicker = () => {
         };
       }
 
-      if (tmr in selected) {
+      if (tmr in selectedDates) {
         // make tmr's startingDay true
         const { [tmr]: tmp, ...rest } = new_selected;
         new_selected = {
@@ -90,9 +90,9 @@ const DatePicker = () => {
           },
         };
       }
-      dispatch(setSelectedDates(new_selected));
+      setSelectedDates(new_selected);
     } else {
-      let new_selected = { ...selected };
+      let new_selected = { ...selectedDates };
 
       let props = {
         startingDay: true,
@@ -102,7 +102,7 @@ const DatePicker = () => {
       };
 
       // 3. Check for either presence
-      if (ytd in selected) {
+      if (ytd in selectedDates) {
         // make ytd's endingDay false, and today's startingDay false
         const { [ytd]: tmp, ...rest } = new_selected;
         new_selected = {
@@ -116,7 +116,7 @@ const DatePicker = () => {
         props.startingDay = false;
       }
 
-      if (tmr in selected) {
+      if (tmr in selectedDates) {
         // make tmr's startingDay false, and today's endingDay true
         let { [tmr]: tmp, ...rest } = new_selected;
         new_selected = {
@@ -131,9 +131,12 @@ const DatePicker = () => {
       }
 
       new_selected = { ...new_selected, [day.dateString]: props };
-      dispatch(setSelectedDates(new_selected)); // changing to use redux
+      setSelectedDates(new_selected); // changing to use redux
     }
   };
+  React.useEffect(() => {
+    console.log(selectedDates);
+  }, [selectedDates]);
 
   return (
     <Box alignSelf="stretch" px={16}>
@@ -157,7 +160,7 @@ const DatePicker = () => {
           },
         }}
         markingType={"period"}
-        markedDates={selected}
+        markedDates={selectedDates}
         // Initially visible month. Default = Date()
         current={new Date()}
         // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
@@ -175,9 +178,8 @@ const DatePicker = () => {
         // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
         monthFormat={"yyyy MMMM"}
         // Handler which gets executed when visible month changes in calendar. Default = undefined
-        onMonthChange={(month) => {
-          console.log("month changed", month);
-        }}
+        // onMonthChange={(month) => {
+        // }}
         // Hide month navigation arrows. Default = false
         // hideArrows={true}
         // Replace default arrows with custom ones (direction can be 'left' or 'right')
