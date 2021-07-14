@@ -241,9 +241,6 @@ const FinalDetailsScreen = () => {
         alignItems="center"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-        }}
         bg={theme.colors.backgroundlight}
         overlayColor="black"
         overlayOpacity={0.65}

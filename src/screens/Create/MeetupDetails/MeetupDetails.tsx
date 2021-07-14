@@ -5,15 +5,10 @@ import { CreateMeetupStackParamList } from "types/types";
 import Container from "components/Container";
 import { theme } from "constants/theme";
 import StyledButton from "components/StyledButton";
-import {
-  CaptionText,
-  Heading,
-  Subheading,
-  BodyTextRegular,
-} from "components/StyledText";
+import { Heading, Subheading } from "components/StyledText";
 import { useWindowDimensions } from "react-native";
 import { UnderlinedInput } from "components/StyledInput";
-import PalsListSelect from "./AddFriends";
+import PalsListSelect from "./PalsListSelect";
 
 const MeetupDetails = ({
   navigation,

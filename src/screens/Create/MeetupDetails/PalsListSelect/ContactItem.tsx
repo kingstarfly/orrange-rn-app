@@ -10,18 +10,10 @@ import { OtherUser } from "types/types";
 
 interface ContactItemProps {
   item: OtherUser;
-  clearSearchQuery: () => void;
+  onSelectItem: (item: OtherUser) => void;
 }
 
-const ContactItem = ({ item, clearSearchQuery }: ContactItemProps) => {
-  const dispatch = useAppDispatch();
-
-  const handleSelectContact = (contact: OtherUser) => {
-    dispatch(toggleSelectedState(contact));
-    dispatch(onSelectFriend(contact));
-    clearSearchQuery();
-  };
-
+const ContactItem = ({ item, onSelectItem }: ContactItemProps) => {
   const selectedIcon = (
     <Icon
       name={"check-circle"}
@@ -44,11 +36,10 @@ const ContactItem = ({ item, clearSearchQuery }: ContactItemProps) => {
     <TouchableHighlight
       activeOpacity={0.85}
       underlayColor="#E5E5E5"
-      onPress={() => handleSelectContact(item)}
+      onPress={() => onSelectItem(item)}
       style={{ borderRadius: 8 }}
     >
       <UserRow
-        // item={item}
         avatar_url={item.url_thumbnail}
         firstName={item.firstName}
         rightItem={item.selected ? selectedIcon : unselectedIcon}
