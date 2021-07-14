@@ -19,11 +19,14 @@ export const DatePickerSlice = createSlice({
     setSelectedDates: (state, action: PayloadAction<MarkedDates>) => {
       state.selected = action.payload;
     },
+    clearSelectedDates: (state) => {
+      state.selected = {};
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setSelectedDates } = DatePickerSlice.actions;
+export const { setSelectedDates, clearSelectedDates } = DatePickerSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectedDates = (state: RootState) => state.DatePicker.selected;
