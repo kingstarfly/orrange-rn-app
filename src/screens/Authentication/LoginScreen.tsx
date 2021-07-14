@@ -1,10 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
-  StyleSheet,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  View,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
@@ -28,7 +23,7 @@ import {
   WINDOW_HEIGHT,
   WINDOW_WIDTH,
 } from "react-native-magnus";
-import { Heading, Subheading } from "components/StyledText";
+import { Subheading } from "components/StyledText";
 import { theme } from "constants/theme";
 import LargeButton from "components/LargeButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -39,7 +34,6 @@ export default function LoginScreen() {
     useNavigation<StackNavigationProp<AuthStackParamList, "Login">>();
 
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [verificationId, setVerificationId] = useState("");
   const recaptchaVerifier = useRef(null);
   const [countryCode, setCountryCode] = useState<CountryCode>("SG");
   const [country, setCountry] = useState<Country>(null);
@@ -80,14 +74,13 @@ export default function LoginScreen() {
     phoneProvider
       .verifyPhoneNumber(fullNumber, recaptchaVerifier.current)
       .then((verificationId) => {
-        console.log("Going to verify screen");
         navigation.replace("Verify", {
           verificationId,
         });
       })
       .catch((err) => {
-        console.log("Error verifying phone number");
-        console.log(err);
+        console.log("Error verifying phone number", err);
+        setLoading(false);
       });
   };
 
@@ -168,17 +161,6 @@ export default function LoginScreen() {
                 />
               </Box>
             </Box>
-
-            {/* <Box position="absolute" bottom={WINDOW_HEIGHT * 0.15}>
-              <LargeButton
-                loading={loading}
-                onPress={() => {
-                  Keyboard.dismiss();
-                  authData.signOut();
-                }}
-                title="LOGOUT"
-              />
-            </Box> */}
 
             <Box position="absolute" bottom={WINDOW_HEIGHT * 0.05}>
               <LargeButton
