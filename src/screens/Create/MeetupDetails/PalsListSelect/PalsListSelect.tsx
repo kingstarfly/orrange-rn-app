@@ -10,18 +10,25 @@ import { FlatList } from "react-native-gesture-handler";
 import PalAvatar from "screens/Plan/SelectTime/TimeGridSelector/PalAvatar";
 import { SearchInput } from "components/StyledInput";
 import { StyleSheet, View } from "react-native";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
+import { onSelectFriend } from "redux/slices/SelectedFriendsSlice";
 
 const PalsListSelect = (props: DivProps) => {
   const [pals, setPals] = React.useState<OtherUser[]>([]);
-  const [selectedPals, setSelectedPals] = React.useState<OtherUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const selectedPals = useAppSelector(
+    (state) => state.SelectedFriends.selectedFriends
+  );
 
   // todo obtain contacts from user first and put into state, account for loading time
   const navigation =
     useNavigation<
       StackNavigationProp<CreateMeetupStackParamList, "MeetupDetails">
     >();
+
+  const dispatch = useAppDispatch();
+
   const getAllPals = React.useCallback(async () => {
     setIsLoading(true);
     try {
@@ -57,14 +64,17 @@ const PalsListSelect = (props: DivProps) => {
 
       <Box w="100%" flex={1}>
         <Box justifyContent="flex-end">
-          <SearchInput
-            inputPlaceholder="Search your pals..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            showPrefix
-          />
+          <Box my={8}>
+            <SearchInput
+              inputPlaceholder="Search your pals..."
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              showPrefix
+            />
+          </Box>
 
           <FlatList
+            refreshing={isLoading}
             data={getFilteredResults(pals, searchQuery)}
             keyExtractor={(item) => item.id || item.uid}
             renderItem={({ item }: { item: OtherUser }) => (
@@ -72,7 +82,8 @@ const PalsListSelect = (props: DivProps) => {
                 item={item}
                 onSelectItem={(pal: OtherUser) => {
                   if (!pal.selected) {
-                    setSelectedPals((old) => [...old, pal]);
+                    // setSelectedPals((old) => [...old, pal]);
+                    dispatch(onSelectFriend(pal));
                     setPals((old) => {
                       const ind = old.findIndex((e) => e.uid === pal.uid);
                       return [
@@ -85,9 +96,10 @@ const PalsListSelect = (props: DivProps) => {
                       ];
                     });
                   } else {
-                    setSelectedPals((old) =>
-                      old.filter((e) => e.uid !== pal.uid)
-                    );
+                    // setSelectedPals((old) =>
+                    //   old.filter((e) => e.uid !== pal.uid)
+                    // );
+                    dispatch(onSelectFriend(pal));
                     setPals((old) => {
                       const ind = old.findIndex((e) => e.uid === pal.uid);
                       return [
