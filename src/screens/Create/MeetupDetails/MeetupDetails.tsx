@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { Box } from "react-native-magnus";
+import { Box, WINDOW_HEIGHT } from "react-native-magnus";
 import { CreateMeetupStackParamList } from "types/types";
 import Container from "components/Container";
 import { theme } from "constants/theme";
 import StyledButton from "components/StyledButton";
 import { Heading, Subheading } from "components/StyledText";
-import { useWindowDimensions } from "react-native";
+import { useWindowDimensions, Alert } from "react-native";
 import { UnderlinedInput } from "components/StyledInput";
 import PalsListSelect from "./PalsListSelect";
+import LargeButton from "components/LargeButton";
 
 const MeetupDetails = ({
   navigation,
@@ -17,6 +18,19 @@ const MeetupDetails = ({
   const [name, setName] = useState("");
 
   const handleConfirm = () => {
+    if (name.length < 4) {
+      Alert.alert(
+        "",
+        "Plan name should be longer than 4 characters!",
+        [
+          {
+            text: "Done",
+          },
+        ],
+        { cancelable: true }
+      );
+      return;
+    }
     navigation.push("SelectDates", { meetupName: name });
   };
 
@@ -33,6 +47,7 @@ const MeetupDetails = ({
             placeholder="Name Your Meetup!"
             value={name}
             onChangeText={setName}
+            maxLength={28}
           />
         </Box>
 
@@ -42,14 +57,11 @@ const MeetupDetails = ({
         </Box>
       </Box>
 
-      <StyledButton
-        onPress={handleConfirm}
-        bg={theme.colors.primary400}
-        position="absolute"
-        bottom={height * 0.03}
-      >
-        Confirm
-      </StyledButton>
+      <Box bottom={WINDOW_HEIGHT * 0.02} position="absolute" alignSelf="center">
+        <LargeButton onPress={handleConfirm} title="Confirm">
+          Confirm
+        </LargeButton>
+      </Box>
     </Container>
   );
 };

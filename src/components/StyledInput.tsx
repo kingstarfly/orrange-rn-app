@@ -40,8 +40,7 @@ export const SearchInput = ({
 }: SearchInputProps) => {
   return (
     <Input
-      h={32}
-      py={0}
+      py={4}
       px={20}
       my={0}
       textAlignVertical="center"

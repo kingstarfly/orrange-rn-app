@@ -4,6 +4,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import CountryPicker, {
@@ -65,7 +66,16 @@ export default function LoginScreen() {
   const onLoginPress = () => {
     const phoneProvider = new firebaseApp.auth.PhoneAuthProvider();
     if (phoneNumber.length < 4 || phoneNumber.length > 12) {
-      alert("Please enter a valid phone number");
+      Alert.alert(
+        "",
+        "Please enter a valid phone number",
+        [
+          {
+            text: "Done",
+          },
+        ],
+        { cancelable: true }
+      );
       return;
     }
 
