@@ -35,7 +35,7 @@ const SearchableList = <
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const getFilteredUsers = (users: ItemProp[]) => {
+  const getFilteredUsers = React.useCallback((users: ItemProp[]) => {
     if (!users) {
       return [];
     }
@@ -50,7 +50,7 @@ const SearchableList = <
       );
     });
     return filtered;
-  };
+  }, []);
 
   return (
     <Box justifyContent="flex-end">

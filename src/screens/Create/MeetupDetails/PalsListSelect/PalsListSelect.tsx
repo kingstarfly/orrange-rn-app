@@ -8,6 +8,8 @@ import SearchableList from "components/SearchableList";
 import ContactItem from "./ContactItem";
 import { FlatList } from "react-native-gesture-handler";
 import PalAvatar from "screens/Plan/SelectTime/TimeGridSelector/PalAvatar";
+import { SearchInput } from "components/StyledInput";
+import { StyleSheet, View } from "react-native";
 
 const PalsListSelect = (props: DivProps) => {
   const [pals, setPals] = React.useState<OtherUser[]>([]);
@@ -54,50 +56,60 @@ const PalsListSelect = (props: DivProps) => {
       </Box>
 
       <Box w="100%" flex={1}>
-        <SearchableList
-          data={getFilteredResults(pals, searchQuery)}
-          isLoading={isLoading}
-          renderItem={({ item }: { item: OtherUser }) => (
-            <ContactItem
-              item={item}
-              onSelectItem={(pal: OtherUser) => {
-                if (!pal.selected) {
-                  setSelectedPals((old) => [...old, pal]);
-                  setPals((old) => {
-                    const ind = old.findIndex((e) => e.uid === pal.uid);
-                    return [
-                      ...old.slice(0, ind),
-                      {
-                        ...old[ind],
-                        selected: true,
-                      },
-                      ...old.slice(ind + 1),
-                    ];
-                  });
-                } else {
-                  setSelectedPals((old) =>
-                    old.filter((e) => e.uid !== pal.uid)
-                  );
-                  setPals((old) => {
-                    const ind = old.findIndex((e) => e.uid === pal.uid);
-                    return [
-                      ...old.slice(0, ind),
-                      {
-                        ...old[ind],
-                        selected: false,
-                      },
-                      ...old.slice(ind + 1),
-                    ];
-                  });
-                }
+        <Box justifyContent="flex-end">
+          <SearchInput
+            inputPlaceholder="Search your pals..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            showPrefix
+          />
 
-                // Only reset search query when user has input there. Use case is when user is de-selecting users.
-                searchQuery && setSearchQuery("");
-              }}
-            />
-          )}
-          inputPlaceholder="Search your pals..."
-        />
+          <FlatList
+            data={getFilteredResults(pals, searchQuery)}
+            keyExtractor={(item) => item.id || item.uid}
+            renderItem={({ item }: { item: OtherUser }) => (
+              <ContactItem
+                item={item}
+                onSelectItem={(pal: OtherUser) => {
+                  if (!pal.selected) {
+                    setSelectedPals((old) => [...old, pal]);
+                    setPals((old) => {
+                      const ind = old.findIndex((e) => e.uid === pal.uid);
+                      return [
+                        ...old.slice(0, ind),
+                        {
+                          ...old[ind],
+                          selected: true,
+                        },
+                        ...old.slice(ind + 1),
+                      ];
+                    });
+                  } else {
+                    setSelectedPals((old) =>
+                      old.filter((e) => e.uid !== pal.uid)
+                    );
+                    setPals((old) => {
+                      const ind = old.findIndex((e) => e.uid === pal.uid);
+                      return [
+                        ...old.slice(0, ind),
+                        {
+                          ...old[ind],
+                          selected: false,
+                        },
+                        ...old.slice(ind + 1),
+                      ];
+                    });
+                  }
+
+                  // Only reset search query when user has input there. Use case is when user is de-selecting users.
+                  searchQuery && setSearchQuery("");
+                }}
+              />
+            )}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            showsVerticalScrollIndicator={false}
+          />
+        </Box>
       </Box>
     </Box>
   );
@@ -119,3 +131,11 @@ const getFilteredResults = (contacts: OtherUser[], searchQuery: string) => {
 };
 
 export default PalsListSelect;
+
+const styles = StyleSheet.create({
+  separator: {
+    height: 1,
+    backgroundColor: "#D8D8D8",
+    marginLeft: "18%",
+  },
+});
