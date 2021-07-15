@@ -11,6 +11,8 @@ import { SearchInput } from "components/StyledInput";
 import { StyleSheet, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { onSelectPal } from "redux/slices/SelectedPalsSlice";
+import { useAuth } from "lib/auth";
+import { getPals } from "lib/api/pals";
 
 const PalsListSelect = (props: DivProps) => {
   const [pals, setPals] = React.useState<OtherUser[]>([]);
@@ -20,19 +22,19 @@ const PalsListSelect = (props: DivProps) => {
     (state) => state.SelectedPals.selectedPals
   );
 
-  // todo obtain contacts from user first and put into state, account for loading time
   const navigation =
     useNavigation<
       StackNavigationProp<CreateMeetupStackParamList, "MeetupDetails">
     >();
 
   const dispatch = useAppDispatch();
+  const authData = useAuth();
 
   const getAllPals = React.useCallback(async () => {
     setIsLoading(true);
     try {
-      const initialContacts = await getMockUsers();
-      const res = initialContacts.map((contact) => ({
+      const initialPals = await getPals(authData.userData.uid);
+      const res = initialPals.map((contact) => ({
         ...contact,
         selected: false,
       }));

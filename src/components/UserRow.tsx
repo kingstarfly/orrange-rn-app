@@ -10,8 +10,6 @@ interface UserRowProps {
   lastName?: string;
   username?: string;
   avatar_url?: string;
-  // item: OtherUser; // todo add possible item combis in future. TootleUser | XXXDetials | YYYDetails
-  // handleSelectUser: (item: TootleUser) => void;
   rightItem?: JSX.Element;
 }
 const UserRow = ({

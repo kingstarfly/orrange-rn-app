@@ -83,23 +83,10 @@ function useProvideAuth() {
       );
       const userCredential = await auth.signInWithCredential(credential);
       let user = await handleUser(userCredential.user);
-      // AsyncStorage.setItem("@AuthData", JSON.stringify(user)); // TODO: check if this actually works because state changes might not have taken place
     } catch (err) {
       console.error("useAuth verify failed ", err);
     }
   };
-
-  // const fakeLogin = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     const userCredential = await auth.signInAnonymously();
-  //     let user = handleUser(userCredential.user);
-  //     AsyncStorage.setItem("@AuthData", JSON.stringify(user)); // TODO: check if this actually works because state changes might not have taken place
-  //     console.log("Signed in anonymously");
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
   const signOut = async () => {
     await auth.signOut();
