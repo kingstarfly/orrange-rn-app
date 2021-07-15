@@ -147,8 +147,8 @@ const meetups = [...Array(7).keys()].map((val) => {
     activity: meetupNames[val],
     startAt: startTime.toISOString(),
     endAt: endTime.toISOString(),
-    isConfirmed: true,
-    // isConfirmed: false,
+    // isConfirmed: true,
+    isConfirmed: false,
   } as MeetupFields;
 });
 
@@ -187,6 +187,7 @@ function addParticipants() {
             isHost: meetupIndex === userIndex ? true : false, // user 0 is host for meeting 0
             username: user.username,
             url_thumbnail: user.url_thumbnail,
+            uid: user.uid,
           } as ParticipantFields);
         await db
           .collection("users")
@@ -205,6 +206,7 @@ function addParticipants() {
             requestedAt: faker.date.past().toISOString(),
             username: user.username,
             url_thumbnail: user.url_thumbnail,
+            uid: user.uid,
           } as PendingParticipantFields);
       });
     });

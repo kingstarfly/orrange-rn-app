@@ -34,6 +34,7 @@ import { PhosphorIcon } from "constants/Icons";
 import Loading from "components/Loading";
 import { auth } from "firebase-admin";
 import InviteContacts from "screens/InviteContacts";
+import AddParticipantsScreen from "screens/Plan/AddParticipantsScreen";
 
 export default function Navigation({
   colorScheme,
@@ -123,6 +124,11 @@ const AppStackScreen = () => (
     <AppStack.Screen
       name="DiscussDetails"
       component={DiscussDetailsScreen}
+      options={{ title: "" }}
+    />
+    <AppStack.Screen
+      name="AddParticipants"
+      component={AddParticipantsScreen}
       options={{ title: "" }}
     />
     <AppStack.Screen

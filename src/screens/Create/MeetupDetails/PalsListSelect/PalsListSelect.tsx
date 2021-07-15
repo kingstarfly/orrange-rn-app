@@ -22,11 +22,6 @@ const PalsListSelect = (props: DivProps) => {
     (state) => state.SelectedPals.selectedPals
   );
 
-  const navigation =
-    useNavigation<
-      StackNavigationProp<CreateMeetupStackParamList, "MeetupDetails">
-    >();
-
   const dispatch = useAppDispatch();
   const authData = useAuth();
 

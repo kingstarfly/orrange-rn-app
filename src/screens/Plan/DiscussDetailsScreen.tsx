@@ -157,6 +157,10 @@ const DiscussDetailsScreen = () => {
 
   const handlePressAddParticipant = () => {
     // TODO: Navigate to new screen to add pals
+    navigation.push("AddParticipants", {
+      meetupId: meetingInfo.id,
+      userUid: authData.userData.uid,
+    });
   };
   if (isLoading || !meetingInfo) {
     return (

@@ -57,6 +57,7 @@ export type ParticipantFields = {
   isHost: boolean;
   username: string;
   url_thumbnail: string;
+  uid: string;
 };
 
 export type PreferredDuration = {
@@ -69,6 +70,7 @@ export type PendingParticipantFields = {
   requestedAt: string;
   username: string;
   url_thumbnail: string;
+  uid: string;
 };
 
 export type SuggestionFields = {
@@ -122,6 +124,14 @@ export type AppStackParamList = {
   TestScreen: undefined;
 
   DiscussDetails: {
+    meetupId: string;
+  };
+
+  AddParticipants: {
+    // TODO: Might want to create a DiscussDetails stack and put this screen there instead? Current way is simpler way.
+    // UseruId is needed to know which pals to display
+    // MeetupId is needed to know which pals to exclude since they are already participants / pending participants.
+    userUid: string;
     meetupId: string;
   };
   FinalDetails: {
