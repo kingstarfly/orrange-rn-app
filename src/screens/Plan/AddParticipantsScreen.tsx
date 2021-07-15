@@ -6,14 +6,15 @@ import {
   ScrollView,
 } from "react-native";
 import Container from "components/Container";
-import { Subheading, CaptionText } from "components/StyledText";
+import { Subheading, CaptionText, MiniText } from "components/StyledText";
 import { RouteProp, useRoute } from "@react-navigation/core";
-import { Div, WINDOW_HEIGHT } from "react-native-magnus";
+import { Box, Div, WINDOW_HEIGHT } from "react-native-magnus";
 
 import HeaderComponent from "./Components/SectionHeaderComponent";
 import {
   AppStackParamList,
   MeetupFields,
+  OtherUser,
   PalFields,
   ParticipantFields,
   PendingParticipantFields,
@@ -22,6 +23,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useAuth } from "lib/auth";
 import {
+  addUsersToMeetup,
   getMeetingInfo,
   getParticipants,
   getPendingParticipants,
@@ -30,6 +32,10 @@ import { getPals } from "lib/api/pals";
 import Loading from "components/Loading";
 import MeetupNameHeaderComponent from "./Components/MeetupNameHeaderComponent";
 import { sectionSpacing } from "constants/Layout";
+import PalsListSelect from "screens/Create/MeetupDetails/PalsListSelect";
+import LargeButton from "components/LargeButton";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
+import { clearSelectedPals } from "redux/slices/SelectedPalsSlice";
 
 const AddParticipantsScreen = () => {
   const route = useRoute<RouteProp<AppStackParamList, "AddParticipants">>();
@@ -42,9 +48,15 @@ const AddParticipantsScreen = () => {
   const [pals, setPals] = React.useState<PalFields[]>();
 
   const [isLoading, setIsLoading] = React.useState(false);
+  const [buttonLoading, setButtonLoading] = React.useState(false);
 
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
+
+  const selectedPals = useAppSelector(
+    (state) => state.SelectedPals.selectedPals
+  );
+  const dispatch = useAppDispatch();
 
   const fetchPalsToShow = React.useCallback(async () => {
     setIsLoading(true);
@@ -64,6 +76,9 @@ const AddParticipantsScreen = () => {
         return true;
       }
     });
+    console.log("excludeUids: ", excludeUids);
+    console.log("getPals:", d);
+    console.log("palsToShow: ", palsToShow);
 
     setMeetingInfo(a);
     setPals(palsToShow);
@@ -80,6 +95,19 @@ const AddParticipantsScreen = () => {
     return unsubscribe;
   }, []);
 
+  const handleAddParticipants = async () => {
+    // Adds pals to the meetup
+    setButtonLoading(true);
+    // Get selected pals from redux
+    await addUsersToMeetup(selectedPals, meetupId);
+
+    // Clear redux information of selected pals
+    dispatch(clearSelectedPals());
+
+    navigation.pop();
+    setButtonLoading(false);
+  };
+
   if (isLoading || !meetingInfo) {
     return (
       <Container avoidHeader>
@@ -87,9 +115,27 @@ const AddParticipantsScreen = () => {
       </Container>
     );
   }
+
   return (
     <Container avoidHeader>
       <MeetupNameHeaderComponent title={meetingInfo.name} mb={24} />
+      <HeaderComponent title="Add more Pals!" mb={0} />
+      <PalsListSelect
+        pals={pals.map((pal) => {
+          const { addedAt, ...rest } = pal;
+          return rest as OtherUser;
+        })}
+        setPals={setPals}
+        isLoading={isLoading}
+      />
+
+      <Box bottom={WINDOW_HEIGHT * 0.02} position="absolute" alignSelf="center">
+        <LargeButton
+          onPress={() => handleAddParticipants()}
+          loading={buttonLoading}
+          title="CONFIRM"
+        />
+      </Box>
     </Container>
   );
 };

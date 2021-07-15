@@ -259,3 +259,24 @@ export const createMeetup = async (
       meetup_ids: firebaseApp.firestore.FieldValue.arrayUnion(meetupId),
     });
 };
+
+export const addUsersToMeetup = (users: OtherUser[], meetupId: string) => {
+  // Add to pending participants
+  let batch = firestore.batch();
+  let collection = firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PENDING_PARTICIPANTS);
+
+  users.forEach((user) => {
+    let doc = collection.doc(user.uid);
+    batch.set(doc, {
+      requestedAt: new Date().toISOString(),
+      uid: user.uid,
+      url_thumbnail: user.url_thumbnail,
+      username: user.username,
+    } as PendingParticipantFields);
+  });
+
+  batch.commit();
+};

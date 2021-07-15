@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Box, WINDOW_HEIGHT } from "react-native-magnus";
-import { CreateMeetupStackParamList } from "types/types";
+import { CreateMeetupStackParamList, OtherUser } from "types/types";
 import Container from "components/Container";
 import { theme } from "constants/theme";
 import StyledButton from "components/StyledButton";
@@ -10,12 +10,17 @@ import { useWindowDimensions, Alert } from "react-native";
 import { UnderlinedInput } from "components/StyledInput";
 import PalsListSelect from "./PalsListSelect";
 import LargeButton from "components/LargeButton";
+import { getPals } from "lib/api/pals";
+import { useAuth } from "lib/auth";
 
 const MeetupDetails = ({
   navigation,
 }: StackScreenProps<CreateMeetupStackParamList, "MeetupDetails">) => {
   const { width, height } = useWindowDimensions();
   const [name, setName] = useState("");
+  const [pals, setPals] = React.useState<OtherUser[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const authData = useAuth();
 
   const handleConfirm = () => {
     if (name.length < 4) {
@@ -33,6 +38,31 @@ const MeetupDetails = ({
     }
     navigation.push("SelectDates", { meetupName: name });
   };
+
+  const getAllPals = React.useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const initialPals = await getPals(authData.userData.uid);
+      const res = initialPals.map((contact) => ({
+        ...contact,
+        selected: false,
+      }));
+      res.sort((a, b) => a.username.localeCompare(b.username));
+      setPals(res);
+    } catch (error) {
+      console.error("Unable to fetch pals", error);
+    }
+    setIsLoading(false);
+  }, []);
+
+  // Set up a listener on screen mount
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", async () => {
+      await getAllPals();
+    });
+
+    return unsubscribe;
+  }, []);
 
   return (
     <Container>
@@ -53,7 +83,7 @@ const MeetupDetails = ({
 
         <Box flex={5} mb={height * 0.1}>
           <Subheading>Add your pals!</Subheading>
-          <PalsListSelect />
+          <PalsListSelect pals={pals} setPals={setPals} isLoading={isLoading} />
         </Box>
       </Box>
 

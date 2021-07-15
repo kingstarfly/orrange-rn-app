@@ -13,40 +13,24 @@ import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { onSelectPal } from "redux/slices/SelectedPalsSlice";
 import { useAuth } from "lib/auth";
 import { getPals } from "lib/api/pals";
+import { BodyTextRegular } from "components/StyledText";
 
-const PalsListSelect = (props: DivProps) => {
-  const [pals, setPals] = React.useState<OtherUser[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+interface Props extends DivProps {
+  isLoading: boolean;
+  pals: OtherUser[];
+  setPals: React.Dispatch<React.SetStateAction<OtherUser[]>>;
+}
+
+const PalsListSelect = ({ isLoading, pals, setPals, ...rest }: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const selectedPals = useAppSelector(
     (state) => state.SelectedPals.selectedPals
   );
 
   const dispatch = useAppDispatch();
-  const authData = useAuth();
-
-  const getAllPals = React.useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const initialPals = await getPals(authData.userData.uid);
-      const res = initialPals.map((contact) => ({
-        ...contact,
-        selected: false,
-      }));
-      res.sort((a, b) => a.username.localeCompare(b.username));
-      setPals(res);
-    } catch (error) {
-      console.error("Unable to fetch pals", error);
-    }
-    setIsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    getAllPals();
-  }, []);
 
   return (
-    <Box flex={1} alignItems="center" justifyContent="flex-end" {...props}>
+    <Box flex={1} alignItems="center" justifyContent="flex-end" {...rest}>
       <Box w="100%" py="md">
         <FlatList
           horizontal
@@ -116,6 +100,11 @@ const PalsListSelect = (props: DivProps) => {
             )}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             showsVerticalScrollIndicator={false}
+            ListEmptyComponent={
+              <Box justifyContent="center" alignItems="center">
+                <BodyTextRegular>Looks like this is empty...</BodyTextRegular>
+              </Box>
+            }
           />
         </Box>
       </Box>

@@ -73,7 +73,7 @@ const ConfirmedViewPlans = () => {
       <SectionList<MeetingCardProps, ViewPlansSectionData>
         style={styles.scrollViewContainer}
         sections={meetingsData} // enter data here
-        keyExtractor={(item, index) => item.meetingInfo.id}
+        keyExtractor={(item) => item.meetingInfo.id}
         renderItem={({ item }) => {
           return <MeetingCard {...item} accent isConfirmed={true} />;
         }}

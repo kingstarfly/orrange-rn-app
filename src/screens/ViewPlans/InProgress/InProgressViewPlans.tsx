@@ -75,12 +75,12 @@ const InProgressViewPlans = () => {
       <FlatList<MeetingCardProps>
         data={meetingsData}
         style={styles.scrollViewContainer}
-        keyExtractor={(item, index) => item.meetingInfo.id}
+        keyExtractor={(item) => item.meetingInfo.id}
         renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
         onRefresh={onRefresh}
         refreshing={isLoading}
         ListEmptyComponent={listEmptyComponent}
-        contentContainerStyle={{ flex: 1 }}
       />
     </Container>
   );

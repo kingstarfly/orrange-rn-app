@@ -37,9 +37,10 @@ const ContactItem = ({ item, onSelectItem }: ContactItemProps) => {
       style={{ borderRadius: 8 }}
     >
       <UserRow
-        avatar_url={item.url_thumbnail}
-        firstName={item.firstName}
-        rightItem={item.selected ? selectedIcon : unselectedIcon}
+        avatar_url={item?.url_thumbnail}
+        username={item?.username}
+        firstName={item?.firstName}
+        rightItem={item?.selected ? selectedIcon : unselectedIcon}
       />
     </TouchableHighlight>
   );

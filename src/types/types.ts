@@ -45,11 +45,11 @@ export type OtherUser = {
 };
 
 export type PalFields = OtherUser & {
-  addedAt: string;
+  addedAt?: string;
 };
 
 export type PalRequestFields = OtherUser & {
-  requestedAt: string;
+  requestedAt?: string;
 };
 
 export type ParticipantFields = {
