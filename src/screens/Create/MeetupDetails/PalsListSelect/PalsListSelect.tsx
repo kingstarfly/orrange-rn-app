@@ -14,6 +14,7 @@ import { onSelectPal } from "redux/slices/SelectedPalsSlice";
 import { useAuth } from "lib/auth";
 import { getPals } from "lib/api/pals";
 import { BodyTextRegular } from "components/StyledText";
+import { theme } from "constants/theme";
 
 interface Props extends DivProps {
   isLoading: boolean;
@@ -101,8 +102,10 @@ const PalsListSelect = ({ isLoading, pals, setPals, ...rest }: Props) => {
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={
-              <Box justifyContent="center" alignItems="center">
-                <BodyTextRegular>Looks like this is empty...</BodyTextRegular>
+              <Box justifyContent="center" alignItems="center" mt={50}>
+                <BodyTextRegular color={theme.colors.textgray200}>
+                  Looks like this is empty...
+                </BodyTextRegular>
               </Box>
             }
           />
