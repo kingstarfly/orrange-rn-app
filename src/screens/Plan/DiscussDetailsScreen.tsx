@@ -42,6 +42,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import Loading from "components/Loading";
 import { parseISO } from "date-fns";
 import { userData } from "constants/mockdata";
+import { sectionSpacing } from "constants/Layout";
 
 const DiscussDetailsScreen = () => {
   const route = useRoute<RouteProp<AppStackParamList, "DiscussDetails">>();
@@ -67,7 +68,6 @@ const DiscussDetailsScreen = () => {
 
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
-  const divPadding = 20;
 
   const refRBSheet = useRef(null);
 
@@ -154,6 +154,10 @@ const DiscussDetailsScreen = () => {
     await addSuggestion(meetingInfo.id, authData.userData.uid, content);
     await fetchSuggestions();
   };
+
+  const handlePressAddParticipant = () => {
+    // TODO: Navigate to new screen to add pals
+  };
   if (isLoading || !meetingInfo) {
     return (
       <Container avoidHeader>
@@ -163,45 +167,13 @@ const DiscussDetailsScreen = () => {
   }
   return (
     <Container avoidHeader>
-      <RBSheet
-        ref={refRBSheet}
-        closeOnDragDown={false}
-        closeOnPressMask={true}
-        height={windowHeight * 0.15}
-      >
-        <TouchableOpacity>
-          <Div
-            row
-            w="100%"
-            justifyContent="center"
-            alignItems="center"
-            py={16}
-            bg={theme.colors.primary500}
-          >
-            <Subheading>Make Co-Organiser</Subheading>
-          </Div>
-        </TouchableOpacity>
-        <TouchableOpacity style={{ flex: 1 }}>
-          <Div
-            row
-            w="100%"
-            justifyContent="center"
-            alignItems="center"
-            py={16}
-            bg={theme.colors.backgroundlight}
-          >
-            <Subheading>Cancel</Subheading>
-          </Div>
-        </TouchableOpacity>
-      </RBSheet>
-
       <MeetupNameHeaderComponent title={meetingInfo.name} mb={24} />
 
-      <Div mb={divPadding}>
+      <Div mb={sectionSpacing}>
         <HeaderComponent
           title="🎊 Party-cipants"
           rightComponent={
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handlePressAddParticipant()}>
               <PhosphorIcon
                 name="user-circle-plus"
                 color={theme.colors.textdark}
@@ -210,7 +182,7 @@ const DiscussDetailsScreen = () => {
             </TouchableOpacity>
           }
         />
-        <Div row mb={divPadding}>
+        <Div row mb={sectionSpacing}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {[
               ...participants.map((participant, index) => {
@@ -253,8 +225,19 @@ const DiscussDetailsScreen = () => {
         </Div>
       </Div>
 
-      <Div mb={divPadding}>
-        <HeaderComponent title="When should we meet?" />
+      <Div mb={sectionSpacing}>
+        <HeaderComponent
+          title="When should we meet?"
+          rightComponent={
+            <TouchableOpacity>
+              <PhosphorIcon
+                name="calendar"
+                color={theme.colors.textdark}
+                size={28}
+              />
+            </TouchableOpacity>
+          }
+        />
         {!preferredDurationLoading ? (
           preferredDurations ? (
             <Div>
@@ -278,7 +261,7 @@ const DiscussDetailsScreen = () => {
         )}
       </Div>
 
-      <Div mb={divPadding}>
+      <Div mb={sectionSpacing}>
         <HeaderComponent title="What should we do?" />
 
         {!suggestionLoading ? (
@@ -339,6 +322,38 @@ const DiscussDetailsScreen = () => {
           />
         )}
       </Div>
+
+      <RBSheet
+        ref={refRBSheet}
+        closeOnDragDown={false}
+        closeOnPressMask={true}
+        height={windowHeight * 0.15}
+      >
+        <TouchableOpacity>
+          <Div
+            row
+            w="100%"
+            justifyContent="center"
+            alignItems="center"
+            py={16}
+            bg={theme.colors.primary500}
+          >
+            <Subheading>Make Co-Organiser</Subheading>
+          </Div>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ flex: 1 }}>
+          <Div
+            row
+            w="100%"
+            justifyContent="center"
+            alignItems="center"
+            py={16}
+            bg={theme.colors.backgroundlight}
+          >
+            <Subheading>Cancel</Subheading>
+          </Div>
+        </TouchableOpacity>
+      </RBSheet>
     </Container>
   );
 };

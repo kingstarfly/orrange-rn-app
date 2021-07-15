@@ -35,8 +35,7 @@ import * as Localization from "expo-localization";
 import { BodyTextRegular, CaptionText, MiniText } from "components/StyledText";
 import { theme } from "constants/theme";
 import SmallButton from "components/SmallButton";
-
-const divPadding = 20;
+import { sectionSpacing } from "constants/Layout";
 
 const FinalDetailsScreen = () => {
   const route = useRoute<RouteProp<AppStackParamList, "FinalDetails">>();
@@ -170,9 +169,9 @@ const FinalDetailsScreen = () => {
     <Container avoidHeader>
       <MeetupNameHeaderComponent title={meetingInfo.name} mb={24} />
 
-      <Div mb={divPadding}>
+      <Div mb={sectionSpacing}>
         <HeaderComponent title="🎊 Party-cipants" />
-        <Div row mb={divPadding}>
+        <Div row mb={sectionSpacing}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {[
               ...participants.map((participant, index) => {
@@ -206,7 +205,7 @@ const FinalDetailsScreen = () => {
           </ScrollView>
         </Div>
 
-        <Div mb={divPadding}>
+        <Div mb={sectionSpacing}>
           <HeaderComponent title="Start" />
           <HighlightedText>
             {start_date_string}, {end_day_string}
@@ -214,7 +213,7 @@ const FinalDetailsScreen = () => {
           <HighlightedText>{end_time_string}</HighlightedText>
         </Div>
 
-        <Div mb={divPadding}>
+        <Div mb={sectionSpacing}>
           <HeaderComponent title="End" />
           <HighlightedText>
             {end_date_string}, {start_day_string}
@@ -222,7 +221,7 @@ const FinalDetailsScreen = () => {
           <HighlightedText>{start_time_string}</HighlightedText>
         </Div>
 
-        <Div mb={divPadding}>
+        <Div mb={sectionSpacing}>
           <HeaderComponent title="Activity" />
           <HighlightedText>{activityContent}</HighlightedText>
         </Div>

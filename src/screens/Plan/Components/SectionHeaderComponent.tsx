@@ -18,7 +18,7 @@ const HeaderComponent = ({
     <Box
       row
       h={32}
-      mb={8}
+      mb={12}
       w="100%"
       alignItems="center"
       justifyContent="space-between"
