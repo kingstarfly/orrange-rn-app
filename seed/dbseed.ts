@@ -148,6 +148,7 @@ const meetups = [...Array(7).keys()].map((val) => {
     startAt: startTime.toISOString(),
     endAt: endTime.toISOString(),
     isConfirmed: true,
+    // isConfirmed: false,
   } as MeetupFields;
 });
 

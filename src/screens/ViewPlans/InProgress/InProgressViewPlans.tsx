@@ -66,7 +66,7 @@ const InProgressViewPlans = () => {
   }
 
   const listEmptyComponent = (
-    <Box justifyContent="center" alignItems="center">
+    <Box justifyContent="center" alignItems="center" h="100%">
       <BodyTextRegular>You have no plans in progress!</BodyTextRegular>
     </Box>
   );
@@ -80,6 +80,7 @@ const InProgressViewPlans = () => {
         onRefresh={onRefresh}
         refreshing={isLoading}
         ListEmptyComponent={listEmptyComponent}
+        contentContainerStyle={{ flex: 1 }}
       />
     </Container>
   );

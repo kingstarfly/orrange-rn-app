@@ -63,7 +63,7 @@ const ConfirmedViewPlans = () => {
   }
 
   const listEmptyComponent = (
-    <Box justifyContent="center" alignItems="center">
+    <Box justifyContent="center" alignItems="center" h="100%">
       <BodyTextRegular>You have no confirmed plans!</BodyTextRegular>
     </Box>
   );
@@ -86,6 +86,7 @@ const ConfirmedViewPlans = () => {
         onRefresh={onRefresh}
         refreshing={refreshing}
         ListEmptyComponent={listEmptyComponent}
+        contentContainerStyle={{ flex: 1 }}
       />
 
       <Button onPress={() => authData.signOut()}>Sign out</Button>
