@@ -4,18 +4,26 @@ import { Pressable, TouchableOpacity } from "react-native";
 import { Div, WINDOW_WIDTH } from "react-native-magnus";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { BodyTextRegular, MiniText } from "components/StyledText";
-import { format, parseISO } from "date-fns";
+import { differenceInHours, format, isBefore, parseISO } from "date-fns";
 import { PhosphorIcon } from "constants/Icons";
 
 interface Props {
   start: Date;
   end: Date;
   rightButtonType?: RightButtonType;
+  onButtonPress?: (startTime: string, endTime: string) => void;
+  readOnly?: boolean;
 }
 
 type RightButtonType = "add" | "delete" | "default";
 
-const DateTimeRowComponent = ({ start, end, rightButtonType }: Props) => {
+const DateTimeRowComponent = ({
+  start,
+  end,
+  rightButtonType,
+  onButtonPress,
+  readOnly,
+}: Props) => {
   const [fromDate, setFromDate] = useState(start);
   const [fromMode, setFromMode] = useState("date");
   const [showFromDateTimePicker, setShowFromDateTimePicker] = useState(false);
@@ -52,6 +60,20 @@ const DateTimeRowComponent = ({ start, end, rightButtonType }: Props) => {
     setShowToDateTimePicker(false); // closes the picker
     setToDate(currentDate);
   };
+
+  // To ensure end time is always within 24hrs of start time
+  React.useEffect(() => {
+    if (!readOnly) {
+      // If toDate is before fromDate, or more than 24hrs fromDate, then resetDate
+
+      if (
+        isBefore(toDate, fromDate) ||
+        differenceInHours(fromDate, toDate) >= 24
+      ) {
+        setToDate(fromDate);
+      }
+    }
+  }, [fromDate]);
   return (
     <Div
       row
@@ -70,6 +92,7 @@ const DateTimeRowComponent = ({ start, end, rightButtonType }: Props) => {
         alignItems="center"
       >
         <Pressable
+          disabled={readOnly}
           onPress={() => {
             setFromMode("date");
             setShowFromDateTimePicker(true);
@@ -81,6 +104,7 @@ const DateTimeRowComponent = ({ start, end, rightButtonType }: Props) => {
 
       <Div row alignItems="center" justifyContent="flex-end">
         <Pressable
+          disabled={readOnly}
           onPress={() => {
             setFromMode("time");
             setShowFromDateTimePicker(true);
@@ -102,6 +126,7 @@ const DateTimeRowComponent = ({ start, end, rightButtonType }: Props) => {
         <MiniText px={4}>-</MiniText>
 
         <Pressable
+          disabled={readOnly}
           onPress={() => {
             setToMode("time");
             setShowToDateTimePicker(true);
@@ -121,9 +146,13 @@ const DateTimeRowComponent = ({ start, end, rightButtonType }: Props) => {
         </Pressable>
         {rightButtonType && rightButtonType !== "default" && (
           <TouchableOpacity
+            disabled={readOnly}
             style={{
               marginLeft: 8,
             }}
+            onPress={() =>
+              onButtonPress(fromDate.toISOString(), toDate.toISOString())
+            }
           >
             {rightButtonType === "add" ? (
               <PhosphorIcon
@@ -144,22 +173,24 @@ const DateTimeRowComponent = ({ start, end, rightButtonType }: Props) => {
 
       {showFromDateTimePicker && (
         <DateTimePicker
+          minuteInterval={30}
           value={fromDate}
           //@ts-ignore
           mode={fromMode}
           is24Hour={true}
-          display="default"
+          display="spinner"
           onChange={onChangeFrom}
         />
       )}
 
       {showToDateTimePicker && (
         <DateTimePicker
+          minuteInterval={30}
           value={toDate}
           //@ts-ignore
           mode={toMode}
           is24Hour={true}
-          display="default"
+          display="spinner"
           onChange={onChangeTo}
         />
       )}

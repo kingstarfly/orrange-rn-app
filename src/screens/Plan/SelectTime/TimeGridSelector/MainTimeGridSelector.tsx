@@ -7,7 +7,6 @@ import { Box } from "react-native-magnus";
 import { useAppSelector } from "redux/hooks";
 import Day from "./Day";
 import TimeLabels from "./TimeLabels";
-import { getAllDurationsFromMeeting } from "lib/api/meetup";
 import { parseISO } from "date-fns/esm";
 import { DayTimings } from "types/types";
 
@@ -20,11 +19,6 @@ interface Props {
 }
 
 const MainTimeGridSelector = ({ meetupTimings }: Props) => {
-  const selected = useAppSelector((state) => state.DatePicker.selected);
-  // console.log(meetupTimings);
-
-  const dateStrings = Object.keys(selected);
-  dateStrings.sort((a, b) => compareAsc(parseISO(a), parseISO(b)));
   return (
     <ScrollView
       style={styles.scrollViewContainer}
@@ -33,11 +27,9 @@ const MainTimeGridSelector = ({ meetupTimings }: Props) => {
       <Box flexDir="row">
         <TimeLabels startTime={START_TIME} endTime={END_TIME} />
         <ScrollView horizontal>
-          {dateStrings.map((dateString, index) => {
-            let theDate = parse(dateString, DATE_FORMAT, new Date());
-            let timingsData = meetupTimings?.find((dayTiming) =>
-              isSameDay(parseISO(dayTiming.date), theDate)
-            )?.startTimings;
+          {meetupTimings.map((day, index) => {
+            let theDate = parseISO(day.date);
+            let timingsData = day.startTimings;
             return (
               <Day
                 key={index}
@@ -45,9 +37,7 @@ const MainTimeGridSelector = ({ meetupTimings }: Props) => {
                 timingsData={timingsData}
                 startTime={START_TIME}
                 endTime={END_TIME}
-                isRightMostDay={
-                  dateString === dateStrings[dateStrings.length - 1]
-                }
+                isRightMostDay={index === meetupTimings.length - 1}
               />
             );
           })}

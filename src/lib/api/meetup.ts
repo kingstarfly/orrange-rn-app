@@ -1,5 +1,9 @@
-import { compareAsc, formatISO, parseISO } from "date-fns";
+import { compareAsc, formatISO, getDate, parseISO, startOfDay } from "date-fns";
 import { firebaseApp, firestore } from "lib/firebase";
+import {
+  insertPreferredDurationToDayTiming,
+  convertPreferredDurationToDayTiming,
+} from "lib/helpers";
 import { MeetingCardProps } from "screens/ViewPlans/MeetingCard/MeetingCard";
 import {
   MeetupFields,
@@ -12,13 +16,13 @@ import {
 } from "types/types";
 import { DB } from "./dbtypes";
 
-export async function getAllDurationsFromMeeting(
+export async function getAllPreferredDurationsFromMeeting(
   meetupId: string
 ): Promise<PreferredDuration[]> {
   const querySnapShot = await firestore
     .collection(DB.MEETUPS)
     .doc(meetupId)
-    .collection(DB.PENDING_PARTICIPANTS)
+    .collection(DB.PARTICIPANTS)
     .get();
 
   let durations: PreferredDuration[] = [];
@@ -199,6 +203,8 @@ export const addSuggestion = async (
 export const getMeetupTimings = async (meetupId: string) => {
   const doc = await firestore.collection(DB.MEETUPS).doc(meetupId).get();
   const { meetupTimings } = doc.data() as MeetupFields;
+  // Sort meetup timings by date
+  meetupTimings.sort((a, b) => compareAsc(parseISO(a.date), parseISO(b.date)));
   return meetupTimings;
 };
 
@@ -215,6 +221,51 @@ export const getPreferredDurations = async (
 
   const { preferredDurations } = doc.data() as ParticipantFields;
   return preferredDurations;
+};
+
+export const addPreferredDuration = async (
+  prefDuration: PreferredDuration,
+  meetupId: string,
+  userId: string
+) => {
+  // 1. Add to meetup's meetup timings array
+  let query = await firestore.collection(DB.MEETUPS).doc(meetupId).get();
+  let { meetupTimings } = query.data() as MeetupFields;
+  // 1.a Get the datestring, so we know which dayTiming to change.
+  const dateISO = startOfDay(parseISO(prefDuration.startAt)).toISOString();
+  const indexToChange = meetupTimings.findIndex((e) => e.date === dateISO);
+  let dayTimingToChange = meetupTimings[indexToChange];
+
+  const newDayTiming = insertPreferredDurationToDayTiming(
+    prefDuration,
+    dayTimingToChange
+  );
+
+  meetupTimings[indexToChange] = newDayTiming;
+  await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .update({ meetupTimings: meetupTimings });
+
+  // 2. Add to meetup's participants preferred durations
+  let query2 = firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PARTICIPANTS)
+    .doc(userId)
+    .update({
+      preferredDurations:
+        firebaseApp.firestore.FieldValue.arrayUnion(prefDuration),
+    });
+};
+
+export const deletePreferredDuration = async (
+  prefDuration: PreferredDuration,
+  meetupId: string,
+  userId: string
+) => {
+  // TODO
+  return;
 };
 
 export const createMeetup = async (

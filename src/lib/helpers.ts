@@ -1,7 +1,19 @@
 import { userData } from "constants/mockdata";
-import { parse } from "date-fns";
+import {
+  eachMinuteOfInterval,
+  intervalToDuration,
+  parse,
+  parseISO,
+  startOfDay,
+} from "date-fns";
 import { DATE_FORMAT } from "screens/Create/SelectDates/DatePicker";
-import { OtherUser, PalFields, UserData } from "types/types";
+import {
+  DayTimings,
+  OtherUser,
+  PalFields,
+  PreferredDuration,
+  UserData,
+} from "types/types";
 
 export const debounce = (func) => {
   let timer;
@@ -37,4 +49,61 @@ export const convertUserToPal = (user: UserData | OtherUser): PalFields => {
     url_thumbnail: user.url_thumbnail,
     addedAt: new Date().toISOString(),
   };
+};
+
+export const convertPreferredDurationToDayTiming = (
+  preferredDuration: PreferredDuration
+): DayTimings => {
+  const dateISO = startOfDay(parseISO(preferredDuration.startAt)).toISOString();
+  const { startAt, endAt } = preferredDuration;
+  const startDate = parseISO(startAt);
+  const endDate = parseISO(endAt);
+
+  const result = eachMinuteOfInterval(
+    {
+      start: startDate,
+      end: endDate,
+    },
+    { step: 30 }
+  );
+
+  let startTimingsCountMap = {};
+  result.pop(); // Remove last timing because that is not a start time
+  result.forEach((e) => {
+    startTimingsCountMap[e.toISOString()] = 1;
+  });
+
+  return {
+    date: dateISO,
+    startTimings: startTimingsCountMap,
+  };
+};
+
+export const insertPreferredDurationToDayTiming = (
+  preferredDuration: PreferredDuration,
+  dayTiming: DayTimings
+): DayTimings => {
+  let myDayTiming = { ...dayTiming };
+  const localDateISO = startOfDay(
+    parseISO(preferredDuration.startAt)
+  ).toISOString();
+  const { startAt, endAt } = preferredDuration;
+  const startDate = parseISO(startAt);
+  const endDate = parseISO(endAt);
+
+  const result = eachMinuteOfInterval(
+    {
+      start: startDate,
+      end: endDate,
+    },
+    { step: 30 }
+  );
+
+  result.pop(); // Remove last timing because that is not a start time
+
+  result.forEach((e) => {
+    myDayTiming.startTimings[e.toISOString()] =
+      myDayTiming.startTimings[e.toISOString()] + 1;
+  });
+  return myDayTiming;
 };

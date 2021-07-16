@@ -108,7 +108,7 @@ const SelectDates = () => {
         },
       ],
     });
-  }, []);
+  }, [selectedDates]);
   return (
     <Container>
       <Text

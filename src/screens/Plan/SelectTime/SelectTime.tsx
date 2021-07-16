@@ -14,11 +14,17 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import { CaptionText } from "components/StyledText";
 import LargeButton from "components/LargeButton";
 import DateTimeRowComponent from "components/DateTimeRowComponent";
-import { getMeetupTimings, getPreferredDurations } from "lib/api/meetup";
+import {
+  addPreferredDuration,
+  deletePreferredDuration,
+  getMeetupTimings,
+  getPreferredDurations,
+} from "lib/api/meetup";
 import { useAuth } from "lib/auth";
-import { addHours } from "date-fns";
+import { addHours, parseISO } from "date-fns";
 import HeaderComponent from "screens/Plan/Components/SectionHeaderComponent";
 import MainTimeGridSelector from "./TimeGridSelector/MainTimeGridSelector";
+import Loading from "components/Loading";
 
 const SelectTime = ({
   navigation,
@@ -48,19 +54,23 @@ const SelectTime = ({
   const [preferredDurations, setPreferredDurations] = React.useState<
     PreferredDuration[]
   >([]);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const [isEditMode, setIsEditMode] = React.useState(false);
 
+  const fetchAndSetData = React.useCallback(async () => {
+    // get the data on meetupTimings to render on calendar Grid
+    const timings = await getMeetupTimings(meetupId);
+    setMeetupTimings(timings);
+
+    // get data to render the datetimerow picker
+    const resp = await getPreferredDurations(meetupId, authData.userData.uid);
+    setPreferredDurations(resp);
+  }, []);
+
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
-      // get the data on meetupTimings to render on calendar Grid
-      const timings = await getMeetupTimings(meetupId);
-      setMeetupTimings(timings);
-
-      // get data to render the datetimerow picker
-      const resp = await getPreferredDurations(meetupId, authData.userData.uid);
-      console.log(resp);
-      setPreferredDurations(resp);
+      await fetchAndSetData();
     });
 
     return unsubscribe;
@@ -80,6 +90,45 @@ const SelectTime = ({
     </TouchableOpacity>
   );
 
+  const onAddPreferredDuration = async (startTime: string, endTime: string) => {
+    alert("Adding Preferred Duration");
+    // Construct preferredDuration object
+    const preferredDuration: PreferredDuration = {
+      username: authData.userData.username,
+      startAt: startTime,
+      endAt: endTime,
+    };
+
+    console.log(preferredDuration);
+
+    await addPreferredDuration(
+      preferredDuration,
+      meetupId,
+      authData.userData.uid
+    );
+
+    // Refresh all data
+    await fetchAndSetData();
+  };
+
+  const onDeletePreferredDuration = async (
+    startTime: string,
+    endTime: string
+  ) => {
+    // Construct preferredDuration object
+    const preferredDuration: PreferredDuration = {
+      username: authData.userData.username,
+      startAt: startTime,
+      endAt: endTime,
+    };
+    // TODO implement
+    await deletePreferredDuration(
+      preferredDuration,
+      meetupId,
+      authData.userData.uid
+    );
+  };
+
   return (
     <Container avoidHeader>
       <ScrollView
@@ -95,19 +144,39 @@ const SelectTime = ({
           <DateTimeRowComponent
             start={new Date()}
             end={addHours(new Date(), 1)}
+            onButtonPress={(startTime: string, endTime: string) =>
+              onAddPreferredDuration(startTime, endTime)
+            }
             rightButtonType="add"
           />
         </Box>
         <Box mt={28}>
           <HeaderComponent title="My timings" rightComponent={rightComponent} />
-          {/* 
-          // todo: need to map through firestore data here
-          */}
-          <DateTimeRowComponent
-            start={new Date()}
-            end={addHours(new Date(), 1)}
-            rightButtonType={isEditMode ? "delete" : null}
-          />
+          {!isLoading ? (
+            preferredDurations ? (
+              <Box>
+                {preferredDurations?.map((preferredDuration, index) => {
+                  return (
+                    <DateTimeRowComponent
+                      key={index}
+                      start={parseISO(preferredDuration.startAt)}
+                      end={parseISO(preferredDuration.endAt)}
+                      rightButtonType={isEditMode ? "delete" : null}
+                      onButtonPress={(startTime: string, endTime: string) =>
+                        onDeletePreferredDuration(startTime, endTime)
+                      }
+                    />
+                  );
+                })}
+              </Box>
+            ) : (
+              <Box alignItems="center">
+                <CaptionText>You have not entered a time</CaptionText>
+              </Box>
+            )
+          ) : (
+            <Loading />
+          )}
         </Box>
       </ScrollView>
       <Box alignItems="center" bottom={0} py={20} bg="transparent">

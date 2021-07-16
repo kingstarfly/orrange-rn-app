@@ -259,6 +259,7 @@ const DiscussDetailsScreen = () => {
                     key={index}
                     start={parseISO(preferredDuration.startAt)}
                     end={parseISO(preferredDuration.endAt)}
+                    readOnly
                   />
                 );
               })}
