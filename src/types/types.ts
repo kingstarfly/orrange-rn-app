@@ -123,17 +123,7 @@ export type AppStackParamList = {
   NotFound: undefined;
   TestScreen: undefined;
 
-  DiscussDetails: {
-    meetupId: string;
-  };
-
-  AddParticipants: {
-    // TODO: Might want to create a DiscussDetails stack and put this screen there instead? Current way is simpler way.
-    // UseruId is needed to know which pals to display
-    // MeetupId is needed to know which pals to exclude since they are already participants / pending participants.
-    userUid: string;
-    meetupId: string;
-  };
+  DiscussDetailsStackNavigator: undefined;
   FinalDetails: {
     meetupId: string;
     // meeting: MeetupFields;
@@ -162,6 +152,21 @@ export type ViewPlansTabParamList = {
 export type PalsStackParamList = {
   ViewPals: undefined;
   AddPals: undefined;
+};
+
+export type DiscussDetailsStackParamList = {
+  DiscussDetails: {
+    meetupId: string;
+  };
+  AddParticipants: {
+    // UseruId is needed to know which pals to display
+    // MeetupId is needed to know which pals to exclude since they are already participants / pending participants.
+    userUid: string;
+    meetupId: string;
+  };
+  PickTime: {
+    meetupId: string;
+  };
 };
 
 export type MarkedDates = {

@@ -1,33 +1,24 @@
 import React from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-} from "react-native";
-import { Box, Text, WINDOW_HEIGHT } from "react-native-magnus";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { Box, WINDOW_HEIGHT } from "react-native-magnus";
 import Container from "components/Container";
-import MainTimeGridSelector from "screens/Create/SelectTime/TimeGridSelector/MainTimeGridSelector";
-import StyledButton from "components/StyledButton";
 
-import { theme } from "constants/theme";
 import {
   CreateMeetupStackParamList,
   DayTimings,
-  MeetupFields,
-  ParticipantFields,
+  DiscussDetailsStackParamList,
   PreferredDuration,
 } from "types/types";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import { firestore } from "lib/firebase";
-import { CaptionText, Subheading } from "components/StyledText";
+import { CaptionText } from "components/StyledText";
 import LargeButton from "components/LargeButton";
 import DateTimeRowComponent from "components/DateTimeRowComponent";
 import { getMeetupTimings, getPreferredDurations } from "lib/api/meetup";
 import { useAuth } from "lib/auth";
-import { addHours, parseISO } from "date-fns";
+import { addHours } from "date-fns";
 import HeaderComponent from "screens/Plan/Components/SectionHeaderComponent";
+import MainTimeGridSelector from "./TimeGridSelector/MainTimeGridSelector";
 
 const SelectTime = ({
   navigation,
@@ -49,7 +40,7 @@ const SelectTime = ({
     { "2021-07-16T12:30:00.000Z": 7 },
   ];
 
-  const route = useRoute<RouteProp<CreateMeetupStackParamList, "SelectTime">>();
+  const route = useRoute<RouteProp<DiscussDetailsStackParamList, "PickTime">>();
   const { meetupId } = route.params;
   const authData = useAuth();
 

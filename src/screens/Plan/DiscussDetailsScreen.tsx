@@ -6,10 +6,10 @@ import {
   ScrollView,
 } from "react-native";
 import Container from "components/Container";
-import { Subheading, CaptionText, Heading } from "components/StyledText";
+import { Subheading, CaptionText } from "components/StyledText";
 import { RouteProp, useRoute } from "@react-navigation/core";
 import {
-  AppStackParamList,
+  DiscussDetailsStackParamList,
   MeetupFields,
   ParticipantFields,
   PendingParticipantFields,
@@ -41,14 +41,16 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Loading from "components/Loading";
 import { parseISO } from "date-fns";
-import { userData } from "constants/mockdata";
 import { sectionSpacing } from "constants/Layout";
 
 const DiscussDetailsScreen = () => {
-  const route = useRoute<RouteProp<AppStackParamList, "DiscussDetails">>();
+  const route =
+    useRoute<RouteProp<DiscussDetailsStackParamList, "DiscussDetails">>();
   const { meetupId } = route.params;
   const navigation =
-    useNavigation<StackNavigationProp<AppStackParamList, "DiscussDetails">>();
+    useNavigation<
+      StackNavigationProp<DiscussDetailsStackParamList, "DiscussDetails">
+    >();
   const authData = useAuth();
 
   const [newSuggestion, setNewSuggestion] = React.useState("");
@@ -156,12 +158,18 @@ const DiscussDetailsScreen = () => {
   };
 
   const handlePressAddParticipant = () => {
-    // TODO: Navigate to new screen to add pals
     navigation.push("AddParticipants", {
       meetupId: meetingInfo.id,
       userUid: authData.userData.uid,
     });
   };
+
+  const handlePressCalendar = () => {
+    navigation.push("PickTime", {
+      meetupId: meetingInfo.id,
+    });
+  };
+
   if (isLoading || !meetingInfo) {
     return (
       <Container avoidHeader>
@@ -233,7 +241,7 @@ const DiscussDetailsScreen = () => {
         <HeaderComponent
           title="When should we meet?"
           rightComponent={
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handlePressCalendar()}>
               <PhosphorIcon
                 name="calendar"
                 color={theme.colors.textdark}

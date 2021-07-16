@@ -25,16 +25,15 @@ import VerificationScreen from "screens/Authentication/VerificationScreen";
 
 import MainBottomTabNavigator from "./MainBottomTabNavigator";
 import { useAuth } from "lib/auth";
-import DiscussDetailsScreen from "screens/Plan/DiscussDetailsScreen";
 import { headerHeight } from "constants/Layout";
 import FinalDetailsScreen from "screens/Plan/FinalDetailsScreen";
 import YourUsername from "screens/Authentication/YourUsernameScreen";
 import YourInfoScreen from "screens/Authentication/YourInfoScreen";
 import { PhosphorIcon } from "constants/Icons";
 import Loading from "components/Loading";
-import { auth } from "firebase-admin";
 import InviteContacts from "screens/InviteContacts";
 import AddParticipantsScreen from "screens/Plan/AddParticipantsScreen";
+import DiscussDetailsStackNavigator from "./DiscussDetailsStackNavigator";
 
 export default function Navigation({
   colorScheme,
@@ -122,15 +121,11 @@ const AppStackScreen = () => (
       options={{ title: "" }}
     />
     <AppStack.Screen
-      name="DiscussDetails"
-      component={DiscussDetailsScreen}
-      options={{ title: "" }}
+      name="DiscussDetailsStackNavigator"
+      component={DiscussDetailsStackNavigator}
+      options={{ headerShown: false }}
     />
-    <AppStack.Screen
-      name="AddParticipants"
-      component={AddParticipantsScreen}
-      options={{ title: "" }}
-    />
+
     <AppStack.Screen
       name="FinalDetails"
       component={FinalDetailsScreen}

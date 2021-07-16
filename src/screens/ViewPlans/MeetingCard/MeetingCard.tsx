@@ -86,8 +86,10 @@ const MeetingCard = ({
             meetupId: meetingInfo.id,
           });
         } else {
-          navigation.push("DiscussDetails", {
-            meetupId: meetingInfo.id,
+          // @ts-ignore
+          navigation.navigate("DiscussDetailsStackNavigator", {
+            screen: "DiscussDetails",
+            params: { meetupId: meetingInfo.id },
           });
         }
       }}

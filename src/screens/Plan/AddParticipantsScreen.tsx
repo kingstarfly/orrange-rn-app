@@ -13,6 +13,7 @@ import { Box, Div, WINDOW_HEIGHT } from "react-native-magnus";
 import HeaderComponent from "./Components/SectionHeaderComponent";
 import {
   AppStackParamList,
+  DiscussDetailsStackParamList,
   MeetupFields,
   OtherUser,
   PalFields,
@@ -38,10 +39,13 @@ import { useAppDispatch, useAppSelector } from "redux/hooks";
 import { clearSelectedPals } from "redux/slices/SelectedPalsSlice";
 
 const AddParticipantsScreen = () => {
-  const route = useRoute<RouteProp<AppStackParamList, "AddParticipants">>();
+  const route =
+    useRoute<RouteProp<DiscussDetailsStackParamList, "AddParticipants">>();
   const { meetupId, userUid } = route.params;
   const navigation =
-    useNavigation<StackNavigationProp<AppStackParamList, "AddParticipants">>();
+    useNavigation<
+      StackNavigationProp<DiscussDetailsStackParamList, "AddParticipants">
+    >();
   const authData = useAuth();
 
   const [meetingInfo, setMeetingInfo] = React.useState<MeetupFields>();

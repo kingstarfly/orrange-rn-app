@@ -94,9 +94,16 @@ const SelectDates = () => {
       routes: [
         { name: "MainBottomTabNavigator" },
         {
-          name: "DiscussDetails",
-          params: {
-            meetupId: id,
+          name: "DiscussDetailsStackNavigator",
+          state: {
+            routes: [
+              {
+                name: "DiscussDetails",
+                params: {
+                  meetupId: id,
+                },
+              },
+            ],
           },
         },
       ],
