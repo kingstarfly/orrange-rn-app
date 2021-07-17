@@ -1,4 +1,12 @@
-import { compareAsc, formatISO, getDate, parseISO, startOfDay } from "date-fns";
+import {
+  compareAsc,
+  eachMinuteOfInterval,
+  endOfDay,
+  formatISO,
+  getDate,
+  parseISO,
+  startOfDay,
+} from "date-fns";
 import { firebaseApp, firestore } from "lib/firebase";
 import {
   insertPreferredDurationToDayTiming,
@@ -6,6 +14,7 @@ import {
 } from "lib/helpers";
 import { MeetingCardProps } from "screens/ViewPlans/MeetingCard/MeetingCard";
 import {
+  DayTimings,
   MeetupFields,
   OtherUser,
   ParticipantFields,
@@ -234,21 +243,45 @@ export const addPreferredDuration = async (
   // 1.a Get the datestring, so we know which dayTiming to change.
   const dateISO = startOfDay(parseISO(prefDuration.startAt)).toISOString();
   const indexToChange = meetupTimings.findIndex((e) => e.date === dateISO);
-  let dayTimingToChange = meetupTimings[indexToChange];
+
+  let dayTimingToChange: DayTimings;
+  if (indexToChange === -1) {
+    // Construct new dayTiming
+    dayTimingToChange = { date: dateISO, startTimings: {} };
+    let startTimings = eachMinuteOfInterval(
+      {
+        start: startOfDay(parseISO(prefDuration.startAt)),
+        end: endOfDay(parseISO(prefDuration.startAt)),
+      },
+      { step: 30 }
+    );
+    startTimings.forEach((timing) => {
+      dayTimingToChange.startTimings[timing.toISOString()] = 0;
+    });
+  } else {
+    dayTimingToChange = meetupTimings[indexToChange];
+  }
+
+  console.log(dayTimingToChange);
 
   const newDayTiming = insertPreferredDurationToDayTiming(
     prefDuration,
     dayTimingToChange
   );
 
-  meetupTimings[indexToChange] = newDayTiming;
+  if (indexToChange === -1) {
+    meetupTimings.push(newDayTiming);
+  } else {
+    meetupTimings[indexToChange] = newDayTiming;
+  }
+
   await firestore
     .collection(DB.MEETUPS)
     .doc(meetupId)
     .update({ meetupTimings: meetupTimings });
 
   // 2. Add to meetup's participants preferred durations
-  let query2 = firestore
+  await firestore
     .collection(DB.MEETUPS)
     .doc(meetupId)
     .collection(DB.PARTICIPANTS)

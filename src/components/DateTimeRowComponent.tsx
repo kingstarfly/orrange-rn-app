@@ -4,7 +4,14 @@ import { Pressable, TouchableOpacity } from "react-native";
 import { Div, WINDOW_WIDTH } from "react-native-magnus";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { BodyTextRegular, MiniText } from "components/StyledText";
-import { differenceInHours, format, isBefore, parseISO } from "date-fns";
+import {
+  differenceInHours,
+  format,
+  isBefore,
+  parseISO,
+  roundToNearestMinutes,
+  subHours,
+} from "date-fns";
 import { PhosphorIcon } from "constants/Icons";
 
 interface Props {
@@ -24,11 +31,11 @@ const DateTimeRowComponent = ({
   onButtonPress,
   readOnly,
 }: Props) => {
-  const [fromDate, setFromDate] = useState(start);
+  const [fromDate, setFromDate] = useState<Date>(start);
   const [fromMode, setFromMode] = useState("date");
   const [showFromDateTimePicker, setShowFromDateTimePicker] = useState(false);
 
-  const [toDate, setToDate] = useState(end);
+  const [toDate, setToDate] = useState<Date>(end);
   const [toMode, setToMode] = useState("date");
   const [showToDateTimePicker, setShowToDateTimePicker] = useState(false);
 
@@ -37,11 +44,12 @@ const DateTimeRowComponent = ({
       setShowFromDateTimePicker(false);
       return;
     }
+    const currentDate = selectedDate || fromDate;
     if (fromMode === "date") {
+      setFromDate(currentDate);
       setFromMode("time");
       return;
     }
-    const currentDate = selectedDate || fromDate;
     setShowFromDateTimePicker(false); // closes the picker
     setFromDate(currentDate);
   };
@@ -58,18 +66,23 @@ const DateTimeRowComponent = ({
     }
     const currentDate = selectedDate || toDate;
     setShowToDateTimePicker(false); // closes the picker
+    if (isBefore(currentDate, fromDate)) {
+      // Set fromDate to be one hour before by default
+      setFromDate(subHours(currentDate, 1));
+    }
     setToDate(currentDate);
   };
 
   // To ensure end time is always within 24hrs of start time
   React.useEffect(() => {
-    if (!readOnly) {
+    if (fromDate && toDate && !readOnly) {
       // If toDate is before fromDate, or more than 24hrs fromDate, then resetDate
 
       if (
         isBefore(toDate, fromDate) ||
-        differenceInHours(fromDate, toDate) >= 24
+        Math.abs(differenceInHours(fromDate, toDate)) >= 24
       ) {
+        console.log("Setting To Date");
         setToDate(fromDate);
       }
     }
@@ -98,7 +111,11 @@ const DateTimeRowComponent = ({
             setShowFromDateTimePicker(true);
           }}
         >
-          <BodyTextRegular>{format(fromDate, "EEEE, d MMM")}</BodyTextRegular>
+          {!fromDate ? (
+            <BodyTextRegular>Tap to edit</BodyTextRegular>
+          ) : (
+            <BodyTextRegular>{format(fromDate, "EEEE, d MMM")}</BodyTextRegular>
+          )}
         </Pressable>
       </Div>
 
@@ -119,7 +136,11 @@ const DateTimeRowComponent = ({
             justifyContent="center"
             alignItems="center"
           >
-            <MiniText>{format(fromDate, "HH:mm")}</MiniText>
+            {!fromDate ? (
+              <MiniText>-- : --</MiniText>
+            ) : (
+              <MiniText>{format(fromDate, "HH:mm")}</MiniText>
+            )}
           </Div>
         </Pressable>
 
@@ -141,7 +162,11 @@ const DateTimeRowComponent = ({
             justifyContent="center"
             alignItems="center"
           >
-            <MiniText>{format(toDate, "HH:mm")}</MiniText>
+            {!toDate ? (
+              <MiniText>-- : --</MiniText>
+            ) : (
+              <MiniText>{format(toDate, "HH:mm")}</MiniText>
+            )}
           </Div>
         </Pressable>
         {rightButtonType && rightButtonType !== "default" && (
@@ -174,7 +199,9 @@ const DateTimeRowComponent = ({
       {showFromDateTimePicker && (
         <DateTimePicker
           minuteInterval={30}
-          value={fromDate}
+          value={
+            fromDate || roundToNearestMinutes(new Date(), { nearestTo: 30 })
+          }
           //@ts-ignore
           mode={fromMode}
           is24Hour={true}
@@ -186,7 +213,7 @@ const DateTimeRowComponent = ({
       {showToDateTimePicker && (
         <DateTimePicker
           minuteInterval={30}
-          value={toDate}
+          value={toDate || roundToNearestMinutes(new Date(), { nearestTo: 30 })}
           //@ts-ignore
           mode={toMode}
           is24Hour={true}

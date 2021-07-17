@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { Alert, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { Box, WINDOW_HEIGHT } from "react-native-magnus";
 import Container from "components/Container";
 
@@ -21,10 +21,11 @@ import {
   getPreferredDurations,
 } from "lib/api/meetup";
 import { useAuth } from "lib/auth";
-import { addHours, parseISO } from "date-fns";
+import { addHours, isBefore, parseISO } from "date-fns";
 import HeaderComponent from "screens/Plan/Components/SectionHeaderComponent";
 import MainTimeGridSelector from "./TimeGridSelector/MainTimeGridSelector";
 import Loading from "components/Loading";
+import { isAfter } from "date-fns/esm";
 
 const SelectTime = ({
   navigation,
@@ -91,24 +92,43 @@ const SelectTime = ({
   );
 
   const onAddPreferredDuration = async (startTime: string, endTime: string) => {
-    alert("Adding Preferred Duration");
-    // Construct preferredDuration object
-    const preferredDuration: PreferredDuration = {
-      username: authData.userData.username,
-      startAt: startTime,
-      endAt: endTime,
-    };
+    if (isAfter(parseISO(startTime), parseISO(endTime))) {
+      Alert.alert("", "Please input a valid time period.");
+      return;
+    }
+    Alert.alert(
+      "",
+      "Do you want to add this timing?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Add",
+          onPress: async () => {
+            // Construct preferredDuration object
+            const preferredDuration: PreferredDuration = {
+              username: authData.userData.username,
+              startAt: startTime,
+              endAt: endTime,
+            };
 
-    console.log(preferredDuration);
+            console.log(preferredDuration);
 
-    await addPreferredDuration(
-      preferredDuration,
-      meetupId,
-      authData.userData.uid
+            await addPreferredDuration(
+              preferredDuration,
+              meetupId,
+              authData.userData.uid
+            );
+
+            // Refresh all data
+            await fetchAndSetData();
+          },
+        },
+      ],
+      { cancelable: true }
     );
-
-    // Refresh all data
-    await fetchAndSetData();
   };
 
   const onDeletePreferredDuration = async (
@@ -142,8 +162,8 @@ const SelectTime = ({
           <HeaderComponent title="Add new timing" />
 
           <DateTimeRowComponent
-            start={new Date()}
-            end={addHours(new Date(), 1)}
+            start={null}
+            end={null}
             onButtonPress={(startTime: string, endTime: string) =>
               onAddPreferredDuration(startTime, endTime)
             }
