@@ -20,7 +20,7 @@ interface Props {
   start: Date;
   end: Date;
   rightButtonType?: RightButtonType;
-  onButtonPress?: (startTime: Date, endTime: Date) => void;
+  onButtonPress?: (startTime: Date, endTime: Date) => Promise<void>;
   readOnly?: boolean;
 }
 
@@ -168,7 +168,14 @@ const DateTimeRowComponent = ({
             style={{
               marginLeft: 8,
             }}
-            onPress={() => onButtonPress(fromDate, toDate)}
+            onPress={() => {
+              onButtonPress(fromDate, toDate).then(() => {
+                if (rightButtonType === "add") {
+                  setFromDate(null);
+                  setToDate(null);
+                }
+              });
+            }}
           >
             {rightButtonType === "add" ? (
               <PhosphorIcon

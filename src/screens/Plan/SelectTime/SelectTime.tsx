@@ -1,5 +1,6 @@
 import React from "react";
 import { Alert, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import AlertAsync from "react-native-alert-async";
 import { Box, WINDOW_HEIGHT } from "react-native-magnus";
 import Container from "components/Container";
 
@@ -60,6 +61,7 @@ const SelectTime = ({
   const [isEditMode, setIsEditMode] = React.useState(false);
 
   const fetchAndSetData = React.useCallback(async () => {
+    setIsLoading(true);
     // get the data on meetupTimings to render on calendar Grid
     const timings = await getMeetupTimings(meetupId);
     setMeetupTimings(timings);
@@ -67,6 +69,7 @@ const SelectTime = ({
     // get data to render the datetimerow picker
     const resp = await getPreferredDurations(meetupId, authData.userData.uid);
     setPreferredDurations(resp);
+    setIsLoading(false);
   }, []);
 
   React.useEffect(() => {
@@ -96,7 +99,7 @@ const SelectTime = ({
       Alert.alert("", "Please input a valid time period.");
       return;
     }
-    Alert.alert(
+    await AlertAsync(
       "",
       "Do you want to add this timing?",
       [
@@ -133,7 +136,7 @@ const SelectTime = ({
   };
 
   const onDeletePreferredDuration = async (startTime: Date, endTime: Date) => {
-    Alert.alert(
+    await AlertAsync(
       "",
       "Do you want to delete this timing?",
       [
@@ -184,9 +187,7 @@ const SelectTime = ({
           <DateTimeRowComponent
             start={null}
             end={null}
-            onButtonPress={(startTime: Date, endTime: Date) =>
-              onAddPreferredDuration(startTime, endTime)
-            }
+            onButtonPress={onAddPreferredDuration}
             rightButtonType="add"
           />
         </Box>
@@ -202,9 +203,7 @@ const SelectTime = ({
                       start={parseISO(preferredDuration.startAt)}
                       end={parseISO(preferredDuration.endAt)}
                       rightButtonType={isEditMode ? "delete" : null}
-                      onButtonPress={(startTime: Date, endTime: Date) =>
-                        onDeletePreferredDuration(startTime, endTime)
-                      }
+                      onButtonPress={onDeletePreferredDuration}
                     />
                   );
                 })}

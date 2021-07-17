@@ -382,8 +382,6 @@ export const deletePreferredDuration = async (
     .update({
       preferredDurations: preferredDurations,
     });
-
-  return;
 };
 
 export const createMeetup = async (
