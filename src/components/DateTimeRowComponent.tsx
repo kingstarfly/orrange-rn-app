@@ -20,7 +20,7 @@ interface Props {
   start: Date;
   end: Date;
   rightButtonType?: RightButtonType;
-  onButtonPress?: (startTime: string, endTime: string) => void;
+  onButtonPress?: (startTime: Date, endTime: Date) => void;
   readOnly?: boolean;
 }
 
@@ -80,24 +80,6 @@ const DateTimeRowComponent = ({
     setToDate(currentDate);
   };
 
-  // To ensure end time is always within 24hrs of start time
-  // React.useEffect(() => {
-  //   if (fromDate && toDate && !readOnly) {
-  //     // If toDate is before fromDate, or more than 24hrs fromDate, then resetDate
-  //     if (
-  //       isBefore(toDate, fromDate) ||
-  //       Math.abs(differenceInHours(fromDate, toDate)) >= 24
-  //     ) {
-  //       console.log("Setting To Date");
-  //       setToDate(fromDate);
-  //     }
-  //   }
-  // }, [fromDate]);
-
-  React.useEffect(() => {
-    console.log(fromDate, toDate);
-    console.log(isSameDay(fromDate, toDate));
-  }, [fromDate, toDate]);
   return (
     <Div
       row
@@ -186,9 +168,7 @@ const DateTimeRowComponent = ({
             style={{
               marginLeft: 8,
             }}
-            onPress={() =>
-              onButtonPress(fromDate.toISOString(), toDate.toISOString())
-            }
+            onPress={() => onButtonPress(fromDate, toDate)}
           >
             {rightButtonType === "add" ? (
               <PhosphorIcon

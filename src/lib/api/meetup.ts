@@ -336,7 +336,12 @@ export const deletePreferredDuration = async (
     let startTimeString = startTime.toISOString();
     old[startTimeString] = old[startTimeString] - 1;
   });
-  meetupTimings[indexToChange].startTimings = old;
+  // Check if all timings are empty in this day. If yes, then just delete this.
+  if (Object.values(old).every((e) => e === 0)) {
+    meetupTimings.splice(indexToChange, 1);
+  } else {
+    meetupTimings[indexToChange].startTimings = old;
+  }
   // Save the timing array
   await firestore
     .collection(DB.MEETUPS)

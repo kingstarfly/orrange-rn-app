@@ -91,8 +91,8 @@ const SelectTime = ({
     </TouchableOpacity>
   );
 
-  const onAddPreferredDuration = async (startTime: string, endTime: string) => {
-    if (isAfter(parseISO(startTime), parseISO(endTime))) {
+  const onAddPreferredDuration = async (startTime: Date, endTime: Date) => {
+    if (!startTime || !endTime || isAfter(startTime, endTime)) {
       Alert.alert("", "Please input a valid time period.");
       return;
     }
@@ -110,8 +110,8 @@ const SelectTime = ({
             // Construct preferredDuration object
             const preferredDuration: PreferredDuration = {
               username: authData.userData.username,
-              startAt: startTime,
-              endAt: endTime,
+              startAt: startTime.toISOString(),
+              endAt: endTime.toISOString(),
             };
             try {
               await addPreferredDuration(
@@ -132,26 +132,41 @@ const SelectTime = ({
     );
   };
 
-  const onDeletePreferredDuration = async (
-    startTime: string,
-    endTime: string
-  ) => {
-    // Construct preferredDuration object
-    const preferredDuration: PreferredDuration = {
-      username: authData.userData.username,
-      startAt: startTime,
-      endAt: endTime,
-    };
-    // TODO implement
-    try {
-      await deletePreferredDuration(
-        preferredDuration,
-        meetupId,
-        authData.userData.uid
-      );
-    } catch (error) {
-      Alert.alert("", error.message);
-    }
+  const onDeletePreferredDuration = async (startTime: Date, endTime: Date) => {
+    Alert.alert(
+      "",
+      "Do you want to delete this timing?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: async () => {
+            // Construct preferredDuration object
+            const preferredDuration: PreferredDuration = {
+              username: authData.userData.username,
+              startAt: startTime.toISOString(),
+              endAt: endTime.toISOString(),
+            };
+
+            try {
+              await deletePreferredDuration(
+                preferredDuration,
+                meetupId,
+                authData.userData.uid
+              );
+            } catch (error) {
+              Alert.alert("", error.message);
+            }
+            // Refresh all data
+            await fetchAndSetData();
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   return (
@@ -169,7 +184,7 @@ const SelectTime = ({
           <DateTimeRowComponent
             start={null}
             end={null}
-            onButtonPress={(startTime: string, endTime: string) =>
+            onButtonPress={(startTime: Date, endTime: Date) =>
               onAddPreferredDuration(startTime, endTime)
             }
             rightButtonType="add"
@@ -187,7 +202,7 @@ const SelectTime = ({
                       start={parseISO(preferredDuration.startAt)}
                       end={parseISO(preferredDuration.endAt)}
                       rightButtonType={isEditMode ? "delete" : null}
-                      onButtonPress={(startTime: string, endTime: string) =>
+                      onButtonPress={(startTime: Date, endTime: Date) =>
                         onDeletePreferredDuration(startTime, endTime)
                       }
                     />
