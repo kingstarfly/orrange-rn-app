@@ -8,10 +8,7 @@ import {
   startOfDay,
 } from "date-fns";
 import { firebaseApp, firestore } from "lib/firebase";
-import {
-  insertPreferredDurationToDayTiming,
-  convertPreferredDurationToDayTiming,
-} from "lib/helpers";
+import { insertPreferredDurationToDayTiming } from "lib/helpers";
 import { MeetingCardProps } from "screens/ViewPlans/MeetingCard/MeetingCard";
 import {
   DayTimings,
@@ -237,10 +234,41 @@ export const addPreferredDuration = async (
   meetupId: string,
   userId: string
 ) => {
-  // 1. Add to meetup's meetup timings array
+  // 0. Check if this duration is already exisiting
+  const { preferredDurations } = (
+    await firestore
+      .collection(DB.MEETUPS)
+      .doc(meetupId)
+      .collection(DB.PARTICIPANTS)
+      .doc(userId)
+      .get()
+  ).data() as ParticipantFields;
+
+  if (
+    preferredDurations.findIndex(
+      (e) =>
+        e.username === prefDuration.username &&
+        e.startAt === prefDuration.startAt &&
+        e.endAt === prefDuration.endAt
+    ) !== -1
+  ) {
+    throw new Error("Duplicate entry not allowed!");
+  }
+  // 1. Add to meetup's participants preferred durations
+  await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PARTICIPANTS)
+    .doc(userId)
+    .update({
+      preferredDurations:
+        firebaseApp.firestore.FieldValue.arrayUnion(prefDuration),
+    });
+
+  // 2. Add to meetup's meetup timings array
   let query = await firestore.collection(DB.MEETUPS).doc(meetupId).get();
   let { meetupTimings } = query.data() as MeetupFields;
-  // 1.a Get the datestring, so we know which dayTiming to change.
+  // 2.a Get the datestring, so we know which dayTiming to change.
   const dateISO = startOfDay(parseISO(prefDuration.startAt)).toISOString();
   const indexToChange = meetupTimings.findIndex((e) => e.date === dateISO);
 
@@ -262,8 +290,6 @@ export const addPreferredDuration = async (
     dayTimingToChange = meetupTimings[indexToChange];
   }
 
-  console.log(dayTimingToChange);
-
   const newDayTiming = insertPreferredDurationToDayTiming(
     prefDuration,
     dayTimingToChange
@@ -279,17 +305,6 @@ export const addPreferredDuration = async (
     .collection(DB.MEETUPS)
     .doc(meetupId)
     .update({ meetupTimings: meetupTimings });
-
-  // 2. Add to meetup's participants preferred durations
-  await firestore
-    .collection(DB.MEETUPS)
-    .doc(meetupId)
-    .collection(DB.PARTICIPANTS)
-    .doc(userId)
-    .update({
-      preferredDurations:
-        firebaseApp.firestore.FieldValue.arrayUnion(prefDuration),
-    });
 };
 
 export const deletePreferredDuration = async (
@@ -297,7 +312,72 @@ export const deletePreferredDuration = async (
   meetupId: string,
   userId: string
 ) => {
-  // TODO
+  // 1. Update meetup's new timing array
+  // Get old timing array
+  const { meetupTimings } = (
+    await firestore.collection(DB.MEETUPS).doc(meetupId).get()
+  ).data() as MeetupFields;
+  const indexToChange = meetupTimings.findIndex(
+    (e) => e.date === startOfDay(parseISO(prefDuration.startAt)).toISOString()
+  );
+  // Modify the timing array
+  const old = meetupTimings[indexToChange].startTimings;
+  const { startAt, endAt } = prefDuration;
+  const startDate = parseISO(startAt);
+  const endDate = parseISO(endAt);
+  const startTimes = eachMinuteOfInterval(
+    {
+      start: startDate,
+      end: endDate,
+    },
+    { step: 30 }
+  ).slice(0, -1);
+  startTimes.forEach((startTime) => {
+    let startTimeString = startTime.toISOString();
+    old[startTimeString] = old[startTimeString] - 1;
+  });
+  meetupTimings[indexToChange].startTimings = old;
+  // Save the timing array
+  await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .update({ meetupTimings: meetupTimings });
+
+  // 2. Delete this preferred duration from participant
+  // Get the preferredDurations array
+  const { preferredDurations } = (
+    await firestore
+      .collection(DB.MEETUPS)
+      .doc(meetupId)
+      .collection(DB.PARTICIPANTS)
+      .doc(userId)
+      .get()
+  ).data() as ParticipantFields;
+
+  // Modify
+  const indexToChange2 = preferredDurations.findIndex(
+    (e) =>
+      e.username === prefDuration.username &&
+      e.startAt === prefDuration.startAt &&
+      e.endAt === prefDuration.endAt
+  );
+
+  if (indexToChange2 === -1) {
+    // Unable to delete
+    throw new Error("Record not found!");
+  }
+  preferredDurations.splice(indexToChange2, 1);
+
+  // Save
+  await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PARTICIPANTS)
+    .doc(userId)
+    .update({
+      preferredDurations: preferredDurations,
+    });
+
   return;
 };
 

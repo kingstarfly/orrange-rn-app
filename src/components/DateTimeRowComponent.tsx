@@ -5,9 +5,11 @@ import { Div, WINDOW_WIDTH } from "react-native-magnus";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { BodyTextRegular, MiniText } from "components/StyledText";
 import {
+  addHours,
   differenceInHours,
   format,
   isBefore,
+  isSameDay,
   parseISO,
   roundToNearestMinutes,
   subHours,
@@ -50,6 +52,10 @@ const DateTimeRowComponent = ({
       setFromMode("time");
       return;
     }
+    // Checks here
+    if (isBefore(toDate, currentDate) || !isSameDay(fromDate, toDate)) {
+      setToDate(addHours(currentDate, 1));
+    }
     setShowFromDateTimePicker(false); // closes the picker
     setFromDate(currentDate);
   };
@@ -60,33 +66,38 @@ const DateTimeRowComponent = ({
       return;
     }
 
+    const currentDate = selectedDate || toDate;
     if (toMode === "date") {
       setToMode("time");
       return;
     }
-    const currentDate = selectedDate || toDate;
-    setShowToDateTimePicker(false); // closes the picker
-    if (isBefore(currentDate, fromDate)) {
+    // Checks here
+    if (isBefore(currentDate, fromDate) || !isSameDay(fromDate, toDate)) {
       // Set fromDate to be one hour before by default
       setFromDate(subHours(currentDate, 1));
     }
+    setShowToDateTimePicker(false); // closes the picker
     setToDate(currentDate);
   };
 
   // To ensure end time is always within 24hrs of start time
-  React.useEffect(() => {
-    if (fromDate && toDate && !readOnly) {
-      // If toDate is before fromDate, or more than 24hrs fromDate, then resetDate
+  // React.useEffect(() => {
+  //   if (fromDate && toDate && !readOnly) {
+  //     // If toDate is before fromDate, or more than 24hrs fromDate, then resetDate
+  //     if (
+  //       isBefore(toDate, fromDate) ||
+  //       Math.abs(differenceInHours(fromDate, toDate)) >= 24
+  //     ) {
+  //       console.log("Setting To Date");
+  //       setToDate(fromDate);
+  //     }
+  //   }
+  // }, [fromDate]);
 
-      if (
-        isBefore(toDate, fromDate) ||
-        Math.abs(differenceInHours(fromDate, toDate)) >= 24
-      ) {
-        console.log("Setting To Date");
-        setToDate(fromDate);
-      }
-    }
-  }, [fromDate]);
+  React.useEffect(() => {
+    console.log(fromDate, toDate);
+    console.log(isSameDay(fromDate, toDate));
+  }, [fromDate, toDate]);
   return (
     <Div
       row

@@ -51,34 +51,6 @@ export const convertUserToPal = (user: UserData | OtherUser): PalFields => {
   };
 };
 
-export const convertPreferredDurationToDayTiming = (
-  preferredDuration: PreferredDuration
-): DayTimings => {
-  const dateISO = startOfDay(parseISO(preferredDuration.startAt)).toISOString();
-  const { startAt, endAt } = preferredDuration;
-  const startDate = parseISO(startAt);
-  const endDate = parseISO(endAt);
-
-  const result = eachMinuteOfInterval(
-    {
-      start: startDate,
-      end: endDate,
-    },
-    { step: 30 }
-  );
-
-  let startTimingsCountMap = {};
-  result.pop(); // Remove last timing because that is not a start time
-  result.forEach((e) => {
-    startTimingsCountMap[e.toISOString()] = 1;
-  });
-
-  return {
-    date: dateISO,
-    startTimings: startTimingsCountMap,
-  };
-};
-
 export const insertPreferredDurationToDayTiming = (
   preferredDuration: PreferredDuration,
   dayTiming: DayTimings

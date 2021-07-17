@@ -113,14 +113,15 @@ const SelectTime = ({
               startAt: startTime,
               endAt: endTime,
             };
-
-            console.log(preferredDuration);
-
-            await addPreferredDuration(
-              preferredDuration,
-              meetupId,
-              authData.userData.uid
-            );
+            try {
+              await addPreferredDuration(
+                preferredDuration,
+                meetupId,
+                authData.userData.uid
+              );
+            } catch (error) {
+              Alert.alert("", error.message);
+            }
 
             // Refresh all data
             await fetchAndSetData();
@@ -142,11 +143,15 @@ const SelectTime = ({
       endAt: endTime,
     };
     // TODO implement
-    await deletePreferredDuration(
-      preferredDuration,
-      meetupId,
-      authData.userData.uid
-    );
+    try {
+      await deletePreferredDuration(
+        preferredDuration,
+        meetupId,
+        authData.userData.uid
+      );
+    } catch (error) {
+      Alert.alert("", error.message);
+    }
   };
 
   return (
