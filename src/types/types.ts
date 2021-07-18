@@ -107,6 +107,7 @@ export type AuthStackParamList = {
   Login: undefined;
   Verify: {
     verificationId: string;
+    phoneNumberString: string;
   };
 };
 

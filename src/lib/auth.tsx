@@ -84,7 +84,7 @@ function useProvideAuth() {
       const userCredential = await auth.signInWithCredential(credential);
       let user = await handleUser(userCredential.user);
     } catch (err) {
-      console.error("useAuth verify failed ", err);
+      throw new Error(err.message);
     }
   };
 

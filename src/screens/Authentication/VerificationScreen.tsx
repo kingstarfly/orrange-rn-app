@@ -10,6 +10,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
 import { RouteProp, useRoute, useNavigation } from "@react-navigation/native";
 import {
@@ -23,7 +24,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { useAuth } from "lib/auth";
 import Container from "components/Container";
 import LargeButton from "components/LargeButton";
-import { Box, WINDOW_HEIGHT } from "react-native-magnus";
+import { Box, Div, WINDOW_HEIGHT } from "react-native-magnus";
+import { BodyTextRegular, Heading } from "components/StyledText";
 
 const CODE_LENGTH = 6;
 
@@ -47,8 +49,12 @@ export default function VerificationScreen() {
 
   const onVerificationPress = async () => {
     setLoading(true);
-    authData.verify(route.params.verificationId, verificationCode);
-    console.log("Verified code");
+    try {
+      authData.verify(route.params.verificationId, verificationCode);
+    } catch (error) {
+      Alert.alert("", "Wrong verification code");
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -63,44 +69,64 @@ export default function VerificationScreen() {
         behavior={Platform.OS == "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <TouchableWithoutFeedback
-          onPress={() => {
-            Keyboard.dismiss();
-          }}
+        <Div
+          justifyContent="flex-start"
+          alignItems="center"
+          mt={WINDOW_HEIGHT * 0.1}
+          flex={1}
         >
-          <View style={styles.container}>
-            <CodeField
-              ref={ref}
-              {...props}
-              value={verificationCode}
-              onChangeText={setVerificationCode}
-              cellCount={CODE_LENGTH}
-              rootStyle={styles.codeFieldRoot}
-              keyboardType="numeric"
-              textContentType="oneTimeCode"
-              renderCell={({ index, symbol, isFocused }) => (
-                <View
-                  key={index}
-                  style={[styles.cell, isFocused && styles.focusCell]}
-                >
-                  <Text
-                    style={styles.cellText}
-                    onLayout={getCellOnLayoutHandler(index)}
+          <Box alignSelf="center" w="100%" mb={WINDOW_HEIGHT * 0.05}>
+            <Heading textAlign="center" mb={40}>
+              {route.params.phoneNumberString}
+            </Heading>
+            <BodyTextRegular textAlign="center">
+              A 6-digit code has been sent to you via SMS. Please enter the code
+              below.
+            </BodyTextRegular>
+          </Box>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Keyboard.dismiss();
+            }}
+          >
+            <View style={styles.container}>
+              <CodeField
+                ref={ref}
+                {...props}
+                value={verificationCode}
+                onChangeText={setVerificationCode}
+                cellCount={CODE_LENGTH}
+                rootStyle={styles.codeFieldRoot}
+                keyboardType="numeric"
+                textContentType="oneTimeCode"
+                renderCell={({ index, symbol, isFocused }) => (
+                  <View
+                    key={index}
+                    style={[styles.cell, isFocused && styles.focusCell]}
                   >
-                    {symbol || (isFocused ? <Cursor /> : null)}
-                  </Text>
-                </View>
-              )}
-            />
-            <Box position="absolute" bottom={WINDOW_HEIGHT * 0.05}>
-              <LargeButton
-                title="Verify Code"
-                loading={loading}
-                onPress={onVerificationPress}
+                    <Text
+                      style={styles.cellText}
+                      onLayout={getCellOnLayoutHandler(index)}
+                    >
+                      {symbol || (isFocused ? <Cursor /> : null)}
+                    </Text>
+                  </View>
+                )}
               />
-            </Box>
-          </View>
-        </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+          <Box
+            position="absolute"
+            bottom={WINDOW_HEIGHT * 0.02}
+            alignSelf="center"
+          >
+            <LargeButton
+              title="CONFIRM"
+              loading={loading}
+              onPress={onVerificationPress}
+            />
+          </Box>
+        </Div>
       </KeyboardAvoidingView>
     </Container>
   );
@@ -109,7 +135,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
   },
   logo: {
     flex: 1,

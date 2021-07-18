@@ -1,4 +1,9 @@
-import { useWindowDimensions, View } from "react-native";
+import {
+  useWindowDimensions,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import {
   Button,
   Div,
@@ -21,6 +26,7 @@ import { DUMMY_USER_ID } from "constants/mockdata";
 import { DB } from "lib/api/dbtypes";
 import Loading from "components/Loading";
 import { theme } from "constants/theme";
+import { BodyTextRegular, Heading } from "components/StyledText";
 
 export default function YourUsername() {
   const route =
@@ -130,38 +136,50 @@ export default function YourUsername() {
   const width = useWindowDimensions().width;
   return (
     <Container>
-      <Div flex={1} alignItems="center" justifyContent="center">
-        <Text fontSize={40} mb={20}>
-          Your Username
-        </Text>
-        <Text fontSize={20} mb={20}>
-          Enter your preferred username below
-        </Text>
-        <Input
-          mt={0.2 * width}
-          mb={0.1 * width}
-          fontSize={20}
-          autoCapitalize="none"
-          w={width * 0.8}
-          placeholder="Username"
-          bg="transparent"
-          onChangeText={setUsername}
-        />
-
-        <LargeButton title="NEXT" onPress={onConfirmYourUsername} />
-      </Div>
-      <Overlay
-        justifyContent="center"
-        alignItems="center"
-        visible={isLoading}
-        overlayColor="black"
-        bg={theme.colors.backgroundlight}
-        overlayOpacity={0.65}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <Div h={WINDOW_HEIGHT * 0.3} w={WINDOW_WIDTH * 0.7}>
-          <Loading />
+        <Div
+          alignItems="center"
+          justifyContent="center"
+          mt={WINDOW_HEIGHT * 0.1}
+        >
+          <Heading mb={20}>Your Username</Heading>
+          <BodyTextRegular mb={40} textAlign="center" w={width * 0.8}>
+            Enter your preferred username below. You may change it later on
+          </BodyTextRegular>
+
+          <Input
+            fontSize={16}
+            w={width * 0.8}
+            autoCapitalize="none"
+            placeholder="Username"
+            prefix={<BodyTextRegular>@</BodyTextRegular>}
+            bg="transparent"
+            onChangeText={setUsername}
+          />
         </Div>
-      </Overlay>
+        <Div
+          bottom={WINDOW_HEIGHT * 0.02}
+          position="absolute"
+          alignSelf="center"
+        >
+          <LargeButton title="NEXT" onPress={onConfirmYourUsername} />
+        </Div>
+        <Overlay
+          justifyContent="center"
+          alignItems="center"
+          visible={isLoading}
+          overlayColor="black"
+          bg={theme.colors.backgroundlight}
+          overlayOpacity={0.65}
+        >
+          <Div h={WINDOW_HEIGHT * 0.3} w={WINDOW_WIDTH * 0.7}>
+            <Loading />
+          </Div>
+        </Overlay>
+      </KeyboardAvoidingView>
     </Container>
   );
 }

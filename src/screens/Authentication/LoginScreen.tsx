@@ -24,10 +24,9 @@ import {
   WINDOW_HEIGHT,
   WINDOW_WIDTH,
 } from "react-native-magnus";
-import { Subheading } from "components/StyledText";
+import { BodyTextRegular, Heading, Subheading } from "components/StyledText";
 import { theme } from "constants/theme";
 import LargeButton from "components/LargeButton";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "lib/auth";
 
 export default function LoginScreen() {
@@ -56,13 +55,6 @@ export default function LoginScreen() {
 
   const authData = useAuth();
 
-  // useEffect(() => {
-  //   const fn = async () => {
-  //     await AsyncStorage.clear();
-  //   };
-  //   fn();
-  // }, []);
-
   const onLoginPress = () => {
     const phoneProvider = new firebaseApp.auth.PhoneAuthProvider();
     if (phoneNumber.length < 4 || phoneNumber.length > 12) {
@@ -86,6 +78,7 @@ export default function LoginScreen() {
       .then((verificationId) => {
         navigation.replace("Verify", {
           verificationId,
+          phoneNumberString: `${callingCode} ${phoneNumber}`,
         });
       })
       .catch((err) => {
@@ -96,39 +89,38 @@ export default function LoginScreen() {
 
   return (
     <Container>
-      <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+      <Box
+        justifyContent="flex-start"
+        alignItems="center"
+        mt={WINDOW_HEIGHT * 0.1}
+        flex={1}
       >
+        <Box alignSelf="center" w="80%" mb={WINDOW_HEIGHT * 0.05}>
+          <Heading textAlign="center" mb={40}>
+            Your Phone
+          </Heading>
+          <BodyTextRegular textAlign="center">
+            Please confirm your country code and enter your phone number
+          </BodyTextRegular>
+        </Box>
         <TouchableWithoutFeedback
           onPress={() => {
             Keyboard.dismiss();
           }}
         >
-          <Box flex={1} justifyContent="center" alignItems="center">
+          <Box flex={1} justifyContent="flex-start" alignItems="center">
             <FirebaseRecaptchaVerifierModal
               ref={recaptchaVerifier}
               firebaseConfig={firebaseConfig}
               attemptInvisibleVerification={false}
             />
 
-            <Box alignSelf="center" w="80%" mb="10%">
-              <Text textAlign="center" fontSize={40} pb={50}>
-                Your Phone
-              </Text>
-              <Text textAlign="center" fontSize={15}>
-                Please confirm your country code and enter your phone number
-              </Text>
-            </Box>
-
             <Box row alignItems="center" justifyContent="center" w="100%">
               <Box
                 row
                 alignItems="center"
-                // borderWidth={1}
                 borderColor={theme.colors.linegray}
                 rounded="sm"
-                // px="sm"
                 h={60}
               >
                 <CountryPicker
@@ -157,7 +149,7 @@ export default function LoginScreen() {
                 <Subheading>{callingCode}</Subheading>
                 <Input
                   keyboardType={"phone-pad"}
-                  placeholder="Phone number"
+                  placeholder="---- ----"
                   placeholderTextColor="#aaaaaa"
                   fontFamily="inter-medium"
                   fontSize={20}
@@ -184,7 +176,7 @@ export default function LoginScreen() {
             </Box>
           </Box>
         </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+      </Box>
     </Container>
   );
 }
