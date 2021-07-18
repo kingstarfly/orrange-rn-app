@@ -475,3 +475,19 @@ export const addCoOrganiser = async (userUid: string, meetupId: string) => {
       "isCoOrganiser"
     >);
 };
+
+export const confirmMeetup = async (
+  meetupId: string,
+  startTime: Date,
+  endTime: Date
+) => {
+  // Save the timing in meetup details
+  // Change the isConfirmed flag
+  let newDetails: Partial<MeetupFields> = {
+    startAt: startTime.toISOString(),
+    endAt: endTime.toISOString(),
+    isConfirmed: true,
+    activity: "test",
+  };
+  await firestore.collection(DB.MEETUPS).doc(meetupId).update(newDetails);
+};

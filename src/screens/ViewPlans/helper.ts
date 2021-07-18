@@ -51,7 +51,7 @@ export function formatDataForFlatListInProgress(
   const inProgressData = propsArray.filter((props) => {
     const { meetingInfo, participants, pendingParticipants, accent } = props;
     const { activity, endAt, startAt, isConfirmed } = meetingInfo;
-    return !isConfirmed || !activity || !endAt || !startAt;
+    return !isConfirmed;
   });
 
   return inProgressData;

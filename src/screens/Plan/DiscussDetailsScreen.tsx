@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Pressable,
   ScrollView,
+  Alert,
 } from "react-native";
 import Container from "components/Container";
 import {
@@ -33,6 +34,7 @@ import LargeButton from "components/LargeButton";
 import {
   addCoOrganiser,
   addSuggestion,
+  confirmMeetup,
   getMeetingInfo,
   getParticipants,
   getPendingParticipants,
@@ -201,9 +203,31 @@ const DiscussDetailsScreen = () => {
   };
 
   const handleOrgPress = async () => {
-    console.log("Handling org press");
     await addCoOrganiser(selectedParticipant.uid, meetupId);
     await fetchMeetupDetails();
+  };
+
+  const handleConfirmPress = async () => {
+    Alert.alert(
+      "",
+      "Are you sure you want to mark this meetup as confirmed?",
+      [
+        {
+          text: "No",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: async () => {
+            await confirmMeetup(meetupId, finalStartTime, finalEndTime);
+            // TODO: Navigate to confirm view. Refresh both lists.
+
+            // await fetchAndSetData();
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   if (isLoading || !meetingInfo) {
@@ -362,16 +386,20 @@ const DiscussDetailsScreen = () => {
       {(currentParticipant?.isHost || currentParticipant?.isCoOrganiser) && (
         <Div mb={sectionSpacing}>
           <HeaderComponent title="When should we meet?" />
-          <FinalDateTimeSelectionComponent />
+          <FinalDateTimeSelectionComponent
+            finalStartTime={finalStartTime}
+            setFinalStartTime={setFinalStartTime}
+            finalEndTime={finalEndTime}
+            setFinalEndTime={setFinalEndTime}
+          />
         </Div>
       )}
 
       <Div position="absolute" bottom={WINDOW_HEIGHT * 0.05} alignSelf="center">
-        {meetingInfo.creatorId === authData.userData.uid ? (
+        {currentParticipant?.isHost || currentParticipant?.isCoOrganiser ? (
           <LargeButton
-            onPress={() => {
-              console.log("Confirmed");
-            }}
+            onPress={() => handleConfirmPress()}
+            disabled={!finalStartTime || !finalEndTime}
             title="CONFIRM"
           />
         ) : (

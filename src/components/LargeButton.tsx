@@ -16,28 +16,34 @@ interface LargeButtonProps extends ButtonProps {
 
 const LargeButton: React.FC<LargeButtonProps> = ({
   title,
+  disabled,
   onPress,
   loading,
 }) => {
   return (
     <TouchableOpacity
       style={[
-        !loading
-          ? styles.button
-          : {
+        loading
+          ? {
               ...styles.button,
               backgroundColor: theme.colors.primary200,
               elevation: 0,
-            },
+            }
+          : disabled
+          ? {
+              ...styles.button,
+              backgroundColor: theme.colors.primary200,
+              elevation: 0,
+            }
+          : styles.button,
         // {
         //   position: "absolute",
         //   bottom: 20,
         //   alignSelf: "center",
         //   zIndex: 100,
         // },
-        ,
       ]}
-      disabled={loading}
+      disabled={loading || disabled}
       onPress={onPress}
     >
       {!loading ? (

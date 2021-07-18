@@ -7,13 +7,23 @@ import { Div, WINDOW_WIDTH } from "react-native-magnus";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const FinalDateTimeSelectionComponent = () => {
-  const [fromDate, setFromDate] = React.useState<Date>(null);
+interface Props {
+  finalStartTime: Date;
+  setFinalStartTime: React.Dispatch<React.SetStateAction<Date>>;
+  finalEndTime: Date;
+  setFinalEndTime: React.Dispatch<React.SetStateAction<Date>>;
+}
+
+const FinalDateTimeSelectionComponent = ({
+  finalStartTime,
+  finalEndTime,
+  setFinalStartTime,
+  setFinalEndTime,
+}: Props) => {
   const [fromMode, setFromMode] = React.useState("date");
   const [showFromDateTimePicker, setShowFromDateTimePicker] =
     React.useState(false);
 
-  const [toDate, setToDate] = React.useState<Date>(null);
   const [toMode, setToMode] = React.useState("date");
   const [showToDateTimePicker, setShowToDateTimePicker] = React.useState(false);
 
@@ -22,29 +32,31 @@ const FinalDateTimeSelectionComponent = () => {
       setShowFromDateTimePicker(false);
       return;
     }
-    const currentDate = selectedDate || fromDate;
+    const currentDate = selectedDate || finalStartTime;
     if (fromMode === "date") {
-      setFromDate(currentDate);
+      setFinalStartTime(currentDate);
       setFromMode("time");
       return;
     }
     setShowFromDateTimePicker(false); // closes the picker
-    setFromDate(currentDate);
+    setFinalStartTime(currentDate);
   };
   const onChangeTo = (_, selectedDate: Date) => {
+    console.log(selectedDate);
     if (!selectedDate) {
       setShowToDateTimePicker(false);
       return;
     }
 
-    const currentDate = selectedDate || toDate;
+    const currentDate = selectedDate || finalEndTime;
     if (toMode === "date") {
+      setFinalEndTime(currentDate);
       setToMode("time");
       return;
     }
     // Checks here
     setShowToDateTimePicker(false); // closes the picker
-    setToDate(currentDate);
+    setFinalEndTime(currentDate);
   };
 
   return (
@@ -67,13 +79,13 @@ const FinalDateTimeSelectionComponent = () => {
               setShowFromDateTimePicker(true);
             }}
           >
-            {!fromDate ? (
+            {!finalStartTime ? (
               <BodyTextRegular color={theme.colors.textgray200}>
                 Tap to edit
               </BodyTextRegular>
             ) : (
               <BodyTextRegular>
-                {format(fromDate, "EEEE, d MMM")}
+                {format(finalStartTime, "EEEE, d MMM")}
               </BodyTextRegular>
             )}
           </Pressable>
@@ -94,10 +106,10 @@ const FinalDateTimeSelectionComponent = () => {
             justifyContent="center"
             alignItems="center"
           >
-            {!fromDate ? (
+            {!finalStartTime ? (
               <CaptionText>-- : --</CaptionText>
             ) : (
-              <CaptionText>{format(fromDate, "HH:mm")}</CaptionText>
+              <CaptionText>{format(finalStartTime, "HH:mm")}</CaptionText>
             )}
           </Div>
         </Pressable>
@@ -121,12 +133,14 @@ const FinalDateTimeSelectionComponent = () => {
               setShowToDateTimePicker(true);
             }}
           >
-            {!toDate ? (
+            {!finalEndTime ? (
               <BodyTextRegular color={theme.colors.textgray200}>
                 Tap to edit
               </BodyTextRegular>
             ) : (
-              <BodyTextRegular>{format(toDate, "EEEE, d MMM")}</BodyTextRegular>
+              <BodyTextRegular>
+                {format(finalEndTime, "EEEE, d MMM")}
+              </BodyTextRegular>
             )}
           </Pressable>
         </Div>
@@ -146,10 +160,10 @@ const FinalDateTimeSelectionComponent = () => {
             justifyContent="center"
             alignItems="center"
           >
-            {!toDate ? (
+            {!finalEndTime ? (
               <CaptionText>-- : --</CaptionText>
             ) : (
-              <CaptionText>{format(toDate, "HH:mm")}</CaptionText>
+              <CaptionText>{format(finalEndTime, "HH:mm")}</CaptionText>
             )}
           </Div>
         </Pressable>
@@ -159,7 +173,8 @@ const FinalDateTimeSelectionComponent = () => {
         <DateTimePicker
           minuteInterval={30}
           value={
-            fromDate || roundToNearestMinutes(new Date(), { nearestTo: 30 })
+            finalStartTime ||
+            roundToNearestMinutes(new Date(), { nearestTo: 30 })
           }
           //@ts-ignore
           mode={fromMode}
@@ -172,7 +187,9 @@ const FinalDateTimeSelectionComponent = () => {
       {showToDateTimePicker && (
         <DateTimePicker
           minuteInterval={30}
-          value={toDate || roundToNearestMinutes(new Date(), { nearestTo: 30 })}
+          value={
+            finalEndTime || roundToNearestMinutes(new Date(), { nearestTo: 30 })
+          }
           //@ts-ignore
           mode={toMode}
           is24Hour={true}
