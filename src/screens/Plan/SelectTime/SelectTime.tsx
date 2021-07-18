@@ -192,7 +192,10 @@ const SelectTime = ({
           />
         </Box>
         <Box mt={28}>
-          <HeaderComponent title="My timings" rightComponent={rightComponent} />
+          <HeaderComponent
+            title="When are you free?"
+            rightComponent={rightComponent}
+          />
           {!isLoading ? (
             preferredDurations ? (
               <Box>

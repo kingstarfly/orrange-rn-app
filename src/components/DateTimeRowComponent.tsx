@@ -91,7 +91,7 @@ const DateTimeRowComponent = ({
       <Div
         borderColor={theme.colors.linegray}
         borderWidth={1}
-        w={WINDOW_WIDTH * 0.5}
+        w={WINDOW_WIDTH * 0.45}
         h={35}
         py={4}
         rounded={5}
@@ -106,7 +106,9 @@ const DateTimeRowComponent = ({
           }}
         >
           {!fromDate ? (
-            <BodyTextRegular>Tap to edit</BodyTextRegular>
+            <BodyTextRegular color={theme.colors.textgray200}>
+              Tap to edit
+            </BodyTextRegular>
           ) : (
             <BodyTextRegular>{format(fromDate, "EEEE, d MMM")}</BodyTextRegular>
           )}

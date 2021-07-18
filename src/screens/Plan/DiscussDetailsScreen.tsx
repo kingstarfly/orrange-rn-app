@@ -255,7 +255,7 @@ const DiscussDetailsScreen = () => {
 
       <Div mb={sectionSpacing}>
         <HeaderComponent
-          title="When should we meet?"
+          title="When are you free?"
           rightComponent={
             <TouchableOpacity onPress={() => handlePressCalendar()}>
               <PhosphorIcon

@@ -210,7 +210,7 @@ export const getMeetupTimings = async (meetupId: string) => {
   const doc = await firestore.collection(DB.MEETUPS).doc(meetupId).get();
   const { meetupTimings } = doc.data() as MeetupFields;
   // Sort meetup timings by date
-  meetupTimings.sort((a, b) => compareAsc(parseISO(a.date), parseISO(b.date)));
+  meetupTimings?.sort((a, b) => compareAsc(parseISO(a.date), parseISO(b.date)));
   return meetupTimings;
 };
 
@@ -270,7 +270,7 @@ export const addPreferredDuration = async (
   let { meetupTimings } = query.data() as MeetupFields;
   // 2.a Get the datestring, so we know which dayTiming to change.
   const dateISO = startOfDay(parseISO(prefDuration.startAt)).toISOString();
-  const indexToChange = meetupTimings.findIndex((e) => e.date === dateISO);
+  const indexToChange = meetupTimings?.findIndex((e) => e.date === dateISO);
 
   let dayTimingToChange: DayTimings;
   if (indexToChange === -1) {
@@ -317,7 +317,7 @@ export const deletePreferredDuration = async (
   const { meetupTimings } = (
     await firestore.collection(DB.MEETUPS).doc(meetupId).get()
   ).data() as MeetupFields;
-  const indexToChange = meetupTimings.findIndex(
+  const indexToChange = meetupTimings?.findIndex(
     (e) => e.date === startOfDay(parseISO(prefDuration.startAt)).toISOString()
   );
   // Modify the timing array
