@@ -156,6 +156,7 @@ export default function YourUsername() {
             autoCapitalize="none"
             placeholder="Username"
             prefix={<BodyTextRegular>@</BodyTextRegular>}
+            maxLength={20}
             bg="transparent"
             onChangeText={setUsername}
           />

@@ -18,7 +18,7 @@ const MeetupNameHeaderComponent = ({ title, ...rest }: Props) => {
       borderBottomWidth={1}
       {...rest}
     >
-      <Heading>{title}</Heading>
+      <Heading numberOfLines={1}>{title}</Heading>
     </Div>
   );
 };

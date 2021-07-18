@@ -54,7 +54,8 @@ export type PalRequestFields = OtherUser & {
 
 export type ParticipantFields = {
   preferredDurations: PreferredDuration[];
-  isHost: boolean;
+  isHost?: boolean;
+  isCoOrganiser?: boolean;
   username: string;
   url_thumbnail: string;
   uid: string;

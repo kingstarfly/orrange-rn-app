@@ -447,3 +447,16 @@ export const addUsersToMeetup = (users: OtherUser[], meetupId: string) => {
 
   batch.commit();
 };
+
+export const addCoOrganiser = async (userUid: string, meetupId: string) => {
+  console.log(userUid, meetupId);
+  await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PARTICIPANTS)
+    .doc(userUid)
+    .update({ isCoOrganiser: true } as Pick<
+      ParticipantFields,
+      "isCoOrganiser"
+    >);
+};

@@ -3,7 +3,7 @@ import { theme } from "constants/theme";
 import { Pressable, TouchableOpacity } from "react-native";
 import { Div, WINDOW_WIDTH } from "react-native-magnus";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { BodyTextRegular, MiniText } from "components/StyledText";
+import { BodyTextRegular, CaptionText, MiniText } from "components/StyledText";
 import {
   addHours,
   differenceInHours,
@@ -92,6 +92,7 @@ const DateTimeRowComponent = ({
         borderColor={theme.colors.linegray}
         borderWidth={1}
         w={WINDOW_WIDTH * 0.5}
+        h={35}
         py={4}
         rounded={5}
         justifyContent="center"
@@ -123,16 +124,16 @@ const DateTimeRowComponent = ({
           <Div
             borderColor={theme.colors.linegray}
             borderWidth={1}
-            w={50}
-            h={30}
+            w={60}
+            h={35}
             rounded={5}
             justifyContent="center"
             alignItems="center"
           >
             {!fromDate ? (
-              <MiniText>-- : --</MiniText>
+              <CaptionText>-- : --</CaptionText>
             ) : (
-              <MiniText>{format(fromDate, "HH:mm")}</MiniText>
+              <CaptionText>{format(fromDate, "HH:mm")}</CaptionText>
             )}
           </Div>
         </Pressable>
@@ -149,16 +150,16 @@ const DateTimeRowComponent = ({
           <Div
             borderColor={theme.colors.linegray}
             borderWidth={1}
-            w={50}
-            h={30}
+            w={60}
+            h={35}
             rounded={5}
             justifyContent="center"
             alignItems="center"
           >
             {!toDate ? (
-              <MiniText>-- : --</MiniText>
+              <CaptionText>-- : --</CaptionText>
             ) : (
-              <MiniText>{format(toDate, "HH:mm")}</MiniText>
+              <CaptionText>{format(toDate, "HH:mm")}</CaptionText>
             )}
           </Div>
         </Pressable>

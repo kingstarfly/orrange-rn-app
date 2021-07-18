@@ -27,6 +27,7 @@ import { PhosphorIcon } from "constants/Icons";
 import { SearchInput } from "components/StyledInput";
 import LargeButton from "components/LargeButton";
 import {
+  addCoOrganiser,
   addSuggestion,
   getMeetingInfo,
   getParticipants,
@@ -62,6 +63,8 @@ const DiscussDetailsScreen = () => {
     React.useState<PendingParticipantFields[]>();
   const [preferredDurations, setPreferredDurations] =
     React.useState<PreferredDuration[]>();
+  const [selectedParticipant, setSelectedParticipant] =
+    React.useState<ParticipantFields>();
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [suggestionLoading, setSuggestionLoading] = React.useState(false);
@@ -75,6 +78,10 @@ const DiscussDetailsScreen = () => {
 
   const openModal = () => {
     refRBSheet.current.open();
+  };
+
+  const closeModal = () => {
+    refRBSheet.current.close();
   };
 
   const fetchSuggestions = React.useCallback(async () => {
@@ -170,6 +177,12 @@ const DiscussDetailsScreen = () => {
     });
   };
 
+  const handleOrgPress = async () => {
+    console.log("Handling org press");
+    await addCoOrganiser(selectedParticipant.uid, meetupId);
+    await fetchMeetupDetails();
+  };
+
   if (isLoading || !meetingInfo) {
     return (
       <Container avoidHeader>
@@ -201,7 +214,10 @@ const DiscussDetailsScreen = () => {
                 return (
                   <Pressable
                     key={index}
-                    onLongPress={openModal}
+                    onLongPress={() => {
+                      setSelectedParticipant(participant);
+                      openModal();
+                    }}
                     style={{ marginRight: 16 }}
                   >
                     <AvatarIcon
@@ -209,7 +225,7 @@ const DiscussDetailsScreen = () => {
                       label={participant.username}
                       uri={participant.url_thumbnail}
                       withLabel
-                      isHost={participant.isHost}
+                      isHost={participant.isHost || participant.isCoOrganiser}
                       showBorder={!!participant.preferredDurations}
                     />
                   </Pressable>
@@ -320,7 +336,7 @@ const DiscussDetailsScreen = () => {
         )}
       </Div>
 
-      <Div alignSelf="center">
+      <Div position="absolute" bottom={WINDOW_HEIGHT * 0.05} alignSelf="center">
         {meetingInfo.creatorId === authData.userData.uid ? (
           <LargeButton
             onPress={() => {
@@ -342,7 +358,7 @@ const DiscussDetailsScreen = () => {
         closeOnPressMask={true}
         height={windowHeight * 0.15}
       >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => handleOrgPress()}>
           <Div
             row
             w="100%"
@@ -354,7 +370,7 @@ const DiscussDetailsScreen = () => {
             <Subheading>Make Co-Organiser</Subheading>
           </Div>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flex: 1 }}>
+        <TouchableOpacity style={{ flex: 1 }} onPress={() => closeModal()}>
           <Div
             row
             w="100%"
