@@ -56,6 +56,20 @@ export const getMeetingInfo = async (meetupId: string) => {
   return doc.data() as MeetupFields;
 };
 
+export const getSingleParticipant = async (
+  meetupId: string,
+  userUid: string
+) => {
+  const doc = await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PARTICIPANTS)
+    .doc(userUid)
+    .get();
+
+  return doc.data() as ParticipantFields;
+};
+
 export const getParticipants = async (meetupId: string) => {
   const participants: ParticipantFields[] = [];
 
@@ -416,6 +430,7 @@ export const createMeetup = async (
       preferredDurations: [],
       url_thumbnail: currentUser.url_thumbnail,
       username: currentUser.username,
+      uid: currentUser.uid,
     } as ParticipantFields);
 
   // Add meetup id to user's data

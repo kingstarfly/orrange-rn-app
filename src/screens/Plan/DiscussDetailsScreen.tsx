@@ -6,7 +6,11 @@ import {
   ScrollView,
 } from "react-native";
 import Container from "components/Container";
-import { Subheading, CaptionText } from "components/StyledText";
+import {
+  Subheading,
+  CaptionText,
+  BodyTextRegular,
+} from "components/StyledText";
 import { RouteProp, useRoute } from "@react-navigation/core";
 import {
   DiscussDetailsStackParamList,
@@ -33,6 +37,7 @@ import {
   getParticipants,
   getPendingParticipants,
   getPreferredDurations,
+  getSingleParticipant,
   getSuggestions,
   toggleLike,
 } from "lib/api/meetup";
@@ -43,6 +48,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import Loading from "components/Loading";
 import { parseISO } from "date-fns";
 import { sectionSpacing } from "constants/Layout";
+import FinalDateTimeSelectionComponent from "./SelectTime/FinalDateTimeSelectionComponent";
 
 const DiscussDetailsScreen = () => {
   const route =
@@ -65,6 +71,11 @@ const DiscussDetailsScreen = () => {
     React.useState<PreferredDuration[]>();
   const [selectedParticipant, setSelectedParticipant] =
     React.useState<ParticipantFields>();
+
+  const [currentParticipant, setCurrentParticipant] =
+    React.useState<ParticipantFields>();
+  const [finalStartTime, setFinalStartTime] = React.useState<Date>();
+  const [finalEndTime, setFinalEndTime] = React.useState<Date>();
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [suggestionLoading, setSuggestionLoading] = React.useState(false);
@@ -127,8 +138,20 @@ const DiscussDetailsScreen = () => {
 
   React.useEffect(() => {
     fetchSuggestions();
+  }, [meetingInfo]);
+
+  React.useEffect(() => {
     fetchPreferredDurations();
   }, [meetingInfo]);
+
+  React.useEffect(() => {
+    console.log("Finding current participant..");
+    console.log(participants);
+    const part = participants?.find((p) => p.uid === authData?.userData?.uid);
+    setCurrentParticipant(part);
+
+    console.log(part);
+  }, [participants, authData?.userData?.uid]);
 
   const handleSuggestionOnPress = async (suggestionId: string) => {
     // update front end so we can avoid refreshing page
@@ -210,7 +233,7 @@ const DiscussDetailsScreen = () => {
         <Div row mb={sectionSpacing}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {[
-              ...participants.map((participant, index) => {
+              ...participants?.map((participant, index) => {
                 return (
                   <Pressable
                     key={index}
@@ -335,6 +358,13 @@ const DiscussDetailsScreen = () => {
           <Loading />
         )}
       </Div>
+
+      {(currentParticipant?.isHost || currentParticipant?.isCoOrganiser) && (
+        <Div mb={sectionSpacing}>
+          <HeaderComponent title="When should we meet?" />
+          <FinalDateTimeSelectionComponent />
+        </Div>
+      )}
 
       <Div position="absolute" bottom={WINDOW_HEIGHT * 0.05} alignSelf="center">
         {meetingInfo.creatorId === authData.userData.uid ? (
