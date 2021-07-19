@@ -159,7 +159,7 @@ export default function YourUsername() {
           />
         </Div>
         <Div
-          bottom={WINDOW_HEIGHT * 0.02}
+          bottom={WINDOW_HEIGHT * 0.05}
           position="absolute"
           alignSelf="center"
         >

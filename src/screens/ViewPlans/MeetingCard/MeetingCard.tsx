@@ -101,10 +101,14 @@ const MeetingCard = ({
           row
           alignItems="center"
           justifyContent="space-between"
-          bg="red200"
+          // bg="red200"
           w="100%"
         >
-          <Box justifyContent="center" w={WINDOW_WIDTH * 0.5} bg="blue200">
+          <Box
+            justifyContent="center"
+            w={WINDOW_WIDTH * 0.5}
+            // bg="blue200"
+          >
             <BodyTextMedium textAlignVertical="center" numberOfLines={1} mb={4}>
               {meetingInfo.name}
             </BodyTextMedium>
@@ -139,15 +143,13 @@ const MeetingCard = ({
             row
             justifyContent="flex-end"
             alignItems="center"
-            bg="green200"
+            // bg="green200"
             pr={12}
           >
             {firstParticipants.map((part, index) => (
-              <AvatarIcon
-                key={index}
-                uri={part.url_thumbnail}
-                label={part.username}
-              />
+              <Box key={index} mr={4}>
+                <AvatarIcon uri={part.url_thumbnail} label={part.username} />
+              </Box>
             ))}
             <TinyText textAlign="center">
               {leftovers ? `+${leftovers.length}` : ""}
