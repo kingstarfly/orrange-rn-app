@@ -124,7 +124,7 @@ export async function getAllMeetingDataForUser(
   let participantPromiseArr: Promise<ParticipantFields[]>[] = [];
   // let pendingParticipantPromiseArr: Promise<PendingParticipantFields[]>[] = [];
 
-  meetupIds.map(async (meetupId) => {
+  meetupIds.forEach(async (meetupId) => {
     meetingInfoPromiseArr.push(getMeetingInfo(meetupId));
     participantPromiseArr.push(getParticipants(meetupId));
     // pendingParticipantPromiseArr.push(getPendingParticipants(meetupId));
@@ -480,15 +480,25 @@ export const addCoOrganiser = async (userUid: string, meetupId: string) => {
 export const confirmMeetup = async (
   meetupId: string,
   startTime: Date,
-  endTime: Date
+  endTime: Date,
+  activity: string
 ) => {
   // Save the timing in meetup details
   // Change the isConfirmed flag
   let newDetails: Partial<MeetupFields> = {
     startAt: startTime.toISOString(),
     endAt: endTime.toISOString(),
+    activity: activity,
     isConfirmed: true,
-    activity: "test",
+  };
+  await firestore.collection(DB.MEETUPS).doc(meetupId).update(newDetails);
+};
+
+export const editMeetup = async (meetupId: string) => {
+  // Save the timing in meetup details
+  // Change the isConfirmed flag
+  let newDetails: Partial<MeetupFields> = {
+    isConfirmed: false,
   };
   await firestore.collection(DB.MEETUPS).doc(meetupId).update(newDetails);
 };

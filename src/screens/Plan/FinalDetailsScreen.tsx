@@ -19,12 +19,16 @@ import {
   Modal,
   Alert,
   TouchableHighlight,
+  TouchableOpacity,
 } from "react-native";
 import AvatarIcon from "components/AvatarIcon";
 import {
+  deleteMeetup,
+  editMeetup,
   getMeetingInfo,
   getParticipants,
   getPendingParticipants,
+  leaveMeetup,
 } from "lib/api/meetup";
 import Loading from "components/Loading";
 import LargeButton from "components/LargeButton";
@@ -36,6 +40,8 @@ import { BodyTextRegular, CaptionText, MiniText } from "components/StyledText";
 import { theme } from "constants/theme";
 import SmallButton from "components/SmallButton";
 import { sectionSpacing } from "constants/Layout";
+import { PhosphorIcon } from "constants/Icons";
+import RBSheet from "react-native-raw-bottom-sheet";
 
 const FinalDetailsScreen = () => {
   const route = useRoute<RouteProp<AppStackParamList, "FinalDetails">>();
@@ -51,7 +57,9 @@ const FinalDetailsScreen = () => {
     React.useState<PendingParticipantFields[]>();
 
   const [isLoading, setIsLoading] = React.useState(false);
-  const [modalVisible, setModalVisible] = React.useState(false);
+  // const [modalVisible, setModalVisible] = React.useState(false);
+
+  const OptionsSheet = React.useRef(null);
 
   const fetchMeetupDetails = React.useCallback(async () => {
     setIsLoading(true);
@@ -75,6 +83,27 @@ const FinalDetailsScreen = () => {
 
     return unsubscribe;
   }, [meetupId]);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => OptionsSheet.current.open()}>
+          <Div>
+            <PhosphorIcon
+              name="dots-three"
+              color={theme.colors.textdark}
+              size={30}
+            />
+          </Div>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
+  const handleEdit = async () => {
+    await editMeetup(meetupId);
+    navigation.pop();
+  };
 
   const handleCreateEvent = async () => {
     // 1. Check existing calendars for any "Orrange" calendar.
@@ -108,7 +137,8 @@ const FinalDetailsScreen = () => {
       timeZone: Localization.timezone,
     });
 
-    setModalVisible(true);
+    Alert.alert("", "This meetup has been saved onto your calendar!");
+    // setModalVisible(true);
   };
 
   async function getDefaultCalendarSource() {
@@ -164,6 +194,49 @@ const FinalDetailsScreen = () => {
   let end_time_string = format(end_datetime, "h:mm a");
 
   let activityContent = meetingInfo.activity;
+
+  const handleDeleteForAll = async () => {
+    Alert.alert(
+      "",
+      "Are you sure you want to delete this meet up for everyone? This is irreversible.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete for all",
+          onPress: async () => {
+            await deleteMeetup(meetupId);
+            OptionsSheet.current.close();
+            navigation.pop();
+          },
+        },
+      ]
+    );
+  };
+
+  const handleDeleteSelfAndLeave = async () => {
+    Alert.alert("", "Are you sure you want to leave this meet up?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Leave",
+        onPress: async () => {
+          try {
+            await leaveMeetup(authData.userData.uid, meetupId);
+          } catch (error) {
+            Alert.alert("", error.message);
+            return;
+          }
+          OptionsSheet.current.close();
+          navigation.pop();
+        },
+      },
+    ]);
+  };
 
   return (
     <Container avoidHeader>
@@ -235,7 +308,7 @@ const FinalDetailsScreen = () => {
         />
       </Div>
 
-      <Overlay
+      {/* <Overlay
         justifyContent="center"
         alignItems="center"
         transparent={true}
@@ -258,7 +331,83 @@ const FinalDetailsScreen = () => {
             Done
           </SmallButton>
         </Div>
-      </Overlay>
+      </Overlay> */}
+
+      <RBSheet
+        ref={OptionsSheet}
+        closeOnDragDown={false}
+        closeOnPressMask={true}
+        height={WINDOW_HEIGHT * 0.225}
+        customStyles={{
+          container: {
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            borderRadius: 15,
+            backgroundColor: theme.colors.backgroundlight,
+          },
+        }}
+      >
+        <TouchableOpacity style={{ flex: 1 }} onPress={() => handleEdit()}>
+          <Div
+            flex={1}
+            row
+            w="100%"
+            justifyContent="flex-start"
+            alignItems="center"
+            px={15}
+          >
+            <PhosphorIcon
+              name="note-pencil"
+              color={theme.colors.textdark}
+              size={24}
+            />
+            <CaptionText ml={15}>Edit plan</CaptionText>
+          </Div>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          onPress={() => handleDeleteForAll()}
+        >
+          <Div
+            flex={1}
+            row
+            w="100%"
+            justifyContent="flex-start"
+            alignItems="center"
+            px={15}
+          >
+            <PhosphorIcon
+              name="trash"
+              color={theme.colors.textdark}
+              size={24}
+            />
+            <CaptionText ml={15} color={theme.colors.red}>
+              Delete for all
+            </CaptionText>
+          </Div>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          onPress={() => handleDeleteSelfAndLeave()}
+        >
+          <Div
+            flex={1}
+            row
+            w="100%"
+            justifyContent="flex-start"
+            alignItems="center"
+            px={15}
+            bg={theme.colors.backgroundlight}
+          >
+            <PhosphorIcon
+              name="sign-out"
+              color={theme.colors.textdark}
+              size={24}
+            />
+            <CaptionText ml={15}>Leave and delete for myself</CaptionText>
+          </Div>
+        </TouchableOpacity>
+      </RBSheet>
     </Container>
   );
 };

@@ -129,7 +129,12 @@ const AppStackScreen = () => (
     <AppStack.Screen
       name="FinalDetails"
       component={FinalDetailsScreen}
-      options={{ title: "" }}
+      options={{
+        title: "",
+        headerRightContainerStyle: {
+          paddingRight: 15,
+        },
+      }}
     />
   </AppStack.Navigator>
 );

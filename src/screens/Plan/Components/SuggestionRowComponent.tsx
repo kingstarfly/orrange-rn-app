@@ -18,7 +18,7 @@ const SuggestionRowComponent = ({ suggestion, onPress }: Props) => {
   // owner of suggestion cannot press the button
 
   return (
-    <Div row alignItems="center" mb={8}>
+    <Div row alignItems="center" mb={8} py={2}>
       <HeartCountComponent
         count={suggestion.likedBy.length || 0}
         filled={liked}

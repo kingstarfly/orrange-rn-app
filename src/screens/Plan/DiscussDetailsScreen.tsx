@@ -22,7 +22,7 @@ import {
   PreferredDuration,
   SuggestionFields,
 } from "types/types";
-import { Div, WINDOW_HEIGHT } from "react-native-magnus";
+import { Div, Input, WINDOW_HEIGHT, WINDOW_WIDTH } from "react-native-magnus";
 import AvatarIcon from "components/AvatarIcon";
 import RBSheet from "react-native-raw-bottom-sheet";
 import HeaderComponent from "./Components/SectionHeaderComponent";
@@ -30,7 +30,7 @@ import { theme } from "constants/theme";
 import DateTimeRowComponent from "../../components/DateTimeRowComponent";
 import SuggestionRowComponent from "./Components/SuggestionRowComponent";
 import { PhosphorIcon } from "constants/Icons";
-import { SearchInput } from "components/StyledInput";
+import { SearchInput, UnderlinedInput } from "components/StyledInput";
 import LargeButton from "components/LargeButton";
 import {
   addCoOrganiser,
@@ -81,6 +81,7 @@ const DiscussDetailsScreen = () => {
     React.useState<ParticipantFields>();
   const [finalStartTime, setFinalStartTime] = React.useState<Date>();
   const [finalEndTime, setFinalEndTime] = React.useState<Date>();
+  const [activityInput, setActivityInput] = React.useState<string>("");
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [suggestionLoading, setSuggestionLoading] = React.useState(false);
@@ -88,7 +89,6 @@ const DiscussDetailsScreen = () => {
     React.useState(false);
 
   const windowWidth = useWindowDimensions().width;
-  const windowHeight = useWindowDimensions().height;
 
   const CoOrgSheet = useRef(null);
   const OptionsSheet = useRef(null);
@@ -225,7 +225,7 @@ const DiscussDetailsScreen = () => {
   };
 
   const handleDeleteSelfAndLeave = async () => {
-    Alert.alert("", "Are you sure you want to leave?", [
+    Alert.alert("", "Are you sure you want to leave this meet up?", [
       {
         text: "Cancel",
         style: "cancel",
@@ -259,8 +259,12 @@ const DiscussDetailsScreen = () => {
         {
           text: "Yes",
           onPress: async () => {
-            await confirmMeetup(meetupId, finalStartTime, finalEndTime);
-            // TODO: Navigate to home page. Refresh both lists.
+            await confirmMeetup(
+              meetupId,
+              finalStartTime,
+              finalEndTime,
+              activityInput
+            );
 
             navigation.pop();
             // await fetchAndSetData();
@@ -297,270 +301,318 @@ const DiscussDetailsScreen = () => {
 
   return (
     <Container avoidHeader>
-      <MeetupNameHeaderComponent title={meetingInfo.name} mb={24} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <MeetupNameHeaderComponent title={meetingInfo.name} mb={24} />
 
-      <Div mb={sectionSpacing}>
-        <HeaderComponent
-          title="🎊 Party-cipants"
-          rightComponent={
-            <TouchableOpacity onPress={() => handlePressAddParticipant()}>
-              <PhosphorIcon
-                name="user-circle-plus"
-                color={theme.colors.textdark}
-                size={28}
-              />
-            </TouchableOpacity>
-          }
-        />
-        <Div row mb={sectionSpacing}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {[
-              ...participants?.map((participant, index) => {
-                return (
-                  <Pressable
-                    key={index}
-                    onLongPress={() => {
-                      setSelectedParticipant(participant);
-                      CoOrgSheet.current.open();
-                    }}
-                    style={{ marginRight: 16 }}
-                  >
-                    <AvatarIcon
-                      diameter={60}
-                      label={participant.username}
-                      uri={participant.url_thumbnail}
-                      withLabel
-                      isHost={participant.isHost || participant.isCoOrganiser}
-                      showBorder={!!participant.preferredDurations}
-                    />
-                  </Pressable>
-                );
-              }),
-              // ...pendingParticipants.map((pending, index2) => {
-              //   return (
-              //     <Pressable
-              //       key={index2}
-              //       onLongPress={() => CoOrgSheet.current.open()}
-              //       style={{ marginRight: 16 }}
-              //     >
-              //       <AvatarIcon
-              //         diameter={60}
-              //         label={pending.username}
-              //         uri={pending.url_thumbnail}
-              //         withLabel
-              //         blurred
-              //       />
-              //     </Pressable>
-              //   );
-              // }),
-            ]}
-          </ScrollView>
-        </Div>
-      </Div>
-
-      <Div mb={sectionSpacing}>
-        <HeaderComponent
-          title="When are you free?"
-          rightComponent={
-            <TouchableOpacity onPress={() => handlePressCalendar()}>
-              <PhosphorIcon
-                name="calendar"
-                color={theme.colors.textdark}
-                size={28}
-              />
-            </TouchableOpacity>
-          }
-        />
-        {!preferredDurationLoading ? (
-          preferredDurations ? (
-            <Div>
-              {preferredDurations?.map((preferredDuration, index) => {
-                return (
-                  <DateTimeRowComponent
-                    key={index}
-                    start={parseISO(preferredDuration.startAt)}
-                    end={parseISO(preferredDuration.endAt)}
-                    readOnly
-                  />
-                );
-              })}
-            </Div>
-          ) : (
-            <Div alignItems="center">
-              <CaptionText>You have not entered a time</CaptionText>
-            </Div>
-          )
-        ) : (
-          <Loading />
-        )}
-      </Div>
-
-      <Div mb={sectionSpacing}>
-        <HeaderComponent title="What should we do?" />
-
-        {!suggestionLoading ? (
-          <Div>
-            <ScrollView style={{ maxHeight: WINDOW_HEIGHT * 0.26 }}>
-              {suggestions.map((suggestion, index) => (
-                <SuggestionRowComponent
-                  key={index}
-                  suggestion={suggestion}
-                  onPress={async () =>
-                    await handleSuggestionOnPress(suggestion.id)
-                  }
-                />
-              ))}
-            </ScrollView>
-
-            <Div row alignItems="center" justifyContent="space-between">
-              <SearchInput
-                value={newSuggestion}
-                onChangeText={setNewSuggestion}
-                inputPlaceholder="Add a suggestion!"
-                w={windowWidth * 0.7}
-                maxLength={24}
-              />
-
-              <TouchableOpacity
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                }}
-                onPress={() => handleAddSuggestion(newSuggestion)}
-              >
+        <Div mb={sectionSpacing}>
+          <HeaderComponent
+            title="🎊 Party-cipants"
+            rightComponent={
+              <TouchableOpacity onPress={() => handlePressAddParticipant()}>
                 <PhosphorIcon
-                  size={30}
-                  name="plus-circle"
+                  name="user-circle-plus"
                   color={theme.colors.textdark}
+                  size={28}
                 />
               </TouchableOpacity>
+            }
+          />
+          <Div row mb={sectionSpacing}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {[
+                ...participants?.map((participant, index) => {
+                  return (
+                    <Pressable
+                      key={index}
+                      onLongPress={() => {
+                        setSelectedParticipant(participant);
+                        CoOrgSheet.current.open();
+                      }}
+                      style={{ marginRight: 16 }}
+                    >
+                      <AvatarIcon
+                        diameter={60}
+                        label={participant.username}
+                        uri={participant.url_thumbnail}
+                        withLabel
+                        isHost={participant.isHost || participant.isCoOrganiser}
+                        showBorder={!!participant.preferredDurations}
+                      />
+                    </Pressable>
+                  );
+                }),
+                // ...pendingParticipants.map((pending, index2) => {
+                //   return (
+                //     <Pressable
+                //       key={index2}
+                //       onLongPress={() => CoOrgSheet.current.open()}
+                //       style={{ marginRight: 16 }}
+                //     >
+                //       <AvatarIcon
+                //         diameter={60}
+                //         label={pending.username}
+                //         uri={pending.url_thumbnail}
+                //         withLabel
+                //         blurred
+                //       />
+                //     </Pressable>
+                //   );
+                // }),
+              ]}
+            </ScrollView>
+          </Div>
+        </Div>
+
+        <Div mb={sectionSpacing}>
+          <HeaderComponent
+            title="When are you free?"
+            rightComponent={
+              <TouchableOpacity onPress={() => handlePressCalendar()}>
+                <PhosphorIcon
+                  name="calendar"
+                  color={theme.colors.textdark}
+                  size={28}
+                />
+              </TouchableOpacity>
+            }
+          />
+          {!preferredDurationLoading ? (
+            preferredDurations ? (
+              <Div>
+                {preferredDurations?.map((preferredDuration, index) => {
+                  return (
+                    <DateTimeRowComponent
+                      key={index}
+                      start={parseISO(preferredDuration.startAt)}
+                      end={parseISO(preferredDuration.endAt)}
+                      readOnly
+                    />
+                  );
+                })}
+              </Div>
+            ) : (
+              <Div alignItems="center">
+                <CaptionText>You have not entered a time</CaptionText>
+              </Div>
+            )
+          ) : (
+            <Loading />
+          )}
+        </Div>
+
+        <Div mb={sectionSpacing}>
+          <HeaderComponent title="What should we do?" />
+
+          {!suggestionLoading ? (
+            <Div>
+              <ScrollView style={{ maxHeight: WINDOW_HEIGHT * 0.26 }}>
+                {suggestions.map((suggestion, index) => (
+                  <SuggestionRowComponent
+                    key={index}
+                    suggestion={suggestion}
+                    onPress={async () =>
+                      await handleSuggestionOnPress(suggestion.id)
+                    }
+                  />
+                ))}
+              </ScrollView>
+
+              <Div row alignItems="center" justifyContent="space-between">
+                <SearchInput
+                  value={newSuggestion}
+                  onChangeText={setNewSuggestion}
+                  inputPlaceholder="Add a suggestion!"
+                  w={windowWidth * 0.8}
+                  maxLength={24}
+                />
+
+                <TouchableOpacity
+                  style={{
+                    flex: 1,
+                    alignItems: "flex-end",
+                  }}
+                  onPress={() => handleAddSuggestion(newSuggestion)}
+                >
+                  <PhosphorIcon
+                    size={30}
+                    name="plus-circle"
+                    color={theme.colors.textdark}
+                  />
+                </TouchableOpacity>
+              </Div>
+            </Div>
+          ) : (
+            <Loading />
+          )}
+        </Div>
+
+        {(currentParticipant?.isHost || currentParticipant?.isCoOrganiser) && (
+          <Div
+            mb={sectionSpacing}
+            bg={theme.colors.backgroundlight}
+            borderWidth={5}
+            borderColor={theme.colors.primary300}
+            px={12}
+            pt={12}
+            pb={20}
+            rounded={10}
+            style={{
+              elevation: 4,
+            }}
+          >
+            <HeaderComponent title="Lock it in!" />
+            <Div row justifyContent="space-between" alignItems="center" mb={16}>
+              <CaptionText w={70}>Activity:</CaptionText>
+              <Div
+                row
+                flex={1}
+                w={WINDOW_WIDTH * 0.5}
+                h={35}
+                rounded={5}
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <Input
+                  value={activityInput}
+                  onChangeText={setActivityInput}
+                  placeholder="..."
+                  py={0}
+                  px={0}
+                  pl={4}
+                  w={windowWidth * 0.5}
+                  h="100%"
+                  maxLength={24}
+                  fontSize={16}
+                  fontFamily="inter-regular"
+                  bg="transparent"
+                  borderColor={theme.colors.linegray}
+                  borderWidth={0}
+                  borderBottomWidth={1}
+                  rounded={0}
+                />
+              </Div>
+            </Div>
+            <FinalDateTimeSelectionComponent
+              finalStartTime={finalStartTime}
+              setFinalStartTime={setFinalStartTime}
+              finalEndTime={finalEndTime}
+              setFinalEndTime={setFinalEndTime}
+            />
+            <Div alignSelf="center" mt={40}>
+              <LargeButton
+                onPress={() => handleConfirmPress()}
+                disabled={!finalStartTime || !finalEndTime}
+                title="CONFIRM"
+              />
             </Div>
           </Div>
-        ) : (
-          <Loading />
         )}
-      </Div>
 
-      {(currentParticipant?.isHost || currentParticipant?.isCoOrganiser) && (
-        <Div mb={sectionSpacing}>
-          <HeaderComponent title="When should we meet?" />
-          <FinalDateTimeSelectionComponent
-            finalStartTime={finalStartTime}
-            setFinalStartTime={setFinalStartTime}
-            finalEndTime={finalEndTime}
-            setFinalEndTime={setFinalEndTime}
-          />
+        <Div alignSelf="center" mb={WINDOW_HEIGHT * 0.05}>
+          {!currentParticipant?.isHost &&
+            !currentParticipant?.isCoOrganiser && (
+              <CaptionText
+                textAlign="center"
+                children={`Waiting for ${meetingInfo.creatorUsername} to confirm...`}
+              />
+            )}
         </Div>
-      )}
 
-      <Div position="absolute" bottom={WINDOW_HEIGHT * 0.05} alignSelf="center">
-        {currentParticipant?.isHost || currentParticipant?.isCoOrganiser ? (
-          <LargeButton
-            onPress={() => handleConfirmPress()}
-            disabled={!finalStartTime || !finalEndTime}
-            title="CONFIRM"
-          />
-        ) : (
-          <CaptionText
-            textAlign="center"
-            children={`Waiting for ${meetingInfo.creatorUsername} to confirm...`}
-          />
-        )}
-      </Div>
+        <RBSheet
+          ref={CoOrgSheet}
+          closeOnDragDown={false}
+          closeOnPressMask={true}
+          height={WINDOW_HEIGHT * 0.075}
+          customStyles={{
+            container: {
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              borderRadius: 15,
+              backgroundColor: theme.colors.backgroundlight,
+            },
+          }}
+        >
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() => handleOrgPress()}
+          >
+            <Div
+              flex={1}
+              row
+              w="100%"
+              justifyContent="flex-start"
+              alignItems="center"
+              px={15}
+            >
+              <PhosphorIcon
+                name="flag"
+                color={theme.colors.textdark}
+                size={24}
+              />
+              <CaptionText ml={15}>Make Co-Organiser</CaptionText>
+            </Div>
+          </TouchableOpacity>
+        </RBSheet>
 
-      <RBSheet
-        ref={CoOrgSheet}
-        closeOnDragDown={false}
-        closeOnPressMask={true}
-        height={windowHeight * 0.15}
-      >
-        <TouchableOpacity onPress={() => handleOrgPress()}>
-          <Div
-            row
-            w="100%"
-            justifyContent="center"
-            alignItems="center"
-            py={16}
-            bg={theme.colors.primary500}
-          >
-            <Subheading>Make Co-Organiser</Subheading>
-          </Div>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ flex: 1 }}
-          onPress={() => CoOrgSheet.current.close()}
+        <RBSheet
+          ref={OptionsSheet}
+          closeOnDragDown={false}
+          closeOnPressMask={true}
+          height={WINDOW_HEIGHT * 0.15}
+          customStyles={{
+            container: {
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              borderRadius: 15,
+              backgroundColor: theme.colors.backgroundlight,
+            },
+          }}
         >
-          <Div
-            row
-            w="100%"
-            justifyContent="center"
-            alignItems="center"
-            py={16}
-            bg={theme.colors.backgroundlight}
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() => handleDeleteForAll()}
           >
-            <Subheading>Cancel</Subheading>
-          </Div>
-        </TouchableOpacity>
-      </RBSheet>
-
-      <RBSheet
-        ref={OptionsSheet}
-        closeOnDragDown={false}
-        closeOnPressMask={true}
-        height={WINDOW_HEIGHT * 0.15}
-        customStyles={{
-          container: {
-            flexDirection: "column",
-            justifyContent: "flex-start",
-            borderRadius: 15,
-            backgroundColor: theme.colors.backgroundlight,
-          },
-        }}
-      >
-        <TouchableOpacity
-          style={{ flex: 1 }}
-          onPress={() => handleDeleteForAll()}
-        >
-          <Div
-            flex={1}
-            row
-            w="100%"
-            justifyContent="flex-start"
-            alignItems="center"
-            px={15}
+            <Div
+              flex={1}
+              row
+              w="100%"
+              justifyContent="flex-start"
+              alignItems="center"
+              px={15}
+            >
+              <PhosphorIcon
+                name="trash"
+                color={theme.colors.textdark}
+                size={24}
+              />
+              <CaptionText ml={15} color={theme.colors.red}>
+                Delete for all
+              </CaptionText>
+            </Div>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() => handleDeleteSelfAndLeave()}
           >
-            <PhosphorIcon
-              name="trash"
-              color={theme.colors.textdark}
-              size={24}
-            />
-            <CaptionText ml={15} color={theme.colors.red}>
-              Delete for all
-            </CaptionText>
-          </Div>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ flex: 1 }}
-          onPress={() => handleDeleteSelfAndLeave()}
-        >
-          <Div
-            flex={1}
-            row
-            w="100%"
-            justifyContent="flex-start"
-            alignItems="center"
-            px={15}
-            bg={theme.colors.backgroundlight}
-          >
-            <PhosphorIcon
-              name="sign-out"
-              color={theme.colors.textdark}
-              size={24}
-            />
-            <CaptionText ml={15}>Leave and delete for myself</CaptionText>
-          </Div>
-        </TouchableOpacity>
-      </RBSheet>
+            <Div
+              flex={1}
+              row
+              w="100%"
+              justifyContent="flex-start"
+              alignItems="center"
+              px={15}
+              bg={theme.colors.backgroundlight}
+            >
+              <PhosphorIcon
+                name="sign-out"
+                color={theme.colors.textdark}
+                size={24}
+              />
+              <CaptionText ml={15}>Leave and delete for myself</CaptionText>
+            </Div>
+          </TouchableOpacity>
+        </RBSheet>
+      </ScrollView>
     </Container>
   );
 };

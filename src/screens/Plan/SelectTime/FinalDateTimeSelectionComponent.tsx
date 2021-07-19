@@ -1,4 +1,4 @@
-import { BodyTextRegular, CaptionText, MiniText } from "components/StyledText";
+import { CaptionText } from "components/StyledText";
 import { theme } from "constants/theme";
 import { format, roundToNearestMinutes } from "date-fns";
 import React from "react";
@@ -61,112 +61,114 @@ const FinalDateTimeSelectionComponent = ({
 
   return (
     <Div>
-      <Div row justifyContent="space-between">
-        <CaptionText w={45}>Start: </CaptionText>
-        <Div
-          borderColor={theme.colors.linegray}
-          borderWidth={1}
-          w={WINDOW_WIDTH * 0.55}
-          h={35}
-          py={4}
-          rounded={5}
-          justifyContent="center"
-          alignItems="center"
-        >
+      <Div row justifyContent="space-between" alignItems="center">
+        <CaptionText w={70}>Start: </CaptionText>
+        <Div row justifyContent="space-between" flex={1}>
           <Pressable
             onPress={() => {
               setFromMode("date");
               setShowFromDateTimePicker(true);
             }}
           >
-            {!finalStartTime ? (
-              <BodyTextRegular color={theme.colors.textgray200}>
-                Tap to edit
-              </BodyTextRegular>
-            ) : (
-              <BodyTextRegular>
-                {format(finalStartTime, "EEEE, d MMM")}
-              </BodyTextRegular>
-            )}
+            <Div
+              borderColor={theme.colors.linegray}
+              borderWidth={1}
+              w={WINDOW_WIDTH * 0.5}
+              h={35}
+              py={4}
+              rounded={5}
+              justifyContent="center"
+              alignItems="center"
+            >
+              {!finalStartTime ? (
+                <CaptionText color={theme.colors.textgray200}>
+                  Tap to edit
+                </CaptionText>
+              ) : (
+                <CaptionText>
+                  {format(finalStartTime, "EEEE, d MMM")}
+                </CaptionText>
+              )}
+            </Div>
+          </Pressable>
+
+          <Pressable
+            onPress={() => {
+              setFromMode("time");
+              setShowFromDateTimePicker(true);
+            }}
+          >
+            <Div
+              borderColor={theme.colors.linegray}
+              borderWidth={1}
+              w={60}
+              h={35}
+              rounded={5}
+              justifyContent="center"
+              alignItems="center"
+            >
+              {!finalStartTime ? (
+                <CaptionText>-- : --</CaptionText>
+              ) : (
+                <CaptionText>{format(finalStartTime, "HH:mm")}</CaptionText>
+              )}
+            </Div>
           </Pressable>
         </Div>
-
-        <Pressable
-          onPress={() => {
-            setFromMode("time");
-            setShowFromDateTimePicker(true);
-          }}
-        >
-          <Div
-            borderColor={theme.colors.linegray}
-            borderWidth={1}
-            w={60}
-            h={35}
-            rounded={5}
-            justifyContent="center"
-            alignItems="center"
-          >
-            {!finalStartTime ? (
-              <CaptionText>-- : --</CaptionText>
-            ) : (
-              <CaptionText>{format(finalStartTime, "HH:mm")}</CaptionText>
-            )}
-          </Div>
-        </Pressable>
       </Div>
 
       <Div row justifyContent="space-between" mt={16}>
-        <CaptionText w={45}>End: </CaptionText>
-        <Div
-          borderColor={theme.colors.linegray}
-          borderWidth={1}
-          w={WINDOW_WIDTH * 0.55}
-          h={35}
-          py={4}
-          rounded={5}
-          justifyContent="center"
-          alignItems="center"
-        >
+        <CaptionText w={70}>End: </CaptionText>
+        <Div row justifyContent="space-between" flex={1}>
           <Pressable
             onPress={() => {
               setToMode("date");
               setShowToDateTimePicker(true);
             }}
           >
-            {!finalEndTime ? (
-              <BodyTextRegular color={theme.colors.textgray200}>
-                Tap to edit
-              </BodyTextRegular>
-            ) : (
-              <BodyTextRegular>
-                {format(finalEndTime, "EEEE, d MMM")}
-              </BodyTextRegular>
-            )}
+            <Div
+              borderColor={theme.colors.linegray}
+              borderWidth={1}
+              w={WINDOW_WIDTH * 0.5}
+              h={35}
+              py={4}
+              rounded={5}
+              justifyContent="center"
+              alignItems="center"
+            >
+              {!finalEndTime ? (
+                <CaptionText color={theme.colors.textgray200}>
+                  Tap to edit
+                </CaptionText>
+              ) : (
+                <CaptionText>{format(finalEndTime, "EEEE, d MMM")}</CaptionText>
+              )}
+            </Div>
+          </Pressable>
+
+          <Pressable
+            onPress={() => {
+              setToMode("time");
+              setShowToDateTimePicker(true);
+            }}
+          >
+            <Div
+              borderColor={theme.colors.linegray}
+              borderWidth={1}
+              w={60}
+              h={35}
+              rounded={5}
+              justifyContent="center"
+              alignItems="center"
+            >
+              {!finalEndTime ? (
+                <CaptionText>-- : --</CaptionText>
+              ) : (
+                <CaptionText>{format(finalEndTime, "HH:mm")}</CaptionText>
+              )}
+            </Div>
           </Pressable>
         </Div>
-
-        <Pressable
-          onPress={() => {
-            setToMode("time");
-            setShowToDateTimePicker(true);
-          }}
-        >
-          <Div
-            borderColor={theme.colors.linegray}
-            borderWidth={1}
-            w={60}
-            h={35}
-            rounded={5}
-            justifyContent="center"
-            alignItems="center"
-          >
-            {!finalEndTime ? (
-              <CaptionText>-- : --</CaptionText>
-            ) : (
-              <CaptionText>{format(finalEndTime, "HH:mm")}</CaptionText>
-            )}
-          </Div>
-        </Pressable>
       </Div>
 
       {showFromDateTimePicker && (
