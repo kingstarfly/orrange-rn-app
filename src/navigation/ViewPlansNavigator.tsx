@@ -55,7 +55,6 @@ function InnerTabNavigator() {
 }
 
 function ViewPlansNavigator() {
-  const insets = useSafeAreaInsets();
   return (
     <Stack.Navigator
       headerMode="screen"
@@ -75,7 +74,6 @@ function ViewPlansNavigator() {
       <Stack.Screen
         name="ViewPlansTabNavigator"
         options={({ route }) => ({
-          title: "Meetup Details",
           headerTitle: () => {
             return <TopNavBar />;
           },

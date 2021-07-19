@@ -68,10 +68,10 @@ const InProgressViewPlans = () => {
     </Box>
   );
   return (
-    <Container>
+    <Container style={{ paddingTop: 10 }}>
       <FlatList<MeetingCardProps>
-        data={meetingsData}
         style={styles.scrollViewContainer}
+        data={meetingsData}
         keyExtractor={(item) => item.meetingInfo.id}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}

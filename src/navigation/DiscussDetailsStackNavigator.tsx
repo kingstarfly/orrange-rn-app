@@ -7,6 +7,8 @@ import { PhosphorIcon } from "constants/Icons";
 import DiscussDetailsScreen from "screens/Plan/DiscussDetailsScreen";
 import AddParticipantsScreen from "screens/Plan/AddParticipantsScreen";
 import SelectTime from "screens/Plan/SelectTime";
+import { MiniText } from "components/StyledText";
+import { Box } from "react-native-magnus";
 
 const Stack = createStackNavigator<DiscussDetailsStackParamList>();
 
@@ -22,6 +24,7 @@ function DiscussDetailsStackNavigator() {
           <PhosphorIcon name="caret-left" size={30} color={tintColor} />
         ),
         headerLeftContainerStyle: { paddingLeft: 10 },
+        headerRightContainerStyle: { paddingRight: 15 },
       }}
     >
       <Stack.Screen name="DiscussDetails" component={DiscussDetailsScreen} />

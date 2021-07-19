@@ -18,7 +18,7 @@ import {
 export interface MeetingCardProps {
   meetingInfo: MeetupFields;
   participants: ParticipantFields[];
-  pendingParticipants: PendingParticipantFields[];
+  pendingParticipants?: PendingParticipantFields[];
   isConfirmed?: boolean;
   accent?: boolean;
 }

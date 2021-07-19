@@ -11,6 +11,7 @@ import {
   Subheading,
   CaptionText,
   BodyTextRegular,
+  MiniText,
 } from "components/StyledText";
 import { RouteProp, useRoute } from "@react-navigation/core";
 import {
@@ -35,12 +36,14 @@ import {
   addCoOrganiser,
   addSuggestion,
   confirmMeetup,
+  deleteMeetup,
   getMeetingInfo,
   getParticipants,
   getPendingParticipants,
   getPreferredDurations,
   getSingleParticipant,
   getSuggestions,
+  leaveMeetup,
   toggleLike,
 } from "lib/api/meetup";
 import { useAuth } from "lib/auth";
@@ -87,15 +90,8 @@ const DiscussDetailsScreen = () => {
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
 
-  const refRBSheet = useRef(null);
-
-  const openModal = () => {
-    refRBSheet.current.open();
-  };
-
-  const closeModal = () => {
-    refRBSheet.current.close();
-  };
+  const CoOrgSheet = useRef(null);
+  const OptionsSheet = useRef(null);
 
   const fetchSuggestions = React.useCallback(async () => {
     setSuggestionLoading(true);
@@ -207,6 +203,50 @@ const DiscussDetailsScreen = () => {
     await fetchMeetupDetails();
   };
 
+  const handleDeleteForAll = async () => {
+    Alert.alert(
+      "",
+      "Are you sure you want to delete this meet up for everyone? This is irreversible.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete for all",
+          onPress: async () => {
+            await deleteMeetup(meetupId);
+            OptionsSheet.current.close();
+            navigation.pop();
+          },
+        },
+      ]
+    );
+  };
+
+  const handleDeleteSelfAndLeave = async () => {
+    Alert.alert("", "Are you sure you want to leave?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Leave",
+        onPress: async () => {
+          console.log("Leave clicked");
+          try {
+            await leaveMeetup(authData.userData.uid, meetupId);
+          } catch (error) {
+            Alert.alert("", error.message);
+            return;
+          }
+          OptionsSheet.current.close();
+          navigation.pop();
+        },
+      },
+    ]);
+  };
+
   const handleConfirmPress = async () => {
     Alert.alert(
       "",
@@ -231,6 +271,22 @@ const DiscussDetailsScreen = () => {
     );
   };
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => OptionsSheet.current.open()}>
+          <Div>
+            <PhosphorIcon
+              name="dots-three"
+              color={theme.colors.textdark}
+              size={30}
+            />
+          </Div>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   if (isLoading || !meetingInfo) {
     return (
       <Container avoidHeader>
@@ -238,6 +294,7 @@ const DiscussDetailsScreen = () => {
       </Container>
     );
   }
+
   return (
     <Container avoidHeader>
       <MeetupNameHeaderComponent title={meetingInfo.name} mb={24} />
@@ -264,7 +321,7 @@ const DiscussDetailsScreen = () => {
                     key={index}
                     onLongPress={() => {
                       setSelectedParticipant(participant);
-                      openModal();
+                      CoOrgSheet.current.open();
                     }}
                     style={{ marginRight: 16 }}
                   >
@@ -279,23 +336,23 @@ const DiscussDetailsScreen = () => {
                   </Pressable>
                 );
               }),
-              ...pendingParticipants.map((pending, index2) => {
-                return (
-                  <Pressable
-                    key={index2}
-                    onLongPress={openModal}
-                    style={{ marginRight: 16 }}
-                  >
-                    <AvatarIcon
-                      diameter={60}
-                      label={pending.username}
-                      uri={pending.url_thumbnail}
-                      withLabel
-                      blurred
-                    />
-                  </Pressable>
-                );
-              }),
+              // ...pendingParticipants.map((pending, index2) => {
+              //   return (
+              //     <Pressable
+              //       key={index2}
+              //       onLongPress={() => CoOrgSheet.current.open()}
+              //       style={{ marginRight: 16 }}
+              //     >
+              //       <AvatarIcon
+              //         diameter={60}
+              //         label={pending.username}
+              //         uri={pending.url_thumbnail}
+              //         withLabel
+              //         blurred
+              //       />
+              //     </Pressable>
+              //   );
+              // }),
             ]}
           </ScrollView>
         </Div>
@@ -412,7 +469,7 @@ const DiscussDetailsScreen = () => {
       </Div>
 
       <RBSheet
-        ref={refRBSheet}
+        ref={CoOrgSheet}
         closeOnDragDown={false}
         closeOnPressMask={true}
         height={windowHeight * 0.15}
@@ -429,7 +486,10 @@ const DiscussDetailsScreen = () => {
             <Subheading>Make Co-Organiser</Subheading>
           </Div>
         </TouchableOpacity>
-        <TouchableOpacity style={{ flex: 1 }} onPress={() => closeModal()}>
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          onPress={() => CoOrgSheet.current.close()}
+        >
           <Div
             row
             w="100%"
@@ -439,6 +499,65 @@ const DiscussDetailsScreen = () => {
             bg={theme.colors.backgroundlight}
           >
             <Subheading>Cancel</Subheading>
+          </Div>
+        </TouchableOpacity>
+      </RBSheet>
+
+      <RBSheet
+        ref={OptionsSheet}
+        closeOnDragDown={false}
+        closeOnPressMask={true}
+        height={WINDOW_HEIGHT * 0.15}
+        customStyles={{
+          container: {
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            borderRadius: 15,
+            backgroundColor: theme.colors.backgroundlight,
+          },
+        }}
+      >
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          onPress={() => handleDeleteForAll()}
+        >
+          <Div
+            flex={1}
+            row
+            w="100%"
+            justifyContent="flex-start"
+            alignItems="center"
+            px={15}
+          >
+            <PhosphorIcon
+              name="trash"
+              color={theme.colors.textdark}
+              size={24}
+            />
+            <CaptionText ml={15} color={theme.colors.red}>
+              Delete for all
+            </CaptionText>
+          </Div>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          onPress={() => handleDeleteSelfAndLeave()}
+        >
+          <Div
+            flex={1}
+            row
+            w="100%"
+            justifyContent="flex-start"
+            alignItems="center"
+            px={15}
+            bg={theme.colors.backgroundlight}
+          >
+            <PhosphorIcon
+              name="sign-out"
+              color={theme.colors.textdark}
+              size={24}
+            />
+            <CaptionText ml={15}>Leave and delete for myself</CaptionText>
           </Div>
         </TouchableOpacity>
       </RBSheet>

@@ -53,12 +53,13 @@ export type PalRequestFields = OtherUser & {
 };
 
 export type ParticipantFields = {
-  preferredDurations: PreferredDuration[];
-  isHost?: boolean;
-  isCoOrganiser?: boolean;
+  uid: string;
   username: string;
   url_thumbnail: string;
-  uid: string;
+  preferredDurations: PreferredDuration[];
+  joinedAt: string;
+  isHost?: boolean;
+  isCoOrganiser?: boolean;
 };
 
 export type PreferredDuration = {
@@ -101,6 +102,8 @@ export type MeetupFields = {
   startAt: string;
   endAt: string;
   isConfirmed: boolean;
+  isDeleted?: boolean;
+  coOrganisers?: string[];
   meetupTimings?: DayTimings[];
 };
 

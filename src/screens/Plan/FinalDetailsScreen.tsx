@@ -188,19 +188,19 @@ const FinalDetailsScreen = () => {
                   </Div>
                 );
               }),
-              ...pendingParticipants.map((pending, index2) => {
-                return (
-                  <Div mr={16} key={index2}>
-                    <AvatarIcon
-                      diameter={60}
-                      label={pending.username}
-                      uri={pending.url_thumbnail}
-                      withLabel
-                      blurred
-                    />
-                  </Div>
-                );
-              }),
+              // ...pendingParticipants.map((pending, index2) => {
+              //   return (
+              //     <Div mr={16} key={index2}>
+              //       <AvatarIcon
+              //         diameter={60}
+              //         label={pending.username}
+              //         uri={pending.url_thumbnail}
+              //         withLabel
+              //         blurred
+              //       />
+              //     </Div>
+              //   );
+              // }),
             ]}
           </ScrollView>
         </Div>

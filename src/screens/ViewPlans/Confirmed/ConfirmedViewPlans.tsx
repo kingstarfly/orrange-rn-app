@@ -64,7 +64,7 @@ const ConfirmedViewPlans = () => {
   );
 
   return (
-    <Container>
+    <Container style={{ paddingTop: 10 }}>
       <SectionList<MeetingCardProps, ViewPlansSectionData>
         style={styles.scrollViewContainer}
         sections={meetingsData} // enter data here
@@ -73,10 +73,9 @@ const ConfirmedViewPlans = () => {
           return <MeetingCard {...item} accent isConfirmed={true} />;
         }}
         renderSectionHeader={({ section: { title } }) => (
-          <Subheading textTransform="capitalize" mt={20}>
-            {title}
-          </Subheading>
+          <Subheading textTransform="capitalize">{title}</Subheading>
         )}
+        SectionSeparatorComponent={() => <Box h={10} />}
         showsVerticalScrollIndicator={false}
         onRefresh={onRefresh}
         refreshing={isLoading}
@@ -84,7 +83,7 @@ const ConfirmedViewPlans = () => {
         contentContainerStyle={{ flex: 1 }}
       />
 
-      <Button onPress={() => authData.signOut()}>Sign out</Button>
+      {/* <Button onPress={() => authData.signOut()}>Sign out</Button> */}
     </Container>
   );
 };

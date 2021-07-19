@@ -1,13 +1,10 @@
 import {
   useWindowDimensions,
-  View,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import {
-  Button,
   Div,
-  Text,
   Input,
   Overlay,
   WINDOW_WIDTH,
@@ -17,7 +14,7 @@ import React, { useState } from "react";
 import { firestore, auth, storage } from "lib/firebase";
 import { useAuth } from "lib/auth";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { AppStackParamList, SignUpStackParamList, UserData } from "types/types";
+import { SignUpStackParamList, UserData } from "types/types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import Container from "components/Container";
 import LargeButton from "components/LargeButton";

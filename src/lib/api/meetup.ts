@@ -122,12 +122,12 @@ export async function getAllMeetingDataForUser(
     */
   let meetingInfoPromiseArr: Promise<MeetupFields>[] = [];
   let participantPromiseArr: Promise<ParticipantFields[]>[] = [];
-  let pendingParticipantPromiseArr: Promise<PendingParticipantFields[]>[] = [];
+  // let pendingParticipantPromiseArr: Promise<PendingParticipantFields[]>[] = [];
 
   meetupIds.map(async (meetupId) => {
     meetingInfoPromiseArr.push(getMeetingInfo(meetupId));
     participantPromiseArr.push(getParticipants(meetupId));
-    pendingParticipantPromiseArr.push(getPendingParticipants(meetupId));
+    // pendingParticipantPromiseArr.push(getPendingParticipants(meetupId));
 
     // const meetingInfo = await getMeetingInfo(meetupId);
     // const participants = await getParticipants(meetupId);
@@ -140,17 +140,16 @@ export async function getAllMeetingDataForUser(
     // });
   });
 
-  const [meetingInfoArr, participantArr, pendingParticipantArr] =
-    await Promise.all([
-      Promise.all(meetingInfoPromiseArr),
-      Promise.all(participantPromiseArr),
-      Promise.all(pendingParticipantPromiseArr),
-    ]);
+  const [meetingInfoArr, participantArr] = await Promise.all([
+    Promise.all(meetingInfoPromiseArr),
+    Promise.all(participantPromiseArr),
+    // Promise.all(pendingParticipantPromiseArr),
+  ]);
   meetingInfoArr.forEach((ele, ind) => {
     allMeetingData.push({
       meetingInfo: ele,
       participants: participantArr[ind],
-      pendingParticipants: pendingParticipantArr[ind],
+      // pendingParticipants: pendingParticipantArr[ind],
     });
   });
   return allMeetingData;
@@ -409,16 +408,17 @@ export const createMeetup = async (
   // Basic fields in meetup
   await meetupDoc.set(meetupDetails);
 
-  // Add Pending Participants to meetup
+  // Add Participants to meetup
   selectedUsers.forEach(async (pal) => {
     await meetupDoc
-      .collection(DB.PENDING_PARTICIPANTS)
+      .collection(DB.PARTICIPANTS)
       .doc(pal.uid)
       .set({
-        requestedAt: new Date().toISOString(),
         username: pal.username,
         url_thumbnail: pal.url_thumbnail,
-      } as PendingParticipantFields);
+        uid: pal.uid,
+        preferredDurations: [],
+      } as ParticipantFields);
   });
 
   // Add user as participant
@@ -443,21 +443,22 @@ export const createMeetup = async (
 };
 
 export const addUsersToMeetup = (users: OtherUser[], meetupId: string) => {
-  // Add to pending participants
+  // Add to participants
   let batch = firestore.batch();
   let collection = firestore
     .collection(DB.MEETUPS)
     .doc(meetupId)
-    .collection(DB.PENDING_PARTICIPANTS);
+    .collection(DB.PARTICIPANTS);
 
   users.forEach((user) => {
     let doc = collection.doc(user.uid);
     batch.set(doc, {
-      requestedAt: new Date().toISOString(),
+      joinedAt: new Date().toISOString(),
       uid: user.uid,
       url_thumbnail: user.url_thumbnail,
+      preferredDurations: [],
       username: user.username,
-    } as PendingParticipantFields);
+    } as ParticipantFields);
   });
 
   batch.commit();
@@ -490,4 +491,59 @@ export const confirmMeetup = async (
     activity: "test",
   };
   await firestore.collection(DB.MEETUPS).doc(meetupId).update(newDetails);
+};
+
+export const deleteMeetup = async (meetupId: string) => {
+  // For each participant, go to their user profile and remove this meetup from their meetup_ids
+  const snapshot = await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PARTICIPANTS)
+    .get();
+
+  let promiseArr: Promise<void>[] = [];
+  snapshot.forEach((doc) => {
+    const promise = firestore
+      .collection(DB.USERS)
+      .doc(doc.id)
+      .update({
+        meetup_ids: firebaseApp.firestore.FieldValue.arrayRemove(meetupId),
+      });
+    promiseArr.push(promise);
+  });
+  await Promise.all(promiseArr);
+
+  // Then just delete this meetup document. Maybe just have a delete flag instead of actually deleting.
+  await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .update({ isDeleted: true });
+};
+
+export const leaveMeetup = async (userUid: string, meetupId: string) => {
+  // For this meetup, remove this user from participants. Before this, check if user is the only creator / co-organiser. If yes, then do not remove and return an error.
+  const { coOrganisers, creatorId } = (
+    await firestore.collection(DB.MEETUPS).doc(meetupId).get()
+  ).data() as MeetupFields;
+
+  if (userUid === creatorId && !coOrganisers) {
+    throw new Error(
+      "Organiser is unable to leave if there is no other co-organiser"
+    );
+  } else {
+    await firestore
+      .collection(DB.MEETUPS)
+      .doc(meetupId)
+      .collection(DB.PARTICIPANTS)
+      .doc(userUid)
+      .delete();
+  }
+
+  // For this user, remove this meetup from meetup_ids.
+  await firestore
+    .collection(DB.USERS)
+    .doc(userUid)
+    .update({
+      meetup_ids: firebaseApp.firestore.FieldValue.arrayRemove(meetupId),
+    });
 };
