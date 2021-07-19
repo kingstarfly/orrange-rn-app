@@ -50,20 +50,17 @@ const InProgressViewPlans = () => {
   }, []);
 
   React.useEffect(() => {
-    fetchInProgressPlans();
+    const unsubscribe = navigation.addListener("focus", async () => {
+      console.log("Refetching in progress screen");
+      await fetchInProgressPlans();
+    });
+
+    return unsubscribe;
   }, []);
 
   const renderItem = ({ item }) => {
     return <MeetingCard {...item} accent isConfirmed={false} />;
   };
-
-  if (isLoading) {
-    return (
-      <Container>
-        <Loading />
-      </Container>
-    );
-  }
 
   const listEmptyComponent = (
     <Box justifyContent="center" alignItems="center" h="100%">

@@ -22,7 +22,6 @@ export interface ViewPlansSectionData {
 const ConfirmedViewPlans = () => {
   const authData = useAuth();
   const [isLoading, setIsLoading] = React.useState(false);
-  const [refreshing, setRefreshing] = React.useState(false);
   const [meetingsData, setMeetingsData] = React.useState<
     ViewPlansSectionData[]
   >([]);
@@ -41,26 +40,22 @@ const ConfirmedViewPlans = () => {
   }, [authData.userData.uid]);
 
   const onRefresh = React.useCallback(async () => {
-    setRefreshing(true);
+    setIsLoading(true);
     try {
       await fetchConfirmedPlans();
     } catch (error) {
       console.error(error);
     }
-    setRefreshing(false);
+    setIsLoading(false);
   }, []);
-
   React.useEffect(() => {
-    fetchConfirmedPlans();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", async () => {
+      console.log("Refetching confirmed screen");
+      await fetchConfirmedPlans();
+    });
 
-  if (isLoading) {
-    return (
-      <Container>
-        <Loading />
-      </Container>
-    );
-  }
+    return unsubscribe;
+  }, []);
 
   const listEmptyComponent = (
     <Box justifyContent="center" alignItems="center" h="100%">
@@ -84,7 +79,7 @@ const ConfirmedViewPlans = () => {
         )}
         showsVerticalScrollIndicator={false}
         onRefresh={onRefresh}
-        refreshing={refreshing}
+        refreshing={isLoading}
         ListEmptyComponent={listEmptyComponent}
         contentContainerStyle={{ flex: 1 }}
       />

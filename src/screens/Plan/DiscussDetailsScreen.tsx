@@ -220,8 +220,9 @@ const DiscussDetailsScreen = () => {
           text: "Yes",
           onPress: async () => {
             await confirmMeetup(meetupId, finalStartTime, finalEndTime);
-            // TODO: Navigate to confirm view. Refresh both lists.
+            // TODO: Navigate to home page. Refresh both lists.
 
+            navigation.pop();
             // await fetchAndSetData();
           },
         },
