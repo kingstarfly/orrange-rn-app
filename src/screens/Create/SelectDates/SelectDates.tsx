@@ -1,3 +1,5 @@
+// THIS HAS BEEN DEPRECATED
+
 import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import DatePicker, { DATE_FORMAT } from "screens/Create/SelectDates/DatePicker";
 import StyledButton from "components/StyledButton";
@@ -80,7 +82,7 @@ const SelectDates = () => {
     } as MeetupFields;
 
     // use all information, and create new meetup in firestore
-    await createMeetup(meetupDetails, selectedPals, authData.userData);
+    // await createMeetup(meetupDetails, selectedPals, authData.userData);
 
     // Clear local state of selected dates
     setSelectedDates({});

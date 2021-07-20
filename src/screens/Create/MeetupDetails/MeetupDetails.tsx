@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { StackScreenProps } from "@react-navigation/stack";
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack";
 import { Box, WINDOW_HEIGHT } from "react-native-magnus";
-import { CreateMeetupStackParamList, OtherUser } from "types/types";
+import {
+  AppStackParamList,
+  CreateMeetupStackParamList,
+  OtherUser,
+} from "types/types";
 import Container from "components/Container";
 import { theme } from "constants/theme";
 import StyledButton from "components/StyledButton";
@@ -12,17 +16,31 @@ import PalsListSelect from "./PalsListSelect";
 import LargeButton from "components/LargeButton";
 import { getPals } from "lib/api/pals";
 import { useAuth } from "lib/auth";
+import { useNavigation } from "@react-navigation/native";
+import { useAppDispatch, useAppSelector } from "redux/hooks";
+import { createMeetup } from "lib/api/meetup";
+import { clearSelectedPals } from "redux/slices/SelectedPalsSlice";
 
-const MeetupDetails = ({
-  navigation,
-}: StackScreenProps<CreateMeetupStackParamList, "MeetupDetails">) => {
+const MeetupDetails = () => {
   const { width, height } = useWindowDimensions();
   const [name, setName] = useState("");
   const [pals, setPals] = React.useState<OtherUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const authData = useAuth();
+  const selectedPals = useAppSelector(
+    (state) => state.SelectedPals.selectedPals
+  );
+  const dispatch = useAppDispatch();
 
-  const handleConfirm = () => {
+  // Workaround for typescript error?
+  const navigation =
+    useNavigation<
+      StackNavigationProp<AppStackParamList, "MainBottomTabNavigator">
+    >();
+
+  const handleConfirm = async () => {
+    console.log("RESET");
+
     if (name.length < 4) {
       Alert.alert(
         "",
@@ -36,7 +54,32 @@ const MeetupDetails = ({
       );
       return;
     }
-    navigation.push("SelectDates", { meetupName: name });
+    // use all information, and create new meetup in firestore
+    const meetupId = await createMeetup(name, selectedPals, authData.userData);
+
+    // Clear redux information of selected pals
+    dispatch(clearSelectedPals());
+
+    // Replace navigation history, (home page --> Discuss details)
+    navigation.reset({
+      index: 1,
+      routes: [
+        { name: "MainBottomTabNavigator" },
+        {
+          name: "DiscussDetailsStackNavigator",
+          state: {
+            routes: [
+              {
+                name: "DiscussDetails",
+                params: {
+                  meetupId: meetupId,
+                },
+              },
+            ],
+          },
+        },
+      ],
+    });
   };
 
   const getAllPals = React.useCallback(async () => {
@@ -88,7 +131,7 @@ const MeetupDetails = ({
       </Box>
 
       <Box bottom={WINDOW_HEIGHT * 0.02} position="absolute" alignSelf="center">
-        <LargeButton onPress={handleConfirm} title="Next" />
+        <LargeButton onPress={handleConfirm} title="CREATE" />
       </Box>
     </Container>
   );

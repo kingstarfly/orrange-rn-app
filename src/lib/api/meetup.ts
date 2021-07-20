@@ -416,12 +416,25 @@ export const deletePreferredDuration = async (
 };
 
 export const createMeetup = async (
-  meetupDetails: MeetupFields,
+  meetupName: string,
   selectedUsers: OtherUser[],
   currentUser: UserData
 ) => {
-  const meetupId = meetupDetails.id;
-  const meetupDoc = firestore.collection(DB.MEETUPS).doc(meetupId);
+  const meetupDoc = firestore.collection("meetups").doc();
+  const meetupId = meetupDoc.id;
+
+  // construct meetupDetails
+  const meetupDetails = {
+    id: meetupId,
+    hostUid: currentUser.uid,
+    hostUsername: currentUser.username,
+    name: meetupName,
+    activity: null, // null refers to unconfirmed
+    startAt: null,
+    endAt: null,
+    isConfirmed: false,
+    meetupTimings: [],
+  } as MeetupFields;
 
   // Basic fields in meetup
   await meetupDoc.set(meetupDetails);
@@ -458,6 +471,7 @@ export const createMeetup = async (
     .update({
       meetup_ids: firebaseApp.firestore.FieldValue.arrayUnion(meetupId),
     });
+  return meetupId;
 };
 
 export const addUsersToMeetup = (users: OtherUser[], meetupId: string) => {
