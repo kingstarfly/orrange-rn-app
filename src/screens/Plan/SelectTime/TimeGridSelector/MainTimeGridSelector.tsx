@@ -1,7 +1,7 @@
 import { DATE_FORMAT } from "screens/Create/SelectDates/DatePicker";
-import { compareAsc, isSameDay, parse } from "date-fns";
+import { compareAsc, format, isSameDay, parse } from "date-fns";
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Box } from "react-native-magnus";
 import { useAppSelector } from "redux/hooks";
@@ -10,7 +10,7 @@ import TimeLabels from "./TimeLabels";
 import { parseISO } from "date-fns/esm";
 import { DayTimings } from "types/types";
 import Loading from "components/Loading";
-import { BodyTextRegular } from "components/StyledText";
+import { BodyTextRegular, CaptionText } from "components/StyledText";
 import { theme } from "constants/theme";
 
 // !! default start and end time, subject to change
@@ -22,6 +22,15 @@ interface Props {
 }
 
 const MainTimeGridSelector = ({ meetupTimings }: Props) => {
+  const verticalRef = React.useRef<ScrollView>(null);
+
+  // Scroll to 9am-ish on boot
+  React.useEffect(() => {
+    verticalRef.current.scrollTo({
+      y: 369,
+    });
+  }, []);
+
   if (!meetupTimings) {
     return (
       <Box justifyContent="center" flex={1}>
@@ -33,38 +42,55 @@ const MainTimeGridSelector = ({ meetupTimings }: Props) => {
   }
 
   return (
-    <ScrollView
-      style={styles.scrollViewContainer}
-      showsVerticalScrollIndicator={false}
-    >
-      <Box flexDir="row">
-        <TimeLabels startTime={START_TIME} endTime={END_TIME} />
-        <ScrollView horizontal>
-          {meetupTimings?.map((day, index) => {
-            let theDate = parseISO(day.date);
-            let timingsData = day.startTimings;
-            return (
-              <Day
-                key={index}
-                date={theDate}
-                timingsData={timingsData}
-                startTime={START_TIME}
-                endTime={END_TIME}
-                isRightMostDay={index === meetupTimings.length - 1}
-              />
-            );
-          })}
-        </ScrollView>
+    <View style={{ flex: 1 }}>
+      <Box row justifyContent="flex-start" left={60}>
+        {meetupTimings.map((timing) => {
+          let date = parseISO(timing.date);
+          return (
+            <Box alignItems="center" w={80}>
+              <CaptionText
+                fontFamily="inter-regular"
+                color={theme.colors.textgray400}
+                fontSize={14}
+              >
+                {format(date, "EEE")}
+              </CaptionText>
+              <CaptionText
+                fontFamily="inter-regular"
+                color={theme.colors.textgray400}
+                fontSize={14}
+              >
+                {format(date, "MMM d")}
+              </CaptionText>
+            </Box>
+          );
+        })}
       </Box>
-    </ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false} ref={verticalRef}>
+        <Box flexDir="row">
+          <TimeLabels startTime={START_TIME} endTime={END_TIME} />
+          <ScrollView horizontal>
+            {meetupTimings?.map((day, index) => {
+              let theDate = parseISO(day.date);
+              let timingsData = day.startTimings;
+              return (
+                <Day
+                  key={index}
+                  date={theDate}
+                  timingsData={timingsData}
+                  startTime={START_TIME}
+                  endTime={END_TIME}
+                  isRightMostDay={index === meetupTimings.length - 1}
+                />
+              );
+            })}
+          </ScrollView>
+        </Box>
+      </ScrollView>
+    </View>
   );
 };
 
 export default MainTimeGridSelector;
 
-const styles = StyleSheet.create({
-  scrollViewContainer: {
-    // backgroundColor: "red",
-    flex: 1,
-  },
-});
+const styles = StyleSheet.create({});

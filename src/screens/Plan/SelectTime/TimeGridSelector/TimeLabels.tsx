@@ -14,7 +14,7 @@ const TimeLabels = ({ startTime, endTime }: timeProps) => {
     let time = x;
     if (x === 12) {
       suffix = "NN";
-    } else if (x === 24) {
+    } else if (x === 24 || x === 0) {
       suffix = "MN";
       time = 12;
     } else if (x < 12) {
@@ -27,12 +27,11 @@ const TimeLabels = ({ startTime, endTime }: timeProps) => {
   }
 
   return (
-    <Box mt={40}>
+    <Box>
       {labels.map((label, index) => (
         <Box
           key={index}
           bg={theme.colors.backgroundlight}
-          // bg={"red200"}
           h={41}
           w={60}
           pr={10}
@@ -40,7 +39,7 @@ const TimeLabels = ({ startTime, endTime }: timeProps) => {
           <Text
             fontFamily="inter-regular"
             textAlign="right"
-            color={theme.colors.textgray}
+            color={theme.colors.textgray400}
             fontSize={12}
           >
             {label}

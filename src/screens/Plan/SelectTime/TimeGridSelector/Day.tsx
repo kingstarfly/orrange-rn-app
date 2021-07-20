@@ -35,7 +35,7 @@ const Day = ({
 
   return (
     <Box alignItems="center">
-      <Text
+      {/* <Text
         fontFamily="inter-regular"
         color={theme.colors.textgray400}
         fontSize={14}
@@ -48,7 +48,7 @@ const Day = ({
         fontSize={14}
       >
         {format(date, "MMM d")}
-      </Text>
+      </Text> */}
 
       {/* For the below view, check for user taps (not drags). If tapped, create a new timeslot and display it. Actually should  check tap on each grid to know which timing was tapped. */}
 
