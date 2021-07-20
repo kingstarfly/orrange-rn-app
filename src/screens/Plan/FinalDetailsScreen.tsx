@@ -101,8 +101,42 @@ const FinalDetailsScreen = () => {
   }, [navigation]);
 
   const handleEdit = async () => {
-    await editMeetup(meetupId);
-    navigation.pop();
+    Alert.alert(
+      "",
+      "Are you sure you want to mark this meet up as in-progress?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Edit",
+          onPress: async () => {
+            await editMeetup(meetupId);
+            // Replace navigation history, (home page --> Discuss details)
+            navigation.reset({
+              index: 1,
+              routes: [
+                { name: "MainBottomTabNavigator" },
+                {
+                  name: "DiscussDetailsStackNavigator",
+                  state: {
+                    routes: [
+                      {
+                        name: "DiscussDetails",
+                        params: {
+                          meetupId: meetupId,
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            });
+          },
+        },
+      ]
+    );
   };
 
   const handleCreateEvent = async () => {

@@ -42,7 +42,6 @@ const FinalDateTimeSelectionComponent = ({
     setFinalStartTime(currentDate);
   };
   const onChangeTo = (_, selectedDate: Date) => {
-    console.log(selectedDate);
     if (!selectedDate) {
       setShowToDateTimePicker(false);
       return;

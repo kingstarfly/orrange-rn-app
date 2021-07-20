@@ -111,6 +111,10 @@ const DiscussDetailsScreen = () => {
     setParticipants(b);
     setPendingParticipants(c);
 
+    a.startAt && setFinalStartTime(parseISO(a.startAt));
+    a.endAt && setFinalEndTime(parseISO(a.endAt));
+    a.activity && setActivityInput(a.activity);
+
     setIsLoading(false);
   }, [meetupId]);
 
@@ -143,8 +147,6 @@ const DiscussDetailsScreen = () => {
   }, [meetingInfo]);
 
   React.useEffect(() => {
-    console.log("Finding current participant..");
-    console.log(participants);
     const part = participants?.find((p) => p.uid === authData?.userData?.uid);
     setCurrentParticipant(part);
 
@@ -508,16 +510,6 @@ const DiscussDetailsScreen = () => {
           </Div>
         )}
 
-        <Div alignSelf="center" mb={WINDOW_HEIGHT * 0.05}>
-          {!currentParticipant?.isHost &&
-            !currentParticipant?.isCoOrganiser && (
-              <CaptionText
-                textAlign="center"
-                children={`Waiting for ${meetingInfo.hostUsername} to confirm...`}
-              />
-            )}
-        </Div>
-
         <RBSheet
           ref={CoOrgSheet}
           closeOnDragDown={false}
@@ -613,6 +605,14 @@ const DiscussDetailsScreen = () => {
           </TouchableOpacity>
         </RBSheet>
       </ScrollView>
+      <Div position="absolute" alignSelf="center" bottom={WINDOW_HEIGHT * 0.05}>
+        {!currentParticipant?.isHost && !currentParticipant?.isCoOrganiser && (
+          <CaptionText
+            textAlign="center"
+            children={`Waiting for ${meetingInfo.hostUsername} to confirm...`}
+          />
+        )}
+      </Div>
     </Container>
   );
 };
