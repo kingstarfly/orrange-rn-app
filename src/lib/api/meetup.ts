@@ -71,7 +71,26 @@ export const getSingleParticipant = async (
 };
 
 export const getParticipants = async (meetupId: string) => {
+  // Arrange host first, then co-organisers, then the rest
   const participants: ParticipantFields[] = [];
+
+  const query1 = await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PARTICIPANTS)
+    .where("isHost", "==", true)
+    .get();
+
+  query1.forEach((doc) => participants.push(doc.data() as ParticipantFields)); // This is the host.
+
+  const query2 = await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PARTICIPANTS)
+    .where("isCoOrganiser", "==", true)
+    .get();
+
+  query2.forEach((doc) => participants.push(doc.data() as ParticipantFields)); // This are the co-organisers.
 
   const querySnapshot = await firestore
     .collection(DB.MEETUPS)
@@ -531,12 +550,12 @@ export const deleteMeetup = async (meetupId: string) => {
 };
 
 export const leaveMeetup = async (userUid: string, meetupId: string) => {
-  // For this meetup, remove this user from participants. Before this, check if user is the only creator / co-organiser. If yes, then do not remove and return an error.
-  const { coOrganisers, creatorId } = (
+  // For this meetup, remove this user from participants. Before this, check if user is the only host / co-organiser. If yes, then do not remove and return an error.
+  const { coOrganisers, hostUid } = (
     await firestore.collection(DB.MEETUPS).doc(meetupId).get()
   ).data() as MeetupFields;
 
-  if (userUid === creatorId && !coOrganisers) {
+  if (userUid === hostUid && !coOrganisers) {
     throw new Error(
       "Organiser is unable to leave if there is no other co-organiser"
     );

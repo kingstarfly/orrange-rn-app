@@ -513,7 +513,7 @@ const DiscussDetailsScreen = () => {
             !currentParticipant?.isCoOrganiser && (
               <CaptionText
                 textAlign="center"
-                children={`Waiting for ${meetingInfo.creatorUsername} to confirm...`}
+                children={`Waiting for ${meetingInfo.hostUsername} to confirm...`}
               />
             )}
         </Div>

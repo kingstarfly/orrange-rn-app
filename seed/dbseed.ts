@@ -141,8 +141,8 @@ const meetups = [...Array(7).keys()].map((val) => {
 
   return {
     id: faker.datatype.uuid(),
-    creatorId: users[val].uid,
-    creatorUsername: users[val].username,
+    hostUid: users[val].uid,
+    hostUsername: users[val].username,
     name: meetupNames[val],
     activity: meetupNames[val],
     startAt: startTime.toISOString(),
@@ -185,6 +185,7 @@ function addParticipants() {
               },
             ],
             isHost: meetupIndex === userIndex ? true : false, // user 0 is host for meeting 0
+            isCoOrganiser: false,
             username: user.username,
             url_thumbnail: user.url_thumbnail,
             uid: user.uid,

@@ -57,7 +57,7 @@ export type ParticipantFields = {
   username: string;
   url_thumbnail: string;
   preferredDurations: PreferredDuration[];
-  joinedAt: string;
+  joinedAt?: string;
   isHost?: boolean;
   isCoOrganiser?: boolean;
 };
@@ -95,8 +95,8 @@ export type StartTimeMapToNumber = {
 
 export type MeetupFields = {
   id: string;
-  creatorId: string;
-  creatorUsername: string;
+  hostUid: string;
+  hostUsername: string;
   name: string;
   activity: string;
   startAt: string;

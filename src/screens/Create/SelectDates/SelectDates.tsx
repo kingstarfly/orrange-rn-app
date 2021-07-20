@@ -70,8 +70,8 @@ const SelectDates = () => {
     // construct meetupDetails
     const meetupDetails = {
       id: id,
-      creatorId: authData.userData.uid,
-      creatorUsername: authData.userData.username,
+      hostUid: authData.userData.uid,
+      hostUsername: authData.userData.username,
       name: meetupName,
       activity: null, // null refers to unconfirmed
       startAt: null,
