@@ -5,7 +5,7 @@ import { SectionList } from "react-native";
 import { styles } from "./styles";
 import { Box, Button } from "react-native-magnus";
 import { useAuth } from "lib/auth";
-import { BodyTextRegular, Subheading } from "components/StyledText";
+import { BodyTextRegular, Heading, Subheading } from "components/StyledText";
 import { MeetingCardProps } from "../MeetingCard/MeetingCard";
 import { getAllMeetingDataForUser, getMeetingInfo } from "lib/api/meetup";
 import { useNavigation } from "@react-navigation/native";
@@ -73,7 +73,7 @@ const ConfirmedViewPlans = () => {
           return <MeetingCard {...item} accent isConfirmed={true} />;
         }}
         renderSectionHeader={({ section: { title } }) => (
-          <Subheading textTransform="capitalize">{title}</Subheading>
+          <Heading textTransform="capitalize">{title}</Heading>
         )}
         SectionSeparatorComponent={() => <Box h={10} />}
         showsVerticalScrollIndicator={false}

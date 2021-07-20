@@ -27,8 +27,8 @@ function InnerTabNavigator() {
         },
         labelStyle: {
           textTransform: "none",
-          fontFamily: "inter-medium",
-          fontSize: 20,
+          fontFamily: "inter-regular",
+          fontSize: 13,
         },
         inactiveTintColor: "black",
         activeTintColor: "black",

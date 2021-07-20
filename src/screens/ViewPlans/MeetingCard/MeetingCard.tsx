@@ -94,7 +94,7 @@ const MeetingCard = ({
         }
       }}
     >
-      <Box row alignItems="center" my={8}>
+      <Box row alignItems="center" my={2} py={8}>
         {/* The accent */}
         {accent && <Box h="100%" w={3} bg={theme.colors.primary700} mr={10} />}
         <Box
