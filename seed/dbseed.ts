@@ -189,6 +189,7 @@ function addParticipants() {
             username: user.username,
             url_thumbnail: user.url_thumbnail,
             uid: user.uid,
+            joinedAt: faker.date.past().toISOString(),
           } as ParticipantFields);
         await db
           .collection("users")

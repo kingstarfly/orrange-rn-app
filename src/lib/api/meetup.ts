@@ -72,36 +72,31 @@ export const getSingleParticipant = async (
 
 export const getParticipants = async (meetupId: string) => {
   // Arrange host first, then co-organisers, then the rest
-  const participants: ParticipantFields[] = [];
+  let participants: ParticipantFields[] = [];
 
-  const query1 = await firestore
-    .collection(DB.MEETUPS)
-    .doc(meetupId)
-    .collection(DB.PARTICIPANTS)
-    .where("isHost", "==", true)
-    .get();
-
-  query1.forEach((doc) => participants.push(doc.data() as ParticipantFields)); // This is the host.
-
-  const query2 = await firestore
-    .collection(DB.MEETUPS)
-    .doc(meetupId)
-    .collection(DB.PARTICIPANTS)
-    .where("isCoOrganiser", "==", true)
-    .get();
-
-  query2.forEach((doc) => participants.push(doc.data() as ParticipantFields)); // This are the co-organisers.
-
-  const querySnapshot = await firestore
+  const query = await firestore
     .collection(DB.MEETUPS)
     .doc(meetupId)
     .collection(DB.PARTICIPANTS)
     .get();
 
-  querySnapshot.forEach((doc) => {
+  query.forEach((doc) => {
     participants.push(doc.data() as ParticipantFields);
   });
-  return participants;
+
+  // Sort by joined date first
+  participants.sort((a, b) =>
+    compareAsc(parseISO(a.joinedAt), parseISO(b.joinedAt))
+  );
+
+  // Re arrange
+  let host = participants.find((p) => p.isHost);
+  let coOrganisers = participants.filter((p) => p.isCoOrganiser);
+  let rest = participants.filter((p) => !p.isHost && !p.isCoOrganiser);
+
+  let sortedPartcipants = [host, ...coOrganisers, ...rest];
+
+  return sortedPartcipants;
 };
 
 export const getPendingParticipants = async (meetupId: string) => {
@@ -257,7 +252,11 @@ export const getPreferredDurations = async (
     .doc(userId)
     .get();
 
-  const { preferredDurations } = doc.data() as ParticipantFields;
+  let { preferredDurations } = doc.data() as ParticipantFields;
+  // Sort in asc order
+  preferredDurations.sort((a, b) =>
+    compareAsc(parseISO(a.startAt), parseISO(b.startAt))
+  );
   return preferredDurations;
 };
 
