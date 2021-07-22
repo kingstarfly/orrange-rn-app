@@ -1,5 +1,6 @@
 import { userData } from "constants/mockdata";
 import {
+  differenceInMinutes,
   eachMinuteOfInterval,
   intervalToDuration,
   parse,
@@ -38,6 +39,10 @@ export const getInitials = (name: string) => {
 
   // return maximum first two only
   return initials.length > 2 ? initials.slice(0, 2) : initials;
+};
+
+export const getMinutesFromStartOfDay = (d: Date) => {
+  return differenceInMinutes(d, startOfDay(d));
 };
 
 export const convertUserToPal = (user: UserData | OtherUser): PalFields => {

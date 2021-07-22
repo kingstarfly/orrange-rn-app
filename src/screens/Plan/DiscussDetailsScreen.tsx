@@ -385,8 +385,7 @@ const DiscussDetailsScreen = () => {
                   return (
                     <DateTimeRowComponent
                       key={index}
-                      start={parseISO(preferredDuration.startAt)}
-                      end={parseISO(preferredDuration.endAt)}
+                      data={preferredDuration}
                       readOnly
                     />
                   );

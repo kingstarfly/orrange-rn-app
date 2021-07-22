@@ -7,4 +7,5 @@ export enum DB {
   SUGGESTIONS = "suggestions",
   PARTICIPANTS = "participants",
   PENDING_PARTICIPANTS = "pendingParticipants",
+  PREFERRED_DURATIONS = "preferredDurations",
 }

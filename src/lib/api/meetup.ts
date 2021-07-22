@@ -22,6 +22,7 @@ import {
 } from "types/types";
 import { DB } from "./dbtypes";
 
+/*
 export async function getAllPreferredDurationsFromMeeting(
   meetupId: string
 ): Promise<PreferredDuration[]> {
@@ -36,6 +37,7 @@ export async function getAllPreferredDurationsFromMeeting(
     let participantDetails = doc.data() as ParticipantFields;
     participantDetails.preferredDurations.forEach((dur) => {
       durations.push({
+        userUid: participantDetails.uid,
         username: participantDetails.username,
         startAt: dur.startAt,
         endAt: dur.endAt,
@@ -44,6 +46,7 @@ export async function getAllPreferredDurationsFromMeeting(
   });
   return durations;
 }
+*/
 /*
   meetingInfo: MeetupFields;
   participants: ParticipantFields[];
@@ -296,46 +299,64 @@ export const addPreferredDuration = async (
         firebaseApp.firestore.FieldValue.arrayUnion(prefDuration),
     });
 
-  // 2. Add to meetup's meetup timings array
-  let query = await firestore.collection(DB.MEETUPS).doc(meetupId).get();
-  let { meetupTimings } = query.data() as MeetupFields;
-  // 2.a Get the datestring, so we know which dayTiming to change.
-  const dateISO = startOfDay(parseISO(prefDuration.startAt)).toISOString();
-  const indexToChange = meetupTimings?.findIndex((e) => e.date === dateISO);
+  // // 2. Add to meetup's meetup timings array
+  // let query = await firestore.collection(DB.MEETUPS).doc(meetupId).get();
+  // let { meetupTimings } = query.data() as MeetupFields;
+  // // 2.a Get the datestring, so we know which dayTiming to change.
+  // const dateISO = startOfDay(parseISO(prefDuration.startAt)).toISOString();
+  // const indexToChange = meetupTimings?.findIndex((e) => e.date === dateISO);
 
-  let dayTimingToChange: DayTimings;
-  if (indexToChange === -1) {
-    // Construct new dayTiming
-    dayTimingToChange = { date: dateISO, startTimings: {} };
-    let startTimings = eachMinuteOfInterval(
-      {
-        start: startOfDay(parseISO(prefDuration.startAt)),
-        end: endOfDay(parseISO(prefDuration.startAt)),
-      },
-      { step: 30 }
-    );
-    startTimings.forEach((timing) => {
-      dayTimingToChange.startTimings[timing.toISOString()] = 0;
-    });
-  } else {
-    dayTimingToChange = meetupTimings[indexToChange];
-  }
+  // let dayTimingToChange: DayTimings;
+  // if (indexToChange === -1) {
+  //   // Construct new dayTiming
+  //   dayTimingToChange = { date: dateISO, startTimings: {} };
+  //   let startTimings = eachMinuteOfInterval(
+  //     {
+  //       start: startOfDay(parseISO(prefDuration.startAt)),
+  //       end: endOfDay(parseISO(prefDuration.startAt)),
+  //     },
+  //     { step: 30 }
+  //   );
+  //   startTimings.forEach((timing) => {
+  //     dayTimingToChange.startTimings[timing.toISOString()] = 0;
+  //   });
+  // } else {
+  //   dayTimingToChange = meetupTimings[indexToChange];
+  // }
 
-  const newDayTiming = insertPreferredDurationToDayTiming(
-    prefDuration,
-    dayTimingToChange
-  );
+  // let dayTimingToChange: DayTimings;
+  // if (indexToChange === -1) {
+  //   // Construct new dayTiming
+  //   dayTimingToChange = { date: dateISO, startTimings: {} };
+  //   let startTimings = eachMinuteOfInterval(
+  //     {
+  //       start: startOfDay(parseISO(prefDuration.startAt)),
+  //       end: endOfDay(parseISO(prefDuration.startAt)),
+  //     },
+  //     { step: 30 }
+  //   );
+  //   startTimings.forEach((timing) => {
+  //     dayTimingToChange.startTimings[timing.toISOString()] = 0;
+  //   });
+  // } else {
+  //   dayTimingToChange = meetupTimings[indexToChange];
+  // }
 
-  if (indexToChange === -1) {
-    meetupTimings.push(newDayTiming);
-  } else {
-    meetupTimings[indexToChange] = newDayTiming;
-  }
+  // const newDayTiming = insertPreferredDurationToDayTiming(
+  //   prefDuration,
+  //   dayTimingToChange
+  // );
 
-  await firestore
-    .collection(DB.MEETUPS)
-    .doc(meetupId)
-    .update({ meetupTimings: meetupTimings });
+  // if (indexToChange === -1) {
+  //   meetupTimings.push(newDayTiming);
+  // } else {
+  //   meetupTimings[indexToChange] = newDayTiming;
+  // }
+
+  // await firestore
+  //   .collection(DB.MEETUPS)
+  //   .doc(meetupId)
+  //   .update({ meetupTimings: meetupTimings });
 };
 
 export const deletePreferredDuration = async (
@@ -343,41 +364,41 @@ export const deletePreferredDuration = async (
   meetupId: string,
   userId: string
 ) => {
-  // 1. Update meetup's new timing array
-  // Get old timing array
-  const { meetupTimings } = (
-    await firestore.collection(DB.MEETUPS).doc(meetupId).get()
-  ).data() as MeetupFields;
-  const indexToChange = meetupTimings?.findIndex(
-    (e) => e.date === startOfDay(parseISO(prefDuration.startAt)).toISOString()
-  );
-  // Modify the timing array
-  const old = meetupTimings[indexToChange].startTimings;
-  const { startAt, endAt } = prefDuration;
-  const startDate = parseISO(startAt);
-  const endDate = parseISO(endAt);
-  const startTimes = eachMinuteOfInterval(
-    {
-      start: startDate,
-      end: endDate,
-    },
-    { step: 30 }
-  ).slice(0, -1);
-  startTimes.forEach((startTime) => {
-    let startTimeString = startTime.toISOString();
-    old[startTimeString] = old[startTimeString] - 1;
-  });
-  // Check if all timings are empty in this day. If yes, then just delete this.
-  if (Object.values(old).every((e) => e === 0)) {
-    meetupTimings.splice(indexToChange, 1);
-  } else {
-    meetupTimings[indexToChange].startTimings = old;
-  }
-  // Save the timing array
-  await firestore
-    .collection(DB.MEETUPS)
-    .doc(meetupId)
-    .update({ meetupTimings: meetupTimings });
+  // // 1. Update meetup's new timing array
+  // // Get old timing array
+  // const { meetupTimings } = (
+  //   await firestore.collection(DB.MEETUPS).doc(meetupId).get()
+  // ).data() as MeetupFields;
+  // const indexToChange = meetupTimings?.findIndex(
+  //   (e) => e.date === startOfDay(parseISO(prefDuration.startAt)).toISOString()
+  // );
+  // // Modify the timing array
+  // const old = meetupTimings[indexToChange].startTimings;
+  // const { startAt, endAt } = prefDuration;
+  // const startDate = parseISO(startAt);
+  // const endDate = parseISO(endAt);
+  // const startTimes = eachMinuteOfInterval(
+  //   {
+  //     start: startDate,
+  //     end: endDate,
+  //   },
+  //   { step: 30 }
+  // ).slice(0, -1);
+  // startTimes.forEach((startTime) => {
+  //   let startTimeString = startTime.toISOString();
+  //   old[startTimeString] = old[startTimeString] - 1;
+  // });
+  // // Check if all timings are empty in this day. If yes, then just delete this.
+  // if (Object.values(old).every((e) => e === 0)) {
+  //   meetupTimings.splice(indexToChange, 1);
+  // } else {
+  //   meetupTimings[indexToChange].startTimings = old;
+  // }
+  // // Save the timing array
+  // await firestore
+  //   .collection(DB.MEETUPS)
+  //   .doc(meetupId)
+  //   .update({ meetupTimings: meetupTimings });
 
   // 2. Delete this preferred duration from participant
   // Get the preferredDurations array
@@ -393,7 +414,7 @@ export const deletePreferredDuration = async (
   // Modify
   const indexToChange2 = preferredDurations.findIndex(
     (e) =>
-      e.username === prefDuration.username &&
+      e.userUid === prefDuration.userUid &&
       e.startAt === prefDuration.startAt &&
       e.endAt === prefDuration.endAt
   );
@@ -433,7 +454,7 @@ export const createMeetup = async (
     startAt: null,
     endAt: null,
     isConfirmed: false,
-    meetupTimings: [],
+    // meetupTimings: [],
   } as MeetupFields;
 
   // Basic fields in meetup
@@ -449,6 +470,7 @@ export const createMeetup = async (
         url_thumbnail: pal.url_thumbnail,
         uid: pal.uid,
         preferredDurations: [],
+        joinedAt: new Date().toISOString(),
       } as ParticipantFields);
   });
 
@@ -458,10 +480,11 @@ export const createMeetup = async (
     .doc(currentUser.uid)
     .set({
       isHost: true,
-      preferredDurations: [],
       url_thumbnail: currentUser.url_thumbnail,
       username: currentUser.username,
       uid: currentUser.uid,
+      joinedAt: new Date().toISOString(),
+      preferredDurations: [],
     } as ParticipantFields);
 
   // Add meetup id to user's data
@@ -588,4 +611,41 @@ export const leaveMeetup = async (userUid: string, meetupId: string) => {
     .update({
       meetup_ids: firebaseApp.firestore.FieldValue.arrayRemove(meetupId),
     });
+};
+
+export const modifyPreferredDuration = async (
+  meetupId: string,
+  userUid: string,
+  id: string,
+  start: Date,
+  end: Date
+) => {
+  // Find the old duration
+  const doc = await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PARTICIPANTS)
+    .doc(userUid)
+    .collection(DB.PREFERRED_DURATIONS)
+    .doc(id);
+
+  await doc.update({
+    startAt: start.toISOString(),
+    endAt: end.toISOString(),
+  } as Pick<PreferredDuration, "startAt" | "endAt">);
+};
+
+export const updatePreferredDurations = async (
+  meetupId: string,
+  userUid: string,
+  durs: PreferredDuration[]
+) => {
+  firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PARTICIPANTS)
+    .doc(userUid)
+    .update({
+      preferredDurations: durs,
+    } as Pick<ParticipantFields, "preferredDurations">);
 };

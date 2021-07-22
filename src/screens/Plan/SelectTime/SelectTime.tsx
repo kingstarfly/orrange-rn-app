@@ -20,13 +20,15 @@ import {
   deletePreferredDuration,
   getMeetupTimings,
   getPreferredDurations,
+  modifyPreferredDuration,
+  updatePreferredDurations,
 } from "lib/api/meetup";
 import { useAuth } from "lib/auth";
-import { addHours, isBefore, parseISO } from "date-fns";
+import { addHours, isBefore, parseISO, isAfter } from "date-fns";
 import HeaderComponent from "screens/Plan/Components/SectionHeaderComponent";
 import MainTimeGridSelector from "./TimeGridSelector/MainTimeGridSelector";
 import Loading from "components/Loading";
-import { isAfter } from "date-fns/esm";
+import uuid from "react-native-uuid";
 
 const SelectTime = ({
   navigation,
@@ -83,8 +85,15 @@ const SelectTime = ({
   const handleEditPress = () => {
     setIsEditMode(true);
   };
-  const handleDonePress = () => {
+  const handleDonePress = async () => {
+    // Also, save all these preferred documents
+    await updatePreferredDurations(
+      meetupId,
+      authData.userData.uid,
+      preferredDurations
+    );
     setIsEditMode(false);
+    await fetchAndSetData();
   };
   let rightComponent = (
     <TouchableOpacity
@@ -94,8 +103,10 @@ const SelectTime = ({
     </TouchableOpacity>
   );
 
-  const onAddPreferredDuration = async (startTime: Date, endTime: Date) => {
-    if (!startTime || !endTime || isAfter(startTime, endTime)) {
+  const onAddPreferredDuration = async (prefDuration: PreferredDuration) => {
+    const { startAt, endAt } = prefDuration;
+
+    if (!startAt || !endAt || isAfter(parseISO(startAt), parseISO(endAt))) {
       Alert.alert("", "Please input a valid time period.");
       return;
     }
@@ -110,15 +121,13 @@ const SelectTime = ({
         {
           text: "Add",
           onPress: async () => {
-            // Construct preferredDuration object
-            const preferredDuration: PreferredDuration = {
-              username: authData.userData.username,
-              startAt: startTime.toISOString(),
-              endAt: endTime.toISOString(),
-            };
+            // Fill up the object with all other fields other than start and end
+            prefDuration.id = uuid.v4() as string;
+            prefDuration.userUid = authData.userData.uid;
+            prefDuration.username = authData.userData.username;
             try {
               await addPreferredDuration(
-                preferredDuration,
+                prefDuration,
                 meetupId,
                 authData.userData.uid
               );
@@ -135,7 +144,7 @@ const SelectTime = ({
     );
   };
 
-  const onDeletePreferredDuration = async (startTime: Date, endTime: Date) => {
+  const onDeletePreferredDuration = async (prefDuration: PreferredDuration) => {
     await AlertAsync(
       "",
       "Do you want to delete this timing?",
@@ -147,16 +156,9 @@ const SelectTime = ({
         {
           text: "Delete",
           onPress: async () => {
-            // Construct preferredDuration object
-            const preferredDuration: PreferredDuration = {
-              username: authData.userData.username,
-              startAt: startTime.toISOString(),
-              endAt: endTime.toISOString(),
-            };
-
             try {
               await deletePreferredDuration(
-                preferredDuration,
+                prefDuration,
                 meetupId,
                 authData.userData.uid
               );
@@ -185,8 +187,7 @@ const SelectTime = ({
           <HeaderComponent title="Add new timing" />
 
           <DateTimeRowComponent
-            start={null}
-            end={null}
+            data={null}
             onButtonPress={onAddPreferredDuration}
             rightButtonType="add"
           />
@@ -203,10 +204,15 @@ const SelectTime = ({
                   return (
                     <DateTimeRowComponent
                       key={index}
-                      start={parseISO(preferredDuration.startAt)}
-                      end={parseISO(preferredDuration.endAt)}
+                      data={preferredDuration}
+                      setData={(oldId: string, newDur: PreferredDuration) =>
+                        setPreferredDurations((old) => {
+                          return [...old.filter((e) => e.id !== oldId), newDur];
+                        })
+                      }
                       rightButtonType={isEditMode ? "delete" : null}
                       onButtonPress={onDeletePreferredDuration}
+                      readOnly={!isEditMode}
                     />
                   );
                 })}

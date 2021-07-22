@@ -4,6 +4,7 @@ import {
   PalRequestFields,
   ParticipantFields,
   PendingParticipantFields,
+  PreferredDuration,
   SuggestionFields,
   UserData,
 } from "types/types";

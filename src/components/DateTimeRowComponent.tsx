@@ -5,80 +5,149 @@ import { Div, WINDOW_WIDTH } from "react-native-magnus";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { BodyTextRegular, CaptionText, MiniText } from "components/StyledText";
 import {
+  add,
   addHours,
-  differenceInHours,
+  addMinutes,
   format,
   isBefore,
   isSameDay,
+  startOfDay,
   parseISO,
   roundToNearestMinutes,
   subHours,
 } from "date-fns";
 import { PhosphorIcon } from "constants/Icons";
+import { PreferredDuration } from "types/types";
+import { getMinutesFromStartOfDay } from "lib/helpers";
 
 interface Props {
-  start: Date;
-  end: Date;
+  data: PreferredDuration;
+  setData: (oldId: string, newDur: PreferredDuration) => void;
   rightButtonType?: RightButtonType;
-  onButtonPress?: (startTime: Date, endTime: Date) => Promise<void>;
+  onButtonPress?: (prefDuration: PreferredDuration) => Promise<void>;
   readOnly?: boolean;
 }
 
 type RightButtonType = "add" | "delete" | "default";
+type TimeType = "start" | "end";
 
 const DateTimeRowComponent = ({
-  start,
-  end,
+  data,
+  setData,
   rightButtonType,
   onButtonPress,
   readOnly,
 }: Props) => {
-  const [fromDate, setFromDate] = useState<Date>(start);
-  const [fromMode, setFromMode] = useState("date");
-  const [showFromDateTimePicker, setShowFromDateTimePicker] = useState(false);
+  const [startDate, setStartDate] = useState<Date>(
+    data?.startAt ? parseISO(data.startAt) : null
+  );
 
-  const [toDate, setToDate] = useState<Date>(end);
-  const [toMode, setToMode] = useState("date");
-  const [showToDateTimePicker, setShowToDateTimePicker] = useState(false);
+  const [startTime, setStartTime] = useState<Date>(
+    data?.startAt ? parseISO(data.startAt) : null
+  );
+  const [endTime, setEndTime] = useState<Date>(
+    data?.endAt ? parseISO(data.endAt) : null
+  );
 
-  const onChangeFrom = (_, selectedDate: Date) => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [timeType, setTimeType] = useState<TimeType>("start");
+  const [mode, setMode] = useState<string>("date");
+
+  const onChangeDate = (_, selectedDate: Date) => {
     if (!selectedDate) {
-      setShowFromDateTimePicker(false);
+      setShowDatePicker(false);
+      setMode("date");
+      setTimeType("start");
       return;
     }
-    const currentDate = selectedDate || fromDate;
-    if (fromMode === "date") {
-      setFromDate(currentDate);
-      setFromMode("time");
-      return;
+    // setShowDatePicker(false);
+    if (mode === "date") {
+      setStartDate(startOfDay(selectedDate));
+    } else if (timeType === "start") {
+      // setTimeType("end");
+      setShowDatePicker(false);
+
+      if (
+        !endTime ||
+        getMinutesFromStartOfDay(selectedDate) >=
+          getMinutesFromStartOfDay(endTime)
+      ) {
+        // Set fromDate to be one hour before by default
+        setEndTime(addHours(selectedDate, 1));
+      }
+
+      setStartTime(selectedDate);
+    } else {
+      setShowDatePicker(false);
+      setMode("date");
+      // setTimeType("start");
+
+      if (
+        getMinutesFromStartOfDay(startTime) >=
+        getMinutesFromStartOfDay(selectedDate)
+      ) {
+        // Set fromDate to be one hour before by default
+        setStartTime(subHours(selectedDate, 1));
+      }
+      setEndTime(selectedDate);
     }
-    // Checks here
-    if (isBefore(toDate, currentDate) || !isSameDay(fromDate, toDate)) {
-      setToDate(addHours(currentDate, 1));
-    }
-    setShowFromDateTimePicker(false); // closes the picker
-    setFromDate(currentDate);
+
+    // Regardless of which mode, need to update parent
+    setData(data.id, {
+      id: data.id,
+      startAt:
+        addMinutes(
+          startOfDay(startDate),
+          getMinutesFromStartOfDay(startTime)
+        ).toISOString() || "",
+      endAt:
+        addMinutes(
+          startOfDay(startDate),
+          getMinutesFromStartOfDay(endTime)
+        ).toISOString() || "",
+      userUid: data.userUid,
+      username: data.username,
+    });
   };
 
-  const onChangeTo = (_, selectedDate: Date) => {
-    if (!selectedDate) {
-      setShowToDateTimePicker(false);
-      return;
-    }
+  // const onChangeStartTime = (_, selectedDate: Date) => {
+  //   if (!selectedDate) {
+  //     setShowStartTimePicker(false);
+  //     return;
+  //   }
+  //   setShowStartTimePicker(false);
+  //   setShowEndTimePicker(true);
+  //   setStartTime(selectedDate);
+  // };
 
-    const currentDate = selectedDate || toDate;
-    if (toMode === "date") {
-      setToMode("time");
-      return;
-    }
-    // Checks here
-    if (isBefore(currentDate, fromDate) || !isSameDay(fromDate, toDate)) {
-      // Set fromDate to be one hour before by default
-      setFromDate(subHours(currentDate, 1));
-    }
-    setShowToDateTimePicker(false); // closes the picker
-    setToDate(currentDate);
-  };
+  // const onChangeEndTime = (_, selectedDate: Date) => {
+  //   if (!selectedDate) {
+  //     setShowEndTimePicker(false);
+  //     return;
+  //   }
+
+  //   // Checks here
+  //   if (
+  //     getMinutesFromStartOfDay(startTime) > getMinutesFromStartOfDay(endTime)
+  //   ) {
+  //     // Set fromDate to be one hour before by default
+  //     setStartTime(subHours(selectedDate, 1));
+  //   }
+
+  //   setShowEndTimePicker(false); // closes the picker
+  //   setEndTime(selectedDate);
+
+  //   if (saveOnEdit) {
+  //     handleSaveOnEdit(
+  //       data?.id,
+  //       addMinutes(startOfDay(startDate), getMinutesFromStartOfDay(startTime)),
+  //       addMinutes(
+  //         startOfDay(startDate),
+  //         getMinutesFromStartOfDay(selectedDate)
+  //       )
+  //     );
+  //   }
+  // };
 
   return (
     <Div
@@ -88,39 +157,43 @@ const DateTimeRowComponent = ({
       overflow="hidden"
       mb={8}
     >
-      <Div
-        borderColor={theme.colors.linegray}
-        borderWidth={1}
-        w={WINDOW_WIDTH * 0.45}
-        h={35}
-        py={4}
-        rounded={5}
-        justifyContent="center"
-        alignItems="center"
+      <Pressable
+        disabled={readOnly}
+        onPress={() => {
+          setMode("date");
+          setTimeType("start");
+          setShowDatePicker(true);
+        }}
       >
-        <Pressable
-          disabled={readOnly}
-          onPress={() => {
-            setFromMode("date");
-            setShowFromDateTimePicker(true);
-          }}
+        <Div
+          borderColor={theme.colors.linegray}
+          borderWidth={1}
+          w={WINDOW_WIDTH * 0.45}
+          h={35}
+          py={4}
+          rounded={5}
+          justifyContent="center"
+          alignItems="center"
         >
-          {!fromDate ? (
+          {!startDate ? (
             <BodyTextRegular color={theme.colors.textgray200}>
               Tap to edit
             </BodyTextRegular>
           ) : (
-            <BodyTextRegular>{format(fromDate, "EEEE, d MMM")}</BodyTextRegular>
+            <BodyTextRegular>
+              {format(startDate, "EEEE, d MMM")}
+            </BodyTextRegular>
           )}
-        </Pressable>
-      </Div>
+        </Div>
+      </Pressable>
 
       <Div row alignItems="center" justifyContent="flex-end">
         <Pressable
           disabled={readOnly}
           onPress={() => {
-            setFromMode("time");
-            setShowFromDateTimePicker(true);
+            setTimeType("start");
+            setMode("time");
+            setShowDatePicker(true);
           }}
         >
           <Div
@@ -132,10 +205,10 @@ const DateTimeRowComponent = ({
             justifyContent="center"
             alignItems="center"
           >
-            {!fromDate ? (
+            {!startTime ? (
               <CaptionText>-- : --</CaptionText>
             ) : (
-              <CaptionText>{format(fromDate, "HH:mm")}</CaptionText>
+              <CaptionText>{format(startTime, "HH:mm")}</CaptionText>
             )}
           </Div>
         </Pressable>
@@ -145,8 +218,9 @@ const DateTimeRowComponent = ({
         <Pressable
           disabled={readOnly}
           onPress={() => {
-            setToMode("time");
-            setShowToDateTimePicker(true);
+            setTimeType("end");
+            setMode("time");
+            setShowDatePicker(true);
           }}
         >
           <Div
@@ -158,13 +232,14 @@ const DateTimeRowComponent = ({
             justifyContent="center"
             alignItems="center"
           >
-            {!toDate ? (
+            {!endTime ? (
               <CaptionText>-- : --</CaptionText>
             ) : (
-              <CaptionText>{format(toDate, "HH:mm")}</CaptionText>
+              <CaptionText>{format(endTime, "HH:mm")}</CaptionText>
             )}
           </Div>
         </Pressable>
+
         {rightButtonType && rightButtonType !== "default" && (
           <TouchableOpacity
             disabled={readOnly}
@@ -172,10 +247,26 @@ const DateTimeRowComponent = ({
               marginLeft: 8,
             }}
             onPress={() => {
-              onButtonPress(fromDate, toDate).then(() => {
+              if (!startDate || !startTime || !endTime) {
+                return;
+              }
+              onButtonPress({
+                id: data?.id,
+                startAt: addMinutes(
+                  startOfDay(startDate),
+                  getMinutesFromStartOfDay(startTime)
+                ).toISOString(),
+                endAt: addMinutes(
+                  startOfDay(startDate),
+                  getMinutesFromStartOfDay(endTime)
+                ).toISOString(),
+                userUid: data?.userUid,
+                username: data?.username,
+              } as PreferredDuration).then(() => {
                 if (rightButtonType === "add") {
-                  setFromDate(null);
-                  setToDate(null);
+                  setStartDate(null);
+                  setStartTime(null);
+                  setEndTime(null);
                 }
               });
             }}
@@ -197,31 +288,46 @@ const DateTimeRowComponent = ({
         )}
       </Div>
 
-      {showFromDateTimePicker && (
+      {showDatePicker && (
         <DateTimePicker
           minuteInterval={30}
           value={
-            fromDate || roundToNearestMinutes(new Date(), { nearestTo: 30 })
+            (timeType === "start" || mode === "date" ? startTime : endTime) ||
+            roundToNearestMinutes(new Date(), { nearestTo: 30 })
           }
           //@ts-ignore
-          mode={fromMode}
+          mode={mode}
           is24Hour={true}
           display="spinner"
-          onChange={onChangeFrom}
+          onChange={onChangeDate}
         />
       )}
 
-      {showToDateTimePicker && (
+      {/* {showStartTimePicker && (
         <DateTimePicker
           minuteInterval={30}
-          value={toDate || roundToNearestMinutes(new Date(), { nearestTo: 30 })}
-          //@ts-ignore
-          mode={toMode}
+          value={
+            startTime || roundToNearestMinutes(new Date(), { nearestTo: 30 })
+          }
+          mode="time"
           is24Hour={true}
           display="spinner"
-          onChange={onChangeTo}
+          onChange={onChangeStartTime}
         />
       )}
+
+      {showEndTimePicker && (
+        <DateTimePicker
+          minuteInterval={30}
+          value={
+            endTime || roundToNearestMinutes(new Date(), { nearestTo: 30 })
+          }
+          mode="time"
+          is24Hour={true}
+          display="spinner"
+          onChange={onChangeEndTime}
+        />
+      )} */}
     </Div>
   );
 };

@@ -56,14 +56,16 @@ export type ParticipantFields = {
   uid: string;
   username: string;
   url_thumbnail: string;
-  preferredDurations: PreferredDuration[];
+  preferredDurations?: PreferredDuration[];
   joinedAt?: string;
   isHost?: boolean;
   isCoOrganiser?: boolean;
 };
 
 export type PreferredDuration = {
+  id: string;
   username: string;
+  userUid: string;
   startAt: string;
   endAt: string;
 };
@@ -104,7 +106,7 @@ export type MeetupFields = {
   isConfirmed: boolean;
   isDeleted?: boolean;
   coOrganisers?: string[];
-  meetupTimings?: DayTimings[];
+  // meetupTimings?: DayTimings[];
 };
 
 export type AuthStackParamList = {
