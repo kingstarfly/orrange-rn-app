@@ -20,7 +20,6 @@ import {
   deletePreferredDuration,
   getMeetupTimings,
   getPreferredDurations,
-  modifyPreferredDuration,
   updatePreferredDurations,
 } from "lib/api/meetup";
 import { useAuth } from "lib/auth";

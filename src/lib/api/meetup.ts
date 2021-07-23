@@ -236,12 +236,25 @@ export const addSuggestion = async (
   await doc.set(newSuggestion);
 };
 
-export const getMeetupTimings = async (meetupId: string) => {
-  const doc = await firestore.collection(DB.MEETUPS).doc(meetupId).get();
-  const { meetupTimings } = doc.data() as MeetupFields;
-  // Sort meetup timings by date
-  meetupTimings?.sort((a, b) => compareAsc(parseISO(a.date), parseISO(b.date)));
-  return meetupTimings;
+export const getAllPreferredDurationsFromMeeting = async (meetupId: string) => {
+  // TODO: Should read all preferredDurations from all participants, into an array. Return this. The conversion to the weird format will be handled by the grid component.
+  const query = await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PARTICIPANTS)
+    .get();
+
+  let durs: PreferredDuration[] = [];
+  query.forEach((doc) => {
+    const participant = doc.data() as ParticipantFields;
+    durs.push(...participant.preferredDurations);
+  });
+
+  // const doc = await firestore.collection(DB.MEETUPS).doc(meetupId).get();
+  // const { meetupTimings } = doc.data() as MeetupFields;
+  // // Sort meetup timings by date
+  // meetupTimings?.sort((a, b) => compareAsc(parseISO(a.date), parseISO(b.date)));
+  // return meetupTimings;
 };
 
 export const getPreferredDurations = async (
@@ -611,35 +624,6 @@ export const leaveMeetup = async (userUid: string, meetupId: string) => {
     .update({
       meetup_ids: firebaseApp.firestore.FieldValue.arrayRemove(meetupId),
     });
-};
-
-export const modifyPreferredDuration = async (
-  meetupId: string,
-  userUid: string,
-  id: string,
-  start: Date,
-  end: Date
-) => {
-  // Find the old duration
-  const { preferredDurations } = (
-    await firestore
-      .collection(DB.MEETUPS)
-      .doc(meetupId)
-      .collection(DB.PARTICIPANTS)
-      .doc(userUid)
-      .get()
-  ).data() as ParticipantFields;
-
-  // Replace that element
-  const ind = preferredDurations.findIndex((d) => d.id === id);
-  preferredDurations[ind] = {
-    username,
-  };
-
-  await doc.update({
-    startAt: start.toISOString(),
-    endAt: end.toISOString(),
-  } as Pick<PreferredDuration, "startAt" | "endAt">);
 };
 
 export const updatePreferredDurations = async (
