@@ -28,7 +28,8 @@ interface Props {
   rightButtonType?: RightButtonType;
   onButtonPress?: (prefDuration: PreferredDuration) => Promise<void>;
   editable?: boolean;
-  onDataChange?: (id: string, startTime: Date, endTime: Date) => void;
+  onDataChange?: (prefDur: PreferredDuration) => void;
+  saveOnEdit?: boolean;
 }
 
 type RightButtonType = "add" | "delete" | "default";
@@ -39,6 +40,7 @@ const DateTimeRowComponent = ({
   onButtonPress,
   editable,
   onDataChange,
+  saveOnEdit,
 }: Props) => {
   const [startTime, setStartTime] = useState<Date>(
     data?.startAt ? parseISO(data.startAt) : null
@@ -52,9 +54,8 @@ const DateTimeRowComponent = ({
 
   const [startPickerMode, setStartPickerMode] = useState<string>("date");
 
-  const onChangeStartTime = (_, selected) => {
+  const onChangeStartTime = (_, selected: Date) => {
     if (!selected) {
-      console.log("Nothing was selected");
       setShowStartPicker(false);
       return;
     }
@@ -71,20 +72,31 @@ const DateTimeRowComponent = ({
     // Update state
     setStartTime(selected);
 
+    // workaround for not waiting for state update for onDataChange.
+    let localEndTime = endTime;
+
     // If end time is invalid, set end time to 1hr after
     if (
       !endTime ||
       getMinutesFromStartOfDay(endTime) <= getMinutesFromStartOfDay(selected)
     ) {
+      localEndTime = addMinutes(selected, 60);
       setEndTime(addMinutes(selected, 60));
+    }
+
+    // Call onDataChange
+    if (saveOnEdit) {
+      onDataChange({
+        ...data,
+        startAt: selected.toISOString(),
+        endAt: localEndTime.toISOString() || data.endAt,
+      });
     }
   };
 
-  const onChangeEndTime = (_, selected) => {
+  const onChangeEndTime = (_, selected: Date) => {
     if (!selected) {
-      console.log("Nothing was selected");
       setShowEndPicker(false);
-
       return;
     }
 
@@ -93,6 +105,9 @@ const DateTimeRowComponent = ({
     // 2. Add to start of day of startTime.
     // 3. Profit
 
+    // Close the picker to prevent double pop up.
+    setShowEndPicker(false);
+
     const mins = getMinutesFromStartOfDay(selected);
     const newDate = startTime
       ? addMinutes(startOfDay(startTime), mins)
@@ -100,15 +115,25 @@ const DateTimeRowComponent = ({
     // Update state
     setEndTime(newDate);
 
-    // Close the picker to prevent double pop up.
-    setShowEndPicker(false);
+    // workaround for not waiting for state update for onDataChange.
+    let localStartTime = startTime;
 
     // If start time is invalid, set start time to 1hr before
     if (
       !startTime ||
       getMinutesFromStartOfDay(selected) <= getMinutesFromStartOfDay(startTime)
     ) {
+      localStartTime = subMinutes(selected, 60);
       setStartTime(subMinutes(selected, 60));
+    }
+
+    // Call onDataChange
+    if (saveOnEdit) {
+      onDataChange({
+        ...data,
+        startAt: localStartTime.toISOString() || data.startAt,
+        endAt: newDate.toISOString(),
+      });
     }
   };
 

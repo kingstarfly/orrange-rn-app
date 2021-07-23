@@ -176,23 +176,19 @@ const SelectTime = ({
   };
 
   // Just updates local state of preferredDurations. Does not call API.
-  const onDataChange = (id: string, startTime: Date, endTime: Date) => {
+  const onDataChange = ({ id, startAt, endAt }: PreferredDuration) => {
     setPreferredDurations((old) => {
-      const index = old.findIndex((e) => e.id === id);
-      const toBeDeleted = old[index];
-      old.splice(index, 1, {
+      const copy = [...old];
+      const index = copy.findIndex((e) => e.id === id);
+      const toBeDeleted = copy[index];
+      copy.splice(index, 1, {
         ...toBeDeleted,
-        startAt: startTime.toISOString(),
-        endAt: endTime.toISOString(),
+        startAt: startAt,
+        endAt: endAt,
       });
-      return old;
+      return copy;
     });
   };
-
-  React.useEffect(() => {
-    console.log("Pref Durs changed");
-    console.log(preferredDurations);
-  }, [preferredDurations]);
 
   return (
     <Container avoidHeader>
@@ -230,6 +226,7 @@ const SelectTime = ({
                       rightButtonType={isEditMode ? "delete" : null}
                       onButtonPress={onDeletePreferredDuration}
                       editable={isEditMode}
+                      saveOnEdit={true}
                     />
                   );
                 })}
