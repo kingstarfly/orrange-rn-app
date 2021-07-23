@@ -621,13 +621,20 @@ export const modifyPreferredDuration = async (
   end: Date
 ) => {
   // Find the old duration
-  const doc = await firestore
-    .collection(DB.MEETUPS)
-    .doc(meetupId)
-    .collection(DB.PARTICIPANTS)
-    .doc(userUid)
-    .collection(DB.PREFERRED_DURATIONS)
-    .doc(id);
+  const { preferredDurations } = (
+    await firestore
+      .collection(DB.MEETUPS)
+      .doc(meetupId)
+      .collection(DB.PARTICIPANTS)
+      .doc(userUid)
+      .get()
+  ).data() as ParticipantFields;
+
+  // Replace that element
+  const ind = preferredDurations.findIndex((d) => d.id === id);
+  preferredDurations[ind] = {
+    username,
+  };
 
   await doc.update({
     startAt: start.toISOString(),

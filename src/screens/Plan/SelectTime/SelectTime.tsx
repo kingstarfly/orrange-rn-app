@@ -110,6 +110,7 @@ const SelectTime = ({
       Alert.alert("", "Please input a valid time period.");
       return;
     }
+
     await AlertAsync(
       "",
       "Do you want to add this timing?",
@@ -174,6 +175,25 @@ const SelectTime = ({
     );
   };
 
+  // Just updates local state of preferredDurations. Does not call API.
+  const onDataChange = (id: string, startTime: Date, endTime: Date) => {
+    setPreferredDurations((old) => {
+      const index = old.findIndex((e) => e.id === id);
+      const toBeDeleted = old[index];
+      old.splice(index, 1, {
+        ...toBeDeleted,
+        startAt: startTime.toISOString(),
+        endAt: endTime.toISOString(),
+      });
+      return old;
+    });
+  };
+
+  React.useEffect(() => {
+    console.log("Pref Durs changed");
+    console.log(preferredDurations);
+  }, [preferredDurations]);
+
   return (
     <Container avoidHeader>
       <ScrollView
@@ -190,6 +210,7 @@ const SelectTime = ({
             data={null}
             onButtonPress={onAddPreferredDuration}
             rightButtonType="add"
+            editable={true}
           />
         </Box>
         <Box mt={28}>
@@ -205,14 +226,10 @@ const SelectTime = ({
                     <DateTimeRowComponent
                       key={index}
                       data={preferredDuration}
-                      setData={(oldId: string, newDur: PreferredDuration) =>
-                        setPreferredDurations((old) => {
-                          return [...old.filter((e) => e.id !== oldId), newDur];
-                        })
-                      }
+                      onDataChange={onDataChange}
                       rightButtonType={isEditMode ? "delete" : null}
                       onButtonPress={onDeletePreferredDuration}
-                      readOnly={!isEditMode}
+                      editable={isEditMode}
                     />
                   );
                 })}
