@@ -9,7 +9,6 @@ import Day from "./Day";
 import TimeLabels from "./TimeLabels";
 import { parseISO } from "date-fns/esm";
 import { DayTimings } from "types/types";
-import Loading from "components/Loading";
 import { BodyTextRegular, CaptionText } from "components/StyledText";
 import { theme } from "constants/theme";
 
@@ -44,8 +43,8 @@ const MainTimeGridSelector = ({ meetupTimings }: Props) => {
   return (
     <View style={{ flex: 1 }}>
       <Box row justifyContent="flex-start" left={60}>
-        {meetupTimings.map((timing) => {
-          let date = parseISO(timing.date);
+        {meetupTimings.map((dayTimings) => {
+          let date = parseISO(dayTimings.date);
           return (
             <Box alignItems="center" w={80}>
               <CaptionText
@@ -70,16 +69,11 @@ const MainTimeGridSelector = ({ meetupTimings }: Props) => {
         <Box flexDir="row">
           <TimeLabels startTime={START_TIME} endTime={END_TIME} />
           <ScrollView horizontal>
-            {meetupTimings?.map((day, index) => {
-              let theDate = parseISO(day.date);
-              let timingsData = day.startTimings;
+            {meetupTimings?.map((dayTimings, index) => {
               return (
                 <Day
                   key={index}
-                  date={theDate}
-                  timingsData={timingsData}
-                  startTime={START_TIME}
-                  endTime={END_TIME}
+                  dayTimings={dayTimings}
                   isRightMostDay={index === meetupTimings.length - 1}
                 />
               );

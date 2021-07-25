@@ -1,9 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import React from "react";
+import { Pressable } from "react-native";
 import { theme } from "constants/theme";
-import { add, format } from "date-fns";
-import { Box, Text } from "react-native-magnus";
-import { StartTimeMapToNumber } from "types/types";
+import { Box } from "react-native-magnus";
 
 const colourIntensity = [
   theme.colors.backgroundlight,
@@ -17,39 +15,29 @@ const colourIntensity = [
 ];
 
 type CellProps = {
-  start: Date;
   isBottomMostCell?: boolean;
   isRightMostCell?: boolean;
-  timingsData: StartTimeMapToNumber;
+  occupantsArr: string[][]; // Holds occupants for each half cell
 };
 
-type HalfCellProps = Pick<CellProps, "start"> & {
-  count: number;
+type HalfCellProps = {
+  occupants: string[];
 };
 
-const GridHalfCell = ({ start, count = 0 }: HalfCellProps) => {
-  let startTime = format(start, "HH:mm dd-MMM-yyyy");
+const GridHalfCell = ({ occupants = [] }: HalfCellProps) => {
+  const occupantsSet = new Set(occupants);
   return (
-    <Pressable onPress={() => console.log(startTime)}>
-      <Box bg={colourIntensity[count]} h={20} w={80} />
+    <Pressable>
+      <Box bg={colourIntensity[occupantsSet.size]} h={20} w={80} />
     </Pressable>
   );
 };
 
 const GridCell = ({
-  start,
   isRightMostCell,
   isBottomMostCell,
-  timingsData,
+  occupantsArr,
 }: CellProps) => {
-  let middle = add(start, { minutes: 30 });
-
-  const countA = timingsData?.[start.toISOString()];
-  const countB = timingsData?.[middle.toISOString()];
-
-  // console.log(`Count A: ${countA}`);
-  // console.log(`Count B: ${countB}`);
-
   return (
     <Box
       borderColor={theme.colors.linegray}
@@ -58,8 +46,9 @@ const GridCell = ({
       borderRightWidth={isRightMostCell ? 1.5 : 0}
       borderBottomWidth={isBottomMostCell ? 1 : 0}
     >
-      <GridHalfCell start={start} count={countA} />
-      <GridHalfCell start={middle} count={countB} />
+      {occupantsArr.map((occupants) => (
+        <GridHalfCell occupants={occupants} />
+      ))}
     </Box>
   );
 };

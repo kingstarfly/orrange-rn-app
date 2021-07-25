@@ -85,14 +85,9 @@ export type SuggestionFields = {
   createdAt: string;
 };
 
-// key is the start times from 0000 to 2400 hrs in ISOstring for that day. Value is the number of people attending that timeslot. (interval is half hour)
 export type DayTimings = {
   date: string;
-  startTimings: StartTimeMapToNumber;
-};
-
-export type StartTimeMapToNumber = {
-  [startTimeIso: string]: number;
+  startTimings: string[][]; // Keeps track of userUids that occupies this 30min slot.
 };
 
 export type MeetupFields = {

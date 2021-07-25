@@ -13,21 +13,21 @@ import {
 import { StackScreenProps } from "@react-navigation/stack";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { CaptionText } from "components/StyledText";
-import LargeButton from "components/LargeButton";
 import DateTimeRowComponent from "components/DateTimeRowComponent";
 import {
   addPreferredDuration,
   deletePreferredDuration,
-  getMeetupTimings,
+  getAllPreferredDurationsFromMeeting,
   getPreferredDurations,
   updatePreferredDurations,
 } from "lib/api/meetup";
 import { useAuth } from "lib/auth";
-import { addHours, isBefore, parseISO, isAfter } from "date-fns";
+import { addHours, isBefore, parseISO, isAfter, startOfDay } from "date-fns";
 import HeaderComponent from "screens/Plan/Components/SectionHeaderComponent";
 import MainTimeGridSelector from "./TimeGridSelector/MainTimeGridSelector";
 import Loading from "components/Loading";
 import uuid from "react-native-uuid";
+import { getMinutesFromStartOfDay } from "lib/helpers";
 
 const SelectTime = ({
   navigation,
@@ -64,8 +64,44 @@ const SelectTime = ({
   const fetchAndSetData = React.useCallback(async () => {
     setIsLoading(true);
     // get the data on meetupTimings to render on calendar Grid
-    const timings = await getMeetupTimings(meetupId);
-    setMeetupTimings(timings);
+    const preferredDurations = await getAllPreferredDurationsFromMeeting(
+      meetupId
+    );
+
+    // TODO: Convert preferredDurations to DayTiming[]
+    let dayTimingsArray: DayTimings[] = [];
+    preferredDurations.forEach((pd) => {
+      // startAt and endAt are guaranteed to be on same day
+      let dateStr = startOfDay(parseISO(pd.startAt)).toISOString();
+
+      // Check if this dateStr appears in dayTimingsArray.
+      let index = dayTimingsArray.findIndex((dt) => dt.date === dateStr);
+
+      if (index === -1) {
+        dayTimingsArray.push({
+          date: dateStr,
+          startTimings: new Array(24 * 2).fill([]),
+        });
+        index = dayTimingsArray.length - 1;
+      }
+
+      // Grab the dt.startTimings first that corresponds to this dateStr.
+      let dayTimings: DayTimings = dayTimingsArray[index];
+
+      // For the interval between startAt and endAt, decide how to populate the array of dt.startTimings.
+      // Need to map the index in dayTimings to a particular time.
+      let startIndex = Math.floor(
+        getMinutesFromStartOfDay(parseISO(pd.startAt)) / 30
+      );
+      let endIndex = Math.floor(
+        getMinutesFromStartOfDay(parseISO(pd.endAt)) / 30
+      );
+
+      for (let i = startIndex; i < endIndex; i++) {
+        dayTimings.startTimings[i].push(pd.userUid);
+      }
+    });
+    setMeetupTimings(dayTimingsArray);
 
     // get data to render the datetimerow picker
     const resp = await getPreferredDurations(meetupId, authData.userData.uid);
@@ -201,12 +237,7 @@ const SelectTime = ({
         <Box mt={28}>
           <HeaderComponent title="Add new timing" />
 
-          <DateTimeRowComponent
-            data={null}
-            onButtonPress={onAddPreferredDuration}
-            rightButtonType="add"
-            editable={true}
-          />
+          <DateTimeRowComponent preferredDuration={null} mode={"add"} />
         </Box>
         <Box mt={28}>
           <HeaderComponent
@@ -220,12 +251,9 @@ const SelectTime = ({
                   return (
                     <DateTimeRowComponent
                       key={index}
-                      data={preferredDuration}
-                      onDataChange={onDataChange}
-                      rightButtonType={isEditMode ? "delete" : null}
-                      onButtonPress={onDeletePreferredDuration}
-                      editable={isEditMode}
-                      saveOnEdit={true}
+                      preferredDuration={preferredDuration}
+                      readOnly={!isEditMode}
+                      mode={isEditMode ? "edit" : "default"}
                     />
                   );
                 })}

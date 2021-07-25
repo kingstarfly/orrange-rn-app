@@ -56,6 +56,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.4",
     "react-native-magnus": "^1.0.62",
     "react-native-modal": "^11.10.0",
+    "react-native-modal-datetime-picker": "^10.2.0",
     "react-native-raw-bottom-sheet": "^2.2.0",
     "react-native-reanimated": "~2.1.0",
     "react-native-safe-area-context": "3.2.0",
