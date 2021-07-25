@@ -25,12 +25,17 @@ const MainTimeGridSelector = ({ meetupTimings }: Props) => {
 
   // Scroll to 9am-ish on boot
   React.useEffect(() => {
-    verticalRef.current.scrollTo({
-      y: 369,
-    });
+    verticalRef.current &&
+      verticalRef.current.scrollTo({
+        y: 369,
+      });
   }, []);
 
-  if (!meetupTimings) {
+  React.useEffect(() => {
+    console.log(meetupTimings);
+  }, [meetupTimings]);
+
+  if (!meetupTimings || !meetupTimings.length) {
     return (
       <Box justifyContent="center" flex={1}>
         <BodyTextRegular textAlign="center" color={theme.colors.textgray400}>
