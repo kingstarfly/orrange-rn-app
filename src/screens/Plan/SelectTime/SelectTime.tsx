@@ -22,7 +22,14 @@ import {
   updatePreferredDurations,
 } from "lib/api/meetup";
 import { useAuth } from "lib/auth";
-import { addHours, isBefore, parseISO, isAfter, startOfDay } from "date-fns";
+import {
+  addHours,
+  isBefore,
+  parseISO,
+  isAfter,
+  startOfDay,
+  compareAsc,
+} from "date-fns";
 import HeaderComponent from "screens/Plan/Components/SectionHeaderComponent";
 import MainTimeGridSelector from "./TimeGridSelector/MainTimeGridSelector";
 import Loading from "components/Loading";
@@ -61,13 +68,12 @@ const SelectTime = ({
 
   const [isEditMode, setIsEditMode] = React.useState(false);
 
-  const fetchAndSetData = React.useCallback(async () => {
+  const fetchAndSetData = async () => {
     setIsLoading(true);
     // get the data on meetupTimings to render on calendar Grid
     const preferredDurations = await getAllPreferredDurationsFromMeeting(
       meetupId
     );
-
     // TODO: Convert preferredDurations to DayTiming[]
     let dayTimingsArray: DayTimings[] = [];
     preferredDurations.forEach((pd) => {
@@ -101,13 +107,19 @@ const SelectTime = ({
         dayTimings.startTimings[i].push(pd.userUid);
       }
     });
+    // Sort by date
+    dayTimingsArray.sort((a, b) =>
+      compareAsc(parseISO(a.date), parseISO(b.date))
+    );
+    console.log("HELLO");
+    console.log(dayTimingsArray);
     setMeetupTimings(dayTimingsArray);
 
     // get data to render the datetimerow picker
     const resp = await getPreferredDurations(meetupId, authData.userData.uid);
     setPreferredDurations(resp);
     setIsLoading(false);
-  }, []);
+  };
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
@@ -146,38 +158,15 @@ const SelectTime = ({
       return;
     }
 
-    await AlertAsync(
-      "",
-      "Do you want to add this timing?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Add",
-          onPress: async () => {
-            // Fill up the object with all other fields other than start and end
-            prefDuration.id = uuid.v4() as string;
-            prefDuration.userUid = authData.userData.uid;
-            prefDuration.username = authData.userData.username;
-            try {
-              await addPreferredDuration(
-                prefDuration,
-                meetupId,
-                authData.userData.uid
-              );
-            } catch (error) {
-              Alert.alert("", error.message);
-            }
+    prefDuration.id = uuid.v4() as string;
+    try {
+      await addPreferredDuration(prefDuration, meetupId, authData.userData.uid);
+    } catch (error) {
+      Alert.alert("", error.message);
+    }
 
-            // Refresh all data
-            await fetchAndSetData();
-          },
-        },
-      ],
-      { cancelable: true }
-    );
+    // Refresh all data
+    await fetchAndSetData();
   };
 
   const onDeletePreferredDuration = async (prefDuration: PreferredDuration) => {
@@ -237,7 +226,11 @@ const SelectTime = ({
         <Box mt={28}>
           <HeaderComponent title="Add new timing" />
 
-          <DateTimeRowComponent preferredDuration={null} mode={"add"} />
+          <DateTimeRowComponent
+            preferredDuration={null}
+            mode={"add"}
+            handleAddButtonPress={onAddPreferredDuration}
+          />
         </Box>
         <Box mt={28}>
           <HeaderComponent

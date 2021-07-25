@@ -22,14 +22,16 @@ import { getMinutesFromStartOfDay } from "lib/helpers";
 
 interface Props {
   preferredDuration: PreferredDuration;
-  readOnly?: boolean;
   mode: "add" | "edit" | "default";
+  readOnly?: boolean;
+  handleAddButtonPress?: (preferredDuration: PreferredDuration) => void; // without id key
 }
 
 const DateTimeRowComponent = ({
   preferredDuration,
   readOnly,
   mode = "default",
+  handleAddButtonPress,
 }: Props) => {
   const [startPickerVisible, setStartPickerVisible] = React.useState(false);
   const [endPickerVisible, setEndPickerVisible] = React.useState(false);
@@ -81,7 +83,24 @@ const DateTimeRowComponent = ({
       Alert.alert("", "Invalid input");
       return;
     }
-    console.log("Handle Add");
+
+    Alert.alert("", "Do you want to add this timing?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Add",
+        onPress: async () => {
+          const preferredDurationWithoutId: PreferredDuration = {
+            ...preferredDuration,
+            startAt: startTime.toISOString(),
+            endAt: endTime.toISOString(),
+          };
+
+          setStartTime(null);
+          setEndTime(null);
+          handleAddButtonPress(preferredDurationWithoutId);
+        },
+      },
+    ]);
   };
 
   const handleDelete = () => {

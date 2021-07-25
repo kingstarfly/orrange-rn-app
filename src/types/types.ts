@@ -63,7 +63,7 @@ export type ParticipantFields = {
 };
 
 export type PreferredDuration = {
-  id: string;
+  id?: string;
   username: string;
   userUid: string;
   startAt: string;
