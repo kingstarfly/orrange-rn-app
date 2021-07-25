@@ -74,6 +74,7 @@ const SelectTime = ({
     const preferredDurations = await getAllPreferredDurationsFromMeeting(
       meetupId
     );
+    console.log("PreferredDurations, ", preferredDurations);
     // TODO: Convert preferredDurations to DayTiming[]
     let dayTimingsArray: DayTimings[] = [];
     preferredDurations.forEach((pd) => {
@@ -84,15 +85,22 @@ const SelectTime = ({
       let index = dayTimingsArray.findIndex((dt) => dt.date === dateStr);
 
       if (index === -1) {
-        dayTimingsArray.push({
+        let newDayTimings = {
           date: dateStr,
-          startTimings: new Array(24 * 2).fill([]),
-        });
+          startTimings: [],
+        };
+        for (let i = 0; i < 24 * 2; i++) {
+          newDayTimings.startTimings.push([]);
+        }
+
+        dayTimingsArray.push(newDayTimings);
         index = dayTimingsArray.length - 1;
       }
 
       // Grab the dt.startTimings first that corresponds to this dateStr.
       let dayTimings: DayTimings = dayTimingsArray[index];
+
+      console.log(dayTimings);
 
       // For the interval between startAt and endAt, decide how to populate the array of dt.startTimings.
       // Need to map the index in dayTimings to a particular time.
@@ -103,14 +111,19 @@ const SelectTime = ({
         getMinutesFromStartOfDay(parseISO(pd.endAt)) / 30
       );
 
+      console.log(startIndex, endIndex);
+
       for (let i = startIndex; i < endIndex; i++) {
+        console.log(i);
         dayTimings.startTimings[i].push(pd.userUid);
+        console.log(dayTimings);
       }
     });
     // Sort by date
     dayTimingsArray.sort((a, b) =>
       compareAsc(parseISO(a.date), parseISO(b.date))
     );
+    // console.log("dayTimingsArray, ", dayTimingsArray);
 
     setMeetupTimings(dayTimingsArray);
 
@@ -158,6 +171,8 @@ const SelectTime = ({
     }
 
     prefDuration.id = uuid.v4() as string;
+    prefDuration.userUid = authData.userData.uid;
+    prefDuration.username = authData.userData.username;
     try {
       await addPreferredDuration(prefDuration, meetupId, authData.userData.uid);
     } catch (error) {

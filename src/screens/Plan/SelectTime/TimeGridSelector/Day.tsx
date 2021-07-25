@@ -22,8 +22,12 @@ const Day = ({ dayTimings, isRightMostDay }: dayProps) => {
   // Group pairs of arrays.
   const occupantsArrays: string[][][] = [];
   for (let i = 0; i < dayTimings.startTimings.length; i += 2) {
-    occupantsArrays.push(dayTimings.startTimings.slice(i - 1, i + 1));
+    occupantsArrays.push(dayTimings.startTimings.slice(i, i + 2));
   }
+
+  React.useEffect(() => {
+    console.log(occupantsArrays);
+  }, []);
 
   return (
     <Box alignItems="center">

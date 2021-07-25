@@ -31,10 +31,6 @@ const MainTimeGridSelector = ({ meetupTimings }: Props) => {
       });
   }, []);
 
-  React.useEffect(() => {
-    console.log(meetupTimings);
-  }, [meetupTimings]);
-
   if (!meetupTimings || !meetupTimings.length) {
     return (
       <Box justifyContent="center" flex={1}>
