@@ -2,6 +2,7 @@ import { userData } from "constants/mockdata";
 import {
   differenceInMinutes,
   eachMinuteOfInterval,
+  endOfDay,
   intervalToDuration,
   parse,
   parseISO,
@@ -83,4 +84,14 @@ export const insertPreferredDurationToDayTiming = (
       myDayTiming.startTimings[e.toISOString()] + 1;
   });
   return myDayTiming;
+};
+
+export const generateHalfHourSlotsInGivenDate = (date: Date) => {
+  let startTimings = eachMinuteOfInterval(
+    {
+      start: startOfDay(date),
+      end: endOfDay(date),
+    },
+    { step: 30 }
+  ).pop();
 };

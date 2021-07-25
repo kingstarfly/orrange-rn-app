@@ -250,6 +250,8 @@ export const getAllPreferredDurationsFromMeeting = async (meetupId: string) => {
     durs.push(...participant.preferredDurations);
   });
 
+  return durs;
+
   // const doc = await firestore.collection(DB.MEETUPS).doc(meetupId).get();
   // const { meetupTimings } = doc.data() as MeetupFields;
   // // Sort meetup timings by date
