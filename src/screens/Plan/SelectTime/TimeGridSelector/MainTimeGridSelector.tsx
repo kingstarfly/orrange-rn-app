@@ -25,11 +25,15 @@ const MainTimeGridSelector = ({ meetupTimings }: Props) => {
 
   // Scroll to 9am-ish on boot
   React.useEffect(() => {
-    verticalRef.current &&
-      verticalRef.current.scrollTo({
-        y: 369,
-      });
-  }, []);
+    if (meetupTimings) {
+      setTimeout(() => {
+        verticalRef?.current?.scrollTo({
+          y: 369,
+          animated: true,
+        });
+      }, 500);
+    }
+  }, [meetupTimings]);
 
   if (!meetupTimings || !meetupTimings.length) {
     return (
@@ -66,7 +70,11 @@ const MainTimeGridSelector = ({ meetupTimings }: Props) => {
           );
         })}
       </Box>
-      <ScrollView showsVerticalScrollIndicator={false} ref={verticalRef}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        ref={verticalRef}
+        contentOffset={{ x: 0, y: 369 }}
+      >
         <Box flexDir="row">
           <TimeLabels startTime={START_TIME} endTime={END_TIME} />
           <ScrollView horizontal>

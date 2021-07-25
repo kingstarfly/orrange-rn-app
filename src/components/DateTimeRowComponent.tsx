@@ -19,12 +19,14 @@ import DateTimePickerModal, {
 } from "react-native-modal-datetime-picker";
 import { Alert } from "react-native";
 import { getMinutesFromStartOfDay } from "lib/helpers";
+import { updatePreferredDuration } from "lib/api/meetup";
 
 interface Props {
   preferredDuration: PreferredDuration;
   mode: "add" | "edit" | "default";
   handleAddButtonPress?: (preferredDuration: PreferredDuration) => void; // without id key
   handleDeleteButtonPress?: (preferredDurationId: string) => void;
+  handleEdit?: (preferredDuration: PreferredDuration) => void;
 }
 
 const DateTimeRowComponent = ({
@@ -32,6 +34,7 @@ const DateTimeRowComponent = ({
   mode = "default",
   handleAddButtonPress,
   handleDeleteButtonPress,
+  handleEdit,
 }: Props) => {
   const [startPickerVisible, setStartPickerVisible] = React.useState(false);
   const [endPickerVisible, setEndPickerVisible] = React.useState(false);
@@ -47,17 +50,29 @@ const DateTimeRowComponent = ({
     console.log("A date has been picked: ", date);
     setStartPickerVisible(false);
 
-    console.log(endTime, date);
+    let newEndTime = endTime;
     if (!endTime) {
-      setEndTime(addMinutes(date, 60));
+      newEndTime = addMinutes(date, 60);
+      setEndTime(newEndTime);
     } else if (!isSameDay(date, endTime)) {
-      setEndTime(
-        addMinutes(startOfDay(date), getMinutesFromStartOfDay(endTime))
+      newEndTime = addMinutes(
+        startOfDay(date),
+        getMinutesFromStartOfDay(endTime)
       );
+
+      setEndTime(newEndTime);
     } else if (!isBefore(date, endTime)) {
-      setEndTime(addMinutes(date, 60));
+      newEndTime = addMinutes(date, 60);
+      setEndTime(newEndTime);
     }
     setStartTime(date);
+    if (mode === "edit") {
+      handleEdit({
+        ...preferredDuration,
+        startAt: date.toISOString(),
+        endAt: newEndTime.toISOString(),
+      });
+    }
   };
 
   const handleEndPickerConfirm = (date) => {
@@ -71,10 +86,19 @@ const DateTimeRowComponent = ({
 
     const mins = getMinutesFromStartOfDay(date);
     const endDate = addMinutes(startOfDay(startTime), mins);
+    let newStartTime = startTime;
     if (!isBefore(startTime, endDate)) {
-      setStartTime(subMinutes(endDate, 60));
+      newStartTime = subMinutes(endDate, 60);
+      setStartTime(newStartTime);
     }
     setEndTime(endDate);
+    if (mode === "edit") {
+      handleEdit({
+        ...preferredDuration,
+        startAt: newStartTime.toISOString(),
+        endAt: date.toISOString(),
+      });
+    }
   };
 
   const handleAdd = () => {
@@ -121,6 +145,7 @@ const DateTimeRowComponent = ({
         flexDirection: "row",
         justifyContent: "space-between",
         marginBottom: 8,
+        flex: 1,
       }}
     >
       <DateTimePickerModal
@@ -159,8 +184,8 @@ const DateTimeRowComponent = ({
       <View
         style={{
           flexDirection: "row",
-          justifyContent: "space-between",
-          marginHorizontal: 15,
+          justifyContent: "flex-end",
+          marginLeft: 15,
           flex: 4,
         }}
       >
@@ -179,7 +204,7 @@ const DateTimeRowComponent = ({
             </BodyTextRegular>
           )}
         </Pressable>
-        <View style={{ justifyContent: "center" }}>
+        <View style={{ justifyContent: "center", marginHorizontal: 2 }}>
           <BodyTextRegular>-</BodyTextRegular>
         </View>
         <Pressable
@@ -200,7 +225,7 @@ const DateTimeRowComponent = ({
       </View>
       {mode === "add" ? (
         <TouchableOpacity
-          style={{ justifyContent: "center", flex: 1 }}
+          style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
           onPress={() => handleAdd()}
         >
           <PhosphorIcon
@@ -211,7 +236,7 @@ const DateTimeRowComponent = ({
         </TouchableOpacity>
       ) : mode === "edit" ? (
         <TouchableOpacity
-          style={{ justifyContent: "center", flex: 1 }}
+          style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
           onPress={() => handleDelete()}
         >
           <PhosphorIcon

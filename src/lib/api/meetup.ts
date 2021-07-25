@@ -412,6 +412,29 @@ export const deletePreferredDuration = async (
     });
 };
 
+export const updatePreferredDuration = async (
+  meetupId: string,
+  userUid: string,
+  preferredDuration: PreferredDuration
+) => {
+  let { preferredDurations } = (
+    await firestore
+      .collection(DB.MEETUPS)
+      .doc(meetupId)
+      .collection(DB.PARTICIPANTS)
+      .doc(userUid)
+      .get()
+  ).data() as ParticipantFields;
+  let newPd = preferredDurations.filter((pd) => pd.id !== preferredDuration.id);
+  newPd.push(preferredDuration);
+  await firestore
+    .collection(DB.MEETUPS)
+    .doc(meetupId)
+    .collection(DB.PARTICIPANTS)
+    .doc(userUid)
+    .update({ preferredDurations: newPd });
+};
+
 export const createMeetup = async (
   meetupName: string,
   selectedUsers: OtherUser[],
@@ -589,17 +612,17 @@ export const leaveMeetup = async (userUid: string, meetupId: string) => {
     });
 };
 
-export const updatePreferredDurations = async (
-  meetupId: string,
-  userUid: string,
-  durs: PreferredDuration[]
-) => {
-  firestore
-    .collection(DB.MEETUPS)
-    .doc(meetupId)
-    .collection(DB.PARTICIPANTS)
-    .doc(userUid)
-    .update({
-      preferredDurations: durs,
-    } as Pick<ParticipantFields, "preferredDurations">);
-};
+// export const updatePreferredDurations = async (
+//   meetupId: string,
+//   userUid: string,
+//   durs: PreferredDuration[]
+// ) => {
+//   firestore
+//     .collection(DB.MEETUPS)
+//     .doc(meetupId)
+//     .collection(DB.PARTICIPANTS)
+//     .doc(userUid)
+//     .update({
+//       preferredDurations: durs,
+//     } as Pick<ParticipantFields, "preferredDurations">);
+// };

@@ -19,7 +19,7 @@ import {
   deletePreferredDuration,
   getAllPreferredDurationsFromMeeting,
   getPreferredDurations,
-  updatePreferredDurations,
+  updatePreferredDuration,
 } from "lib/api/meetup";
 import { useAuth } from "lib/auth";
 import {
@@ -74,8 +74,6 @@ const SelectTime = ({
     const preferredDurations = await getAllPreferredDurationsFromMeeting(
       meetupId
     );
-    console.log("PreferredDurations, ", preferredDurations);
-    // TODO: Convert preferredDurations to DayTiming[]
     let dayTimingsArray: DayTimings[] = [];
     preferredDurations.forEach((pd) => {
       // startAt and endAt are guaranteed to be on same day
@@ -100,8 +98,6 @@ const SelectTime = ({
       // Grab the dt.startTimings first that corresponds to this dateStr.
       let dayTimings: DayTimings = dayTimingsArray[index];
 
-      console.log(dayTimings);
-
       // For the interval between startAt and endAt, decide how to populate the array of dt.startTimings.
       // Need to map the index in dayTimings to a particular time.
       let startIndex = Math.floor(
@@ -111,19 +107,14 @@ const SelectTime = ({
         getMinutesFromStartOfDay(parseISO(pd.endAt)) / 30
       );
 
-      console.log(startIndex, endIndex);
-
       for (let i = startIndex; i < endIndex; i++) {
-        console.log(i);
         dayTimings.startTimings[i].push(pd.userUid);
-        console.log(dayTimings);
       }
     });
     // Sort by date
     dayTimingsArray.sort((a, b) =>
       compareAsc(parseISO(a.date), parseISO(b.date))
     );
-    // console.log("dayTimingsArray, ", dayTimingsArray);
 
     setMeetupTimings(dayTimingsArray);
 
@@ -137,7 +128,6 @@ const SelectTime = ({
     const unsubscribe = navigation.addListener("focus", async () => {
       await fetchAndSetData();
     });
-
     return unsubscribe;
   }, []);
 
@@ -145,14 +135,7 @@ const SelectTime = ({
     setIsEditMode(true);
   };
   const handleDonePress = async () => {
-    // // Also, save all these preferred documents
-    // await updatePreferredDurations(
-    //   meetupId,
-    //   authData.userData.uid,
-    //   preferredDurations
-    // );
     setIsEditMode(false);
-    await fetchAndSetData();
   };
   let rightComponent = (
     <TouchableOpacity
@@ -197,19 +180,18 @@ const SelectTime = ({
     await fetchAndSetData();
   };
 
-  // Just updates local state of preferredDurations. Does not call API.
-  const onDataChange = ({ id, startAt, endAt }: PreferredDuration) => {
-    setPreferredDurations((old) => {
-      const copy = [...old];
-      const index = copy.findIndex((e) => e.id === id);
-      const toBeDeleted = copy[index];
-      copy.splice(index, 1, {
-        ...toBeDeleted,
-        startAt: startAt,
-        endAt: endAt,
-      });
-      return copy;
-    });
+  const onEditPreferredDuration = async (
+    preferredDuration: PreferredDuration
+  ) => {
+    try {
+      await updatePreferredDuration(
+        meetupId,
+        authData.userData.uid,
+        preferredDuration
+      );
+    } catch (error) {
+      Alert.alert("", error.message);
+    }
   };
 
   return (
@@ -245,6 +227,7 @@ const SelectTime = ({
                       preferredDuration={preferredDuration}
                       mode={isEditMode ? "edit" : "default"}
                       handleDeleteButtonPress={onDeletePreferredDuration}
+                      handleEdit={onEditPreferredDuration}
                     />
                   );
                 })}

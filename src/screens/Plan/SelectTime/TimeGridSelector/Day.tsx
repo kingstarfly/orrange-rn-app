@@ -25,10 +25,6 @@ const Day = ({ dayTimings, isRightMostDay }: dayProps) => {
     occupantsArrays.push(dayTimings.startTimings.slice(i, i + 2));
   }
 
-  React.useEffect(() => {
-    console.log(occupantsArrays);
-  }, []);
-
   return (
     <Box alignItems="center">
       <Box>
