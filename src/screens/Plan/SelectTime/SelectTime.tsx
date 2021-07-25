@@ -111,8 +111,7 @@ const SelectTime = ({
     dayTimingsArray.sort((a, b) =>
       compareAsc(parseISO(a.date), parseISO(b.date))
     );
-    console.log("HELLO");
-    console.log(dayTimingsArray);
+
     setMeetupTimings(dayTimingsArray);
 
     // get data to render the datetimerow picker
@@ -133,12 +132,12 @@ const SelectTime = ({
     setIsEditMode(true);
   };
   const handleDonePress = async () => {
-    // Also, save all these preferred documents
-    await updatePreferredDurations(
-      meetupId,
-      authData.userData.uid,
-      preferredDurations
-    );
+    // // Also, save all these preferred documents
+    // await updatePreferredDurations(
+    //   meetupId,
+    //   authData.userData.uid,
+    //   preferredDurations
+    // );
     setIsEditMode(false);
     await fetchAndSetData();
   };
@@ -169,34 +168,18 @@ const SelectTime = ({
     await fetchAndSetData();
   };
 
-  const onDeletePreferredDuration = async (prefDuration: PreferredDuration) => {
-    await AlertAsync(
-      "",
-      "Do you want to delete this timing?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          onPress: async () => {
-            try {
-              await deletePreferredDuration(
-                prefDuration,
-                meetupId,
-                authData.userData.uid
-              );
-            } catch (error) {
-              Alert.alert("", error.message);
-            }
-            // Refresh all data
-            await fetchAndSetData();
-          },
-        },
-      ],
-      { cancelable: true }
-    );
+  const onDeletePreferredDuration = async (prefDurationId: string) => {
+    try {
+      await deletePreferredDuration(
+        prefDurationId,
+        meetupId,
+        authData.userData.uid
+      );
+    } catch (error) {
+      Alert.alert("", error.message);
+    }
+    // Refresh all data
+    await fetchAndSetData();
   };
 
   // Just updates local state of preferredDurations. Does not call API.
@@ -228,7 +211,7 @@ const SelectTime = ({
 
           <DateTimeRowComponent
             preferredDuration={null}
-            mode={"add"}
+            mode="add"
             handleAddButtonPress={onAddPreferredDuration}
           />
         </Box>
@@ -245,8 +228,8 @@ const SelectTime = ({
                     <DateTimeRowComponent
                       key={index}
                       preferredDuration={preferredDuration}
-                      readOnly={!isEditMode}
                       mode={isEditMode ? "edit" : "default"}
+                      handleDeleteButtonPress={onDeletePreferredDuration}
                     />
                   );
                 })}

@@ -23,15 +23,15 @@ import { getMinutesFromStartOfDay } from "lib/helpers";
 interface Props {
   preferredDuration: PreferredDuration;
   mode: "add" | "edit" | "default";
-  readOnly?: boolean;
   handleAddButtonPress?: (preferredDuration: PreferredDuration) => void; // without id key
+  handleDeleteButtonPress?: (preferredDurationId: string) => void;
 }
 
 const DateTimeRowComponent = ({
   preferredDuration,
-  readOnly,
   mode = "default",
   handleAddButtonPress,
+  handleDeleteButtonPress,
 }: Props) => {
   const [startPickerVisible, setStartPickerVisible] = React.useState(false);
   const [endPickerVisible, setEndPickerVisible] = React.useState(false);
@@ -105,6 +105,15 @@ const DateTimeRowComponent = ({
 
   const handleDelete = () => {
     console.log("Handle Delete");
+    Alert.alert("", "Do you really want to delete this timing?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        onPress: async () => {
+          handleDeleteButtonPress(preferredDuration.id);
+        },
+      },
+    ]);
   };
   return (
     <View
@@ -133,7 +142,7 @@ const DateTimeRowComponent = ({
         minuteInterval={30}
       />
       <Pressable
-        disabled={readOnly}
+        disabled={mode === "default"}
         style={[styles.box, { flex: 5 }]}
         onPress={() => {
           setStartPickerVisible(true);
@@ -156,7 +165,7 @@ const DateTimeRowComponent = ({
         }}
       >
         <Pressable
-          disabled={readOnly}
+          disabled={mode === "default"}
           style={[styles.box, styles.timeBox]}
           onPress={() => {
             setStartPickerVisible(true);
@@ -174,7 +183,7 @@ const DateTimeRowComponent = ({
           <BodyTextRegular>-</BodyTextRegular>
         </View>
         <Pressable
-          disabled={readOnly}
+          disabled={mode === "default"}
           style={[styles.box, styles.timeBox]}
           onPress={() => {
             setEndPickerVisible(true);

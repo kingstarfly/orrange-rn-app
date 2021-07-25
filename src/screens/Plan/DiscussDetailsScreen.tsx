@@ -386,7 +386,6 @@ const DiscussDetailsScreen = () => {
                     <DateTimeRowComponent
                       key={index}
                       preferredDuration={preferredDuration}
-                      readOnly
                       mode="default"
                     />
                   );

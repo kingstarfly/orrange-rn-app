@@ -375,47 +375,11 @@ export const addPreferredDuration = async (
 };
 
 export const deletePreferredDuration = async (
-  prefDuration: PreferredDuration,
+  prefDurationId: string,
   meetupId: string,
   userId: string
 ) => {
-  // // 1. Update meetup's new timing array
-  // // Get old timing array
-  // const { meetupTimings } = (
-  //   await firestore.collection(DB.MEETUPS).doc(meetupId).get()
-  // ).data() as MeetupFields;
-  // const indexToChange = meetupTimings?.findIndex(
-  //   (e) => e.date === startOfDay(parseISO(prefDuration.startAt)).toISOString()
-  // );
-  // // Modify the timing array
-  // const old = meetupTimings[indexToChange].startTimings;
-  // const { startAt, endAt } = prefDuration;
-  // const startDate = parseISO(startAt);
-  // const endDate = parseISO(endAt);
-  // const startTimes = eachMinuteOfInterval(
-  //   {
-  //     start: startDate,
-  //     end: endDate,
-  //   },
-  //   { step: 30 }
-  // ).slice(0, -1);
-  // startTimes.forEach((startTime) => {
-  //   let startTimeString = startTime.toISOString();
-  //   old[startTimeString] = old[startTimeString] - 1;
-  // });
-  // // Check if all timings are empty in this day. If yes, then just delete this.
-  // if (Object.values(old).every((e) => e === 0)) {
-  //   meetupTimings.splice(indexToChange, 1);
-  // } else {
-  //   meetupTimings[indexToChange].startTimings = old;
-  // }
-  // // Save the timing array
-  // await firestore
-  //   .collection(DB.MEETUPS)
-  //   .doc(meetupId)
-  //   .update({ meetupTimings: meetupTimings });
-
-  // 2. Delete this preferred duration from participant
+  // Delete this preferred duration from participant
   // Get the preferredDurations array
   const { preferredDurations } = (
     await firestore
@@ -428,10 +392,7 @@ export const deletePreferredDuration = async (
 
   // Modify
   const indexToChange2 = preferredDurations.findIndex(
-    (e) =>
-      e.userUid === prefDuration.userUid &&
-      e.startAt === prefDuration.startAt &&
-      e.endAt === prefDuration.endAt
+    (e) => e.id === prefDurationId
   );
 
   if (indexToChange2 === -1) {
