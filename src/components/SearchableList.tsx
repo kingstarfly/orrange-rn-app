@@ -1,12 +1,10 @@
-import { theme } from "constants/theme";
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { View } from "react-native";
 import { FlatList, ListRenderItem } from "react-native";
-import { Box, Icon, Input, Text } from "react-native-magnus";
+import { Box } from "react-native-magnus";
 import Loading from "./Loading";
 import { SearchInput } from "./StyledInput";
-import { BodyTextRegular } from "./StyledText";
 
 interface SearchableListProps<ItemProp> {
   data: ItemProp[];

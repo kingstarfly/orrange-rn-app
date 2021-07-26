@@ -28,7 +28,7 @@ function App() {
         <ThemeProvider theme={theme}>
           <Provider store={store}>
             <Navigation colorScheme={colorScheme} />
-            <StatusBar style="dark" backgroundColor={theme.colors.primary600} />
+            <StatusBar style="auto" />
           </Provider>
         </ThemeProvider>
       </SafeAreaProvider>

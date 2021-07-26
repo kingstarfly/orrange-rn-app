@@ -32,11 +32,8 @@ type HalfCellProps = {
 
 const GridHalfCell = ({ occupants = [] }: HalfCellProps) => {
   const occupantsSet = new Set(occupants);
-  if (occupantsSet.size > 0) {
-    console.log(occupantsSet);
-  }
   return (
-    <Pressable>
+    <Pressable style={{ borderWidth: 0 }}>
       <Box bg={colourIntensity[occupantsSet.size]} h={20} w={80} />
     </Pressable>
   );
@@ -50,7 +47,7 @@ const GridCell = ({
   return (
     <Box
       borderColor={theme.colors.linegray}
-      borderTopWidth={1}
+      borderTopWidth={1.1}
       borderLeftWidth={1}
       borderRightWidth={isRightMostCell ? 1.5 : 0}
       borderBottomWidth={isBottomMostCell ? 1 : 0}

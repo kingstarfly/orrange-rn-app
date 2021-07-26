@@ -20,6 +20,7 @@ import {
   Alert,
   TouchableHighlight,
   TouchableOpacity,
+  View,
 } from "react-native";
 import AvatarIcon from "components/AvatarIcon";
 import {
@@ -281,23 +282,27 @@ const FinalDetailsScreen = () => {
         <Div row mb={sectionSpacing}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {[
-              ...participants.map((participant, index) => {
+              ...participants?.map((participant, index) => {
                 return (
-                  <Div mr={16} key={index}>
+                  <View key={index} style={{ marginRight: 16 }}>
                     <AvatarIcon
                       diameter={60}
                       label={participant.username}
                       uri={participant.url_thumbnail}
                       withLabel
-                      isHost={participant.isHost}
+                      isHost={participant.isHost || participant.isCoOrganiser}
                       showBorder={!!participant.preferredDurations}
                     />
-                  </Div>
+                  </View>
                 );
               }),
               // ...pendingParticipants.map((pending, index2) => {
               //   return (
-              //     <Div mr={16} key={index2}>
+              //     <Pressable
+              //       key={index2}
+              //       onLongPress={() => CoOrgSheet.current.open()}
+              //       style={{ marginRight: 16 }}
+              //     >
               //       <AvatarIcon
               //         diameter={60}
               //         label={pending.username}
@@ -305,7 +310,7 @@ const FinalDetailsScreen = () => {
               //         withLabel
               //         blurred
               //       />
-              //     </Div>
+              //     </Pressable>
               //   );
               // }),
             ]}
