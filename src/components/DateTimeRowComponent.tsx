@@ -191,7 +191,7 @@ const DateTimeRowComponent = ({
       >
         <Pressable
           disabled={mode === "default"}
-          style={[styles.box, styles.timeBox]}
+          style={[styles.box, { flex: 4 }]}
           onPress={() => {
             setStartPickerVisible(true);
           }}
@@ -200,16 +200,23 @@ const DateTimeRowComponent = ({
             <BodyTextRegular>{format(startTime, "HH:mm")}</BodyTextRegular>
           ) : (
             <BodyTextRegular color={theme.colors.textgray200}>
-              -- : --
+              :
             </BodyTextRegular>
           )}
         </Pressable>
-        <View style={{ justifyContent: "center", marginHorizontal: 2 }}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            marginHorizontal: 2,
+            flex: 2,
+          }}
+        >
           <BodyTextRegular>-</BodyTextRegular>
         </View>
         <Pressable
           disabled={mode === "default"}
-          style={[styles.box, styles.timeBox]}
+          style={[styles.box, { flex: 4 }]}
           onPress={() => {
             setEndPickerVisible(true);
           }}
@@ -218,7 +225,7 @@ const DateTimeRowComponent = ({
             <BodyTextRegular>{format(endTime, "HH:mm")}</BodyTextRegular>
           ) : (
             <BodyTextRegular color={theme.colors.textgray200}>
-              -- : --
+              :
             </BodyTextRegular>
           )}
         </Pressable>

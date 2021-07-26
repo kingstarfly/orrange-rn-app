@@ -179,10 +179,14 @@ function addParticipants() {
               {
                 startAt: addHours(today, 8).toISOString(),
                 endAt: addHours(today, 12).toISOString(),
+                userUid: user.uid,
+                username: user.username,
               },
               {
                 startAt: addHours(today, 20).toISOString(),
                 endAt: addHours(today, 25).toISOString(),
+                userUid: user.uid,
+                username: user.username,
               },
             ],
             isHost: meetupIndex === userIndex ? true : false, // user 0 is host for meeting 0

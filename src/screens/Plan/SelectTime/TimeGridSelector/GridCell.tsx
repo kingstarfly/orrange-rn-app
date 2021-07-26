@@ -6,11 +6,17 @@ import { Box } from "react-native-magnus";
 const colourIntensity = [
   theme.colors.backgroundlight,
   theme.colors.primary200,
+  theme.colors.primary250,
   theme.colors.primary300,
+  theme.colors.primary350,
   theme.colors.primary400,
+  theme.colors.primary450,
   theme.colors.primary500,
+  theme.colors.primary550,
   theme.colors.primary600,
+  theme.colors.primary650,
   theme.colors.primary700,
+  theme.colors.primary750,
   theme.colors.primary800,
 ];
 
@@ -26,6 +32,9 @@ type HalfCellProps = {
 
 const GridHalfCell = ({ occupants = [] }: HalfCellProps) => {
   const occupantsSet = new Set(occupants);
+  if (occupantsSet.size > 0) {
+    console.log(occupantsSet);
+  }
   return (
     <Pressable>
       <Box bg={colourIntensity[occupantsSet.size]} h={20} w={80} />
