@@ -1,13 +1,11 @@
-import { StackScreenProps } from "@react-navigation/stack";
 import React from "react";
-import { Box, Button, Text } from "react-native-magnus";
+import { Box } from "react-native-magnus";
 import Container from "components/Container";
 import MeetingCard from "screens/ViewPlans/MeetingCard";
-import { meetingsData } from "constants/mockdata";
-import { FlatList, SectionList } from "react-native";
+import { FlatList } from "react-native";
 import { styles } from "./styles";
 
-import { BodyTextRegular, Subheading } from "components/StyledText";
+import { BodyTextRegular } from "components/StyledText";
 import { useAuth } from "lib/auth";
 import { MeetingCardProps } from "../MeetingCard/MeetingCard";
 import { useNavigation } from "@react-navigation/native";
@@ -15,7 +13,6 @@ import { MaterialTopTabNavigationProp } from "@react-navigation/material-top-tab
 import { ViewPlansTabParamList } from "types/types";
 import { getAllMeetingDataForUser } from "lib/api/meetup";
 import { formatDataForFlatListInProgress } from "../helper";
-import Loading from "components/Loading";
 
 const InProgressViewPlans = () => {
   const authData = useAuth();

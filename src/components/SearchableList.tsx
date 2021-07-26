@@ -6,12 +6,14 @@ import { FlatList, ListRenderItem } from "react-native";
 import { Box, Icon, Input, Text } from "react-native-magnus";
 import Loading from "./Loading";
 import { SearchInput } from "./StyledInput";
+import { BodyTextRegular } from "./StyledText";
 
 interface SearchableListProps<ItemProp> {
   data: ItemProp[];
   isLoading: boolean;
   renderItem: ListRenderItem<ItemProp>;
   inputPlaceholder: string;
+  showOnlyWhenSearch?: boolean;
 }
 
 const SearchableList = <
@@ -28,6 +30,7 @@ const SearchableList = <
   isLoading,
   renderItem,
   inputPlaceholder,
+  showOnlyWhenSearch,
 }: SearchableListProps<ItemProp>) => {
   if (isLoading) {
     return <Loading />;
@@ -35,22 +38,28 @@ const SearchableList = <
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const getFilteredUsers = React.useCallback((users: ItemProp[]) => {
-    if (!users) {
-      return [];
-    }
-    let filtered = users.filter((user) => {
-      return (
-        !searchQuery ||
-        user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (user?.firstName + " " + user?.lastName)
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        user?.username?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    });
-    return filtered;
-  }, []);
+  const getFilteredUsers = React.useCallback(
+    (users: ItemProp[]) => {
+      if (!users) {
+        return [];
+      }
+      if (showOnlyWhenSearch && !searchQuery) {
+        return [];
+      }
+      let filtered = users.filter((user) => {
+        return (
+          !searchQuery ||
+          user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (user?.firstName + " " + user?.lastName)
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          user?.username?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      });
+      return filtered;
+    },
+    [searchQuery]
+  );
 
   return (
     <Box justifyContent="flex-end">
@@ -68,6 +77,15 @@ const SearchableList = <
         renderItem={renderItem}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         showsVerticalScrollIndicator={false}
+        // ListEmptyComponent={() => {
+        //   if (showOnlyWhenSearch) {
+        //     return (
+        //       <BodyTextRegular>
+        //         Start searching to see results...
+        //       </BodyTextRegular>
+        //     );
+        //   }
+        // }}
       />
     </Box>
   );

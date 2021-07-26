@@ -81,9 +81,10 @@ const AddPals = () => {
     <Container avoidHeader>
       <SearchableList
         data={nonPals}
-        inputPlaceholder="Search..."
+        inputPlaceholder="Search for users"
         isLoading={isListLoading}
         renderItem={renderItem}
+        showOnlyWhenSearch={true}
       />
     </Container>
   );

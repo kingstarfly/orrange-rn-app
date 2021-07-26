@@ -125,7 +125,7 @@ const MeetingCard = ({
                   maxW={WINDOW_WIDTH * 0.42}
                   ml={8}
                 >
-                  {activityContent}
+                  {isConfirmed ? activityContent : "To be confirmed"}
                 </CaptionText>
               </Box>
               <Box row alignItems="center">
@@ -134,7 +134,9 @@ const MeetingCard = ({
                   size={16}
                   name="clock"
                 />
-                <CaptionText ml={8}>{timeContent}</CaptionText>
+                <CaptionText ml={8}>
+                  {isConfirmed ? timeContent : "To be confirmed"}
+                </CaptionText>
               </Box>
             </Box>
           </Box>
