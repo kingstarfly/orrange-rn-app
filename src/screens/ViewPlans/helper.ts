@@ -56,3 +56,14 @@ export function formatDataForFlatListInProgress(
 
   return inProgressData;
 }
+
+export const sanitizePhoneNumber = (
+  countryCode: string,
+  phoneNumber: string
+) => {
+  const sanitizedPhoneNumber = phoneNumber.replace(/\D/g, "");
+  if (!countryCode) {
+    return sanitizedPhoneNumber;
+  }
+  return countryCode + sanitizedPhoneNumber;
+};

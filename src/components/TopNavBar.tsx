@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { PhosphorIcon } from "constants/Icons";
 import { headerHeight } from "constants/Layout";
 import { theme } from "constants/theme";
@@ -8,6 +10,7 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
+import { AppStackParamList } from "types/types";
 import AppLogo from "./AppLogo";
 import Container from "./Container";
 import withBadge from "./TimeGridSelector/withBadge";
@@ -19,6 +22,11 @@ interface Props {
 const TopNavBar = ({ hideLogo }: Props) => {
   const BadgedIcon = withBadge(1)(PhosphorIcon);
   const { top } = useSafeAreaInsets();
+
+  const navigation =
+    useNavigation<
+      StackNavigationProp<AppStackParamList, "MainBottomTabNavigator">
+    >();
 
   return (
     <View
@@ -56,6 +64,9 @@ const TopNavBar = ({ hideLogo }: Props) => {
           alignSelf: "flex-start",
           bottom: 15, // the icon is not centered, this is the fix
           right: 35,
+        }}
+        onPress={() => {
+          navigation.push("Contacts");
         }}
       >
         <PhosphorIcon name="envelope" color={theme.colors.textdark} size={40} />

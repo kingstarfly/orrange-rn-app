@@ -1,19 +1,7 @@
 import { firestore } from "lib/firebase";
 import { convertUserToPal } from "lib/helpers";
-import {
-  NonTootleUser,
-  OtherUser,
-  PalFields,
-  PalRequestFields,
-  UserData,
-} from "types/types";
+import { OtherUser, PalFields, PalRequestFields, UserData } from "types/types";
 import { DB } from "./dbtypes";
-
-export const inviteContactToapp = (contact: NonTootleUser) => {
-  console.log(
-    `TO IMPLEMENT Going to invite ${contact.name} : ${contact.contactNumber} to the app!`
-  );
-};
 
 export const requestAddPal = async (
   currentUser: UserData,
@@ -117,6 +105,15 @@ export const getPalRequests = async (userUid: string) => {
     palRequests.push(palRequestData);
   });
   return palRequests;
+};
+
+export const getAllOrrangeUsersPhoneNumbers = async () => {
+  const allUsersPhoneNumbers: string[] = [];
+  const snapshot = await firestore.collection(DB.USERS).get();
+  snapshot.forEach((doc) =>
+    allUsersPhoneNumbers.push((doc.data() as OtherUser).contact)
+  );
+  return allUsersPhoneNumbers;
 };
 
 // try to get all users who are not friends

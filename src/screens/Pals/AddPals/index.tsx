@@ -56,11 +56,7 @@ const AddPals = () => {
 
     if (sentRequests?.find((sentReq) => sentReq.uid === otherUser.uid)) {
       rightComponent = (
-        <SmallButton
-          onPress={() => console.log("Accepted")}
-          disabled
-          colorTheme="plain"
-        >
+        <SmallButton disabled colorTheme="plain">
           Sent
         </SmallButton>
       );

@@ -2,94 +2,111 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack/lib/typescript/src/types";
 import Container from "components/Container";
 import SearchableList from "components/SearchableList";
+import SmallButton from "components/SmallButton";
 import UserRow from "components/UserRow";
-import { theme } from "constants/theme";
-import { getAllNonPals, inviteContactToapp } from "lib/api/pals";
 import { useAuth } from "lib/auth";
-import { getMockAddPals } from "mockapi";
 import React, { useEffect, useState } from "react";
-import { Box, Button, Icon, Text } from "react-native-magnus";
-import { OtherUser, PalsStackParamList } from "types/types";
-import InviteSentButton from "./Buttons/InviteSentButton";
-import InviteTootleButton from "./Buttons/InviteTootleButton";
+import { Share, Text, View } from "react-native";
+import { OtherUser, PalsStackParamList, UserData } from "types/types";
+import * as Contacts from "expo-contacts";
+import { getAllOrrangeUsersPhoneNumbers } from "lib/api/pals";
+import { sanitizePhoneNumber } from "screens/ViewPlans/helper";
 
-const InviteContacts = () => {
-  // TODO: To create new type to describe a contact. All code is unusable here now.
+const InviteContactsScreen = () => {
   const [contacts, setContacts] = useState<OtherUser[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+
+  const [isListLoading, setIsListLoading] = useState(false);
   const authData = useAuth();
   const navigation =
     useNavigation<StackNavigationProp<PalsStackParamList, "AddPals">>();
 
-  // retrieve all users from database, also include current friends. To display "friends" indicator.
-  const fetchAllNonPals = async () => {
-    const nonPalUsers = await getAllNonPals(authData.userData.uid);
-    // setNonPals(nonPalUsers);
-  };
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      setIsLoading(true);
-      fetchAllNonPals().finally(() => {
-        setIsLoading(false);
-      });
-    });
+    const unsubscribe = navigation.addListener("focus", async () => {
+      await (async () => {
+        const { status } = await Contacts.requestPermissionsAsync();
+        if (status === "granted") {
+          const { data } = await Contacts.getContactsAsync({
+            fields: [
+              Contacts.Fields.Emails,
+              Contacts.Fields.Name,
+              Contacts.Fields.PhoneNumbers,
+            ],
+          });
 
+          const allOrrangeUsersPhoneNumbers =
+            await getAllOrrangeUsersPhoneNumbers();
+
+          console.log(data);
+          console.log(allOrrangeUsersPhoneNumbers);
+
+          // Remove contacts that are not already on Orrange
+          const filteredContacts = data
+            .filter((contact) => {
+              const primary =
+                contact?.phoneNumbers?.find((e) => e.isPrimary) ||
+                contact.phoneNumbers?.[0];
+              if (!primary) return false;
+              return !allOrrangeUsersPhoneNumbers.includes(
+                sanitizePhoneNumber(primary.countryCode, primary.number)
+              );
+            })
+            .map((contact) => {
+              // Convert Contact to OtherUser
+              const primary =
+                contact?.phoneNumbers?.find((e) => e.isPrimary) ||
+                contact.phoneNumbers?.[0];
+
+              const res: OtherUser = {
+                firstName:
+                  contact.firstName || contact.lastName || contact.name || "",
+                lastName: contact.lastName || "",
+                contact: sanitizePhoneNumber(
+                  primary.countryCode,
+                  primary.number
+                ),
+                uid: contact.id,
+                url_thumbnail: "",
+                username: "",
+              };
+              return res;
+            })
+            .filter((c) => c.contact !== undefined);
+          console.log("Hello");
+          console.log(filteredContacts);
+          setContacts(filteredContacts);
+        }
+      })();
+    });
     return unsubscribe;
   }, []);
 
-  const renderItem = ({ item }: { item: OtherUser }) => {
-    let rightComponent: JSX.Element;
+  const handleInviteButtonClick = async () => {
+    // TODO: Trigger sending msg on tele / whatsapp using react native share
+    try {
+      const result = await Share.share({
+        message:
+          "Hey, I'm using Orrange to arrange meetups with friends! Join me here: https://orrange.app/dl",
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
-    // switch (status) {
-    //   case USER_STATUS.notOnApp:
-    //     rightComponent = (
-    //       <Button
-    //         p="none"
-    //         bg={theme.colors.primary400}
-    //         underlayColor={theme.colors.primary200}
-    //         onPress={() => inviteContactToapp(item as NonTootleUser)}
-    //       >
-    //         <InviteTootleButton />
-    //       </Button>
-    //     );
-    //     break;
-    //   case USER_STATUS.inviteSent:
-    //     rightComponent = <InviteSentButton />;
-    //     break;
-    //   case USER_STATUS.notPal:
-    //     rightComponent = (
-    //       <Button
-    //         p="none"
-    //         bg={theme.colors.primary400}
-    //         underlayColor={theme.colors.primary200}
-    //         onPress={() =>
-    //           addPal(
-    //             {
-    //               id: "123",
-    //               name: "test_current_user",
-    //               contactNumber: "123123",
-    //             },
-    //             item as TootleUser
-    //           )
-    //         }
-    //       >
-    //         <AddPalButton />
-    //       </Button>
-    //     );
-    //     break;
-    //   case USER_STATUS.palRequestSent:
-    //     rightComponent = <RequestedPalButton />;
-    //     break;
+  const renderItem = ({ item: otherUser }: { item: OtherUser }) => {
+    let rightComponent = (
+      <SmallButton
+        onPress={() => handleInviteButtonClick()}
+        colorTheme="primary"
+      >
+        Invite
+      </SmallButton>
+    );
 
-    //   default:
-    //     break;
-    // }
     return (
       <UserRow
-        avatar_url={item.url_thumbnail}
-        firstName={item.firstName}
-        lastName={item.lastName}
-        username={item.username}
+        avatar_url={otherUser.url_thumbnail}
+        firstName={otherUser.firstName}
+        lastName={otherUser.lastName}
         rightItem={rightComponent}
       />
     );
@@ -98,14 +115,14 @@ const InviteContacts = () => {
   return (
     <Container avoidHeader>
       <SearchableList
-        data={nonPals}
-        inputPlaceholder="Search..."
-        isLoading={isLoading}
+        data={contacts}
+        inputPlaceholder="Search my contacts"
+        isLoading={isListLoading}
         renderItem={renderItem}
+        showOnlyWhenSearch={true}
       />
-      {/* <AddButton to="MeetupDetails" /> */}
     </Container>
   );
 };
 
-export default InviteContacts;
+export default InviteContactsScreen;
