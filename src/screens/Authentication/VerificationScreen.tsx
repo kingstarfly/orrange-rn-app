@@ -49,12 +49,15 @@ export default function VerificationScreen() {
 
   const onVerificationPress = async () => {
     setLoading(true);
-    try {
-      authData.verify(route.params.verificationId, verificationCode);
-    } catch (error) {
+    const res = await authData.verify(
+      route.params.verificationId,
+      verificationCode
+    );
+    if (!res.success) {
       Alert.alert("", "Wrong verification code");
-      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   useEffect(() => {

@@ -107,7 +107,7 @@ const MeetupDetails = () => {
 
   return (
     <Container>
-      <Box px={16} justifyContent="space-between" flex={1}>
+      <Box justifyContent="space-between" flex={1}>
         <Box py="2xl">
           <Heading>Create New Plan</Heading>
         </Box>

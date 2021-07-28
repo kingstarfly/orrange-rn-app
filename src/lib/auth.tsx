@@ -7,7 +7,10 @@ import { UserData } from "types/types";
 interface AuthContextValue {
   userData?: UserData;
   isLoading: boolean;
-  verify: (verificationId: string, verificationCode: string) => Promise<void>;
+  verify: (
+    verificationId: string,
+    verificationCode: string
+  ) => Promise<{ success: boolean; message?: string }>;
   signOut: () => void;
   updateUserInfo: (userInfo: UserData) => Promise<void>;
   restoreToken: (userToken: string) => void;
@@ -85,8 +88,10 @@ function useProvideAuth() {
       await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       const userCredential = await auth.signInWithCredential(credential);
       let user = await handleUser(userCredential.user);
+      return { success: true, message: "" };
     } catch (err) {
-      throw new Error(err.message);
+      console.log(err);
+      return { success: false, message: err.message };
     }
   };
 

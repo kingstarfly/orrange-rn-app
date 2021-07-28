@@ -5,6 +5,7 @@ import { headerHeight } from "constants/Layout";
 import { theme } from "constants/theme";
 import { useAuth } from "lib/auth";
 import React from "react";
+import { Alert } from "react-native";
 import { View, Text, TouchableOpacity, Pressable } from "react-native";
 import {
   Badge,
@@ -40,6 +41,13 @@ const TopNavBar = ({ hideLogo }: Props) => {
 
   const authData = useAuth();
   const drawerRef = React.useRef<DrawerRef>();
+
+  const handleSignOut = async () => {
+    Alert.alert("", "Are you sure you want to sign out of Orrange?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Sign Out", onPress: () => authData.signOut() },
+    ]);
+  };
 
   return (
     <View
@@ -115,12 +123,12 @@ const TopNavBar = ({ hideLogo }: Props) => {
           <BodyTextRegular color={theme.colors.textgray400}>
             @{authData.userData.username}
           </BodyTextRegular>
-          <View>
-            <View
+          <View style={{ marginTop: 24 }}>
+            <TouchableOpacity
+              onPress={() => handleSignOut()}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                marginTop: 24,
               }}
             >
               <PhosphorIcon
@@ -128,13 +136,9 @@ const TopNavBar = ({ hideLogo }: Props) => {
                 size={30}
                 color={theme.colors.textgray400}
               />
-              <TouchableOpacity
-                onPress={() => authData.signOut()}
-                style={{ marginLeft: 16 }}
-              >
-                <BodyTextMedium>Sign out</BodyTextMedium>
-              </TouchableOpacity>
-            </View>
+
+              <BodyTextMedium ml={16}>Sign out</BodyTextMedium>
+            </TouchableOpacity>
           </View>
         </View>
       </Drawer>

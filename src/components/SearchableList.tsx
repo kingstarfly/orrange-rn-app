@@ -66,6 +66,7 @@ const SearchableList = <
         value={searchQuery}
         onChangeText={setSearchQuery}
         showPrefix
+        mb={8}
       />
 
       <FlatList

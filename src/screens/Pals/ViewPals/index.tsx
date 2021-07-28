@@ -38,8 +38,8 @@ const ViewPals = () => {
     useNavigation<StackNavigationProp<PalsStackParamList, "ViewPals">>();
 
   const fetchPalsAndPalRequests = async () => {
-    const pals = await getPals(DUMMY_USER_ID);
-    const palRequests = await getPalRequests(DUMMY_USER_ID);
+    const pals = await getPals(authData.userData.uid);
+    const palRequests = await getPalRequests(authData.userData.uid);
 
     setPals(pals);
     setPalRequests(palRequests);
