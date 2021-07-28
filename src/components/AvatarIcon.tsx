@@ -1,5 +1,5 @@
 import { theme } from "constants/theme";
-import { getInitials } from "lib/helpers";
+import { getInitials, stringToHslColor } from "lib/helpers";
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Avatar, Box, Image } from "react-native-magnus";
@@ -29,6 +29,7 @@ const AvatarIcon: React.FC<AvatarIcon> = ({
   showBorder,
 }) => {
   const FADE_OPACITY = 0.3;
+
   return (
     <Box>
       {uri ? (
@@ -43,7 +44,11 @@ const AvatarIcon: React.FC<AvatarIcon> = ({
           style={blurred && { opacity: FADE_OPACITY }}
         />
       ) : (
-        <Avatar bg={theme.colors.red} size={0} color={theme.colors.textdark}>
+        <Avatar
+          bg={stringToHslColor(label, 40, 80)}
+          size={50}
+          color={theme.colors.textdark}
+        >
           <BodyTextRegular>{getInitials(label)}</BodyTextRegular>
         </Avatar>
       )}

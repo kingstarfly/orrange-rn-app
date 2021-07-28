@@ -104,7 +104,7 @@ const InviteContactsScreen = () => {
 
     return (
       <UserRow
-        avatar_url={otherUser.url_thumbnail}
+        // avatar_url={otherUser.url_thumbnail}
         firstName={otherUser.firstName}
         lastName={otherUser.lastName}
         rightItem={rightComponent}
