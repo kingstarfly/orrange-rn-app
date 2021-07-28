@@ -36,7 +36,8 @@ export const getInitials = (name: string) => {
   const initials = name
     .split(" ")
     .map((str) => str[0])
-    .join("");
+    .join("")
+    .toLocaleUpperCase();
 
   // return maximum first two only
   return initials.length > 2 ? initials.slice(0, 2) : initials;

@@ -28,11 +28,13 @@ const InProgressViewPlans = () => {
 
   const fetchInProgressPlans = React.useCallback(async () => {
     setIsLoading(true);
-    // console.log(`getting meeting data for ${authData.userData.uid}`);
-    const result = await getAllMeetingDataForUser(authData.userData.uid);
-    // console.log("Got all meetings already");
-    const output = formatDataForFlatListInProgress(result);
-    setMeetingsData(output);
+    try {
+      const result = await getAllMeetingDataForUser(authData.userData.uid);
+      const output = formatDataForFlatListInProgress(result);
+      setMeetingsData(output);
+    } catch (error) {
+      console.error(error);
+    }
     setIsLoading(false);
   }, [authData.userData.uid]);
 
@@ -74,6 +76,7 @@ const InProgressViewPlans = () => {
         onRefresh={onRefresh}
         refreshing={isLoading}
         ListEmptyComponent={listEmptyComponent}
+        contentContainerStyle={{ flexGrow: 1 }}
       />
     </Container>
   );

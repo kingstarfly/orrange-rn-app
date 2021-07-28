@@ -5,11 +5,12 @@ import { MeetingCardProps } from "./MeetingCard/MeetingCard";
 export function formatDataForSectionListConfirmed(
   propsArray: MeetingCardProps[]
 ) {
+  if (!propsArray) return;
   // Building data for section list. Mapping date-year to an array of card props.
   let myMap = new Map<string, MeetingCardProps[]>();
   const date_format_MMMM_yyyy = "MMMM yyyy";
 
-  propsArray.map((props) => {
+  propsArray?.map((props) => {
     const { meetingInfo, participants, pendingParticipants, accent } = props;
     const { activity, endAt, startAt, isConfirmed } = meetingInfo;
     if (!isConfirmed || !activity || !endAt || !startAt) {
@@ -48,6 +49,8 @@ export function formatDataForSectionListConfirmed(
 export function formatDataForFlatListInProgress(
   propsArray: MeetingCardProps[]
 ) {
+  if (!propsArray) return;
+
   const inProgressData = propsArray.filter((props) => {
     const { meetingInfo, participants, pendingParticipants, accent } = props;
     const { activity, endAt, startAt, isConfirmed } = meetingInfo;

@@ -46,7 +46,7 @@ const AvatarIcon: React.FC<AvatarIcon> = ({
       ) : (
         <Avatar
           bg={stringToHslColor(label, 40, 80)}
-          size={50}
+          size={diameter}
           color={theme.colors.textdark}
         >
           <BodyTextRegular>{getInitials(label)}</BodyTextRegular>

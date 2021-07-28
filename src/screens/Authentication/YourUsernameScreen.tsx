@@ -107,23 +107,23 @@ export default function YourUsername() {
           return alert("Username is already taken!");
         } else {
           // !! TODO CHANGE THIS: Doing this to mock user
-          // authData.updateUserInfo({
-          //   uid: authData.userData.uid,
-          //   firstName: firstName,
-          //   lastName: lastName,
-          //   username: username,
-          //   contact: phoneNumber,
-          //   url_original: url_original,
-          //   url_thumbnail: url_thumbnail,
-          // } as UserData);
+          authData.updateUserInfo({
+            uid: authData.userData.uid,
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            contact: phoneNumber,
+            url_original: url_original,
+            url_thumbnail: url_thumbnail,
+          } as UserData);
 
-          firestore
-            .collection(DB.USERS)
-            .doc(DUMMY_USER_ID)
-            .get()
-            .then((doc) => {
-              authData.updateUserInfo(doc.data() as UserData);
-            });
+          // firestore
+          //   .collection(DB.USERS)
+          //   .doc(DUMMY_USER_ID)
+          //   .get()
+          //   .then((doc) => {
+          //     authData.updateUserInfo(doc.data() as UserData);
+          //   });
         }
       });
 

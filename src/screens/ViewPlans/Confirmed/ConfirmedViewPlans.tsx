@@ -33,9 +33,13 @@ const ConfirmedViewPlans = () => {
 
   const fetchConfirmedPlans = React.useCallback(async () => {
     setIsLoading(true);
-    const result = await getAllMeetingDataForUser(authData.userData.uid);
-    const output = formatDataForSectionListConfirmed(result);
-    setMeetingsData(output);
+    try {
+      const result = await getAllMeetingDataForUser(authData.userData.uid);
+      const output = formatDataForSectionListConfirmed(result);
+      setMeetingsData(output);
+    } catch (error) {
+      console.error(error);
+    }
     setIsLoading(false);
   }, [authData.userData.uid]);
 
@@ -79,10 +83,8 @@ const ConfirmedViewPlans = () => {
         onRefresh={onRefresh}
         refreshing={isLoading}
         ListEmptyComponent={listEmptyComponent}
-        contentContainerStyle={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
       />
-
-      {/* <Button onPress={() => authData.signOut()}>Sign out</Button> */}
     </Container>
   );
 };

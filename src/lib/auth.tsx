@@ -10,6 +10,7 @@ interface AuthContextValue {
   verify: (verificationId: string, verificationCode: string) => Promise<void>;
   signOut: () => void;
   updateUserInfo: (userInfo: UserData) => Promise<void>;
+  restoreToken: (userToken: string) => void;
   // fakeLogin: () => void;
 }
 
@@ -81,6 +82,7 @@ function useProvideAuth() {
         verificationId,
         verificationCode
       );
+      await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       const userCredential = await auth.signInWithCredential(credential);
       let user = await handleUser(userCredential.user);
     } catch (err) {
@@ -113,6 +115,8 @@ function useProvideAuth() {
     await firestore.collection("users").doc(userInfo.uid).set(userInfo);
   };
 
+  const restoreToken = async (userToken: string) => {};
+
   // Returns the authContext object containing the user object and auth methods
   return {
     userData,
@@ -120,5 +124,6 @@ function useProvideAuth() {
     verify,
     signOut,
     updateUserInfo,
+    restoreToken,
   };
 }
