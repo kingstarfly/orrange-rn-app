@@ -47,7 +47,6 @@ const DateTimeRowComponent = ({
   );
 
   const handleStartPickerConfirm = (date) => {
-    console.log("A date has been picked: ", date);
     setStartPickerVisible(false);
 
     let newEndTime = endTime;
@@ -76,7 +75,6 @@ const DateTimeRowComponent = ({
   };
 
   const handleEndPickerConfirm = (date) => {
-    console.log("A date has been picked: ", date);
     setEndPickerVisible(false);
 
     if (!startTime) {
@@ -128,7 +126,6 @@ const DateTimeRowComponent = ({
   };
 
   const handleDelete = () => {
-    console.log("Handle Delete");
     Alert.alert("", "Do you really want to delete this timing?", [
       { text: "Cancel", style: "cancel" },
       {

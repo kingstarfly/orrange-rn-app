@@ -237,7 +237,6 @@ export const addSuggestion = async (
 };
 
 export const getAllPreferredDurationsFromMeeting = async (meetupId: string) => {
-  // TODO: Should read all preferredDurations from all participants, into an array. Return this. The conversion to the weird format will be handled by the grid component.
   const query = await firestore
     .collection(DB.MEETUPS)
     .doc(meetupId)
@@ -519,7 +518,6 @@ export const addUsersToMeetup = (users: OtherUser[], meetupId: string) => {
 };
 
 export const addCoOrganiser = async (userUid: string, meetupId: string) => {
-  console.log(userUid, meetupId);
   await firestore
     .collection(DB.MEETUPS)
     .doc(meetupId)

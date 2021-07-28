@@ -50,7 +50,6 @@ const ConfirmedViewPlans = () => {
   }, []);
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
-      console.log("Refetching confirmed screen");
       await fetchConfirmedPlans();
     });
 

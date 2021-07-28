@@ -36,9 +36,6 @@ const InviteContactsScreen = () => {
           const allOrrangeUsersPhoneNumbers =
             await getAllOrrangeUsersPhoneNumbers();
 
-          console.log(data);
-          console.log(allOrrangeUsersPhoneNumbers);
-
           // Remove contacts that are not already on Orrange
           const filteredContacts = data
             .filter((contact) => {
@@ -71,8 +68,7 @@ const InviteContactsScreen = () => {
               return res;
             })
             .filter((c) => c.contact !== undefined);
-          console.log("Hello");
-          console.log(filteredContacts);
+
           setContacts(filteredContacts);
         }
       })();
@@ -81,11 +77,10 @@ const InviteContactsScreen = () => {
   }, []);
 
   const handleInviteButtonClick = async () => {
-    // TODO: Trigger sending msg on tele / whatsapp using react native share
     try {
       const result = await Share.share({
         message:
-          "Hey, I'm using Orrange to arrange meetups with friends! Join me here: https://orrange.app/dl",
+          "Hey, I'm using Orrange to arrange meetups with friends! Join me here: https://orrange.app/download",
       });
     } catch (error) {
       alert(error.message);

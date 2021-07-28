@@ -48,7 +48,6 @@ const InProgressViewPlans = () => {
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
-      console.log("Refetching in progress screen");
       await fetchInProgressPlans();
     });
 

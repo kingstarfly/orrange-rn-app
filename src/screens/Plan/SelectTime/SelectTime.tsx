@@ -242,9 +242,6 @@ const SelectTime = ({
           )}
         </Box>
       </ScrollView>
-      {/* <Box alignItems="center" bottom={0} py={20} bg="transparent">
-        <LargeButton title="CONFIRM" onPress={() => console.log("Confirmed")} />
-      </Box> */}
     </Container>
   );
 };

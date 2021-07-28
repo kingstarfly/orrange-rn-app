@@ -20,7 +20,6 @@ export const DatePickerSlice = createSlice({
       state.selected = action.payload;
     },
     clearSelectedDates: (state) => {
-      console.log("Resetting selected dates");
       return initialState;
     },
   },

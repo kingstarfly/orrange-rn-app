@@ -47,7 +47,6 @@ const ViewPals = () => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      console.log("setting loading true");
       setIsLoading(true);
       fetchPalsAndPalRequests().finally(() => {
         setIsLoading(false);
@@ -61,7 +60,6 @@ const ViewPals = () => {
     currentUser: UserData,
     requester: OtherUser
   ) => {
-    console.log("Accepted");
     try {
       await acceptPalRequest(currentUser, requester);
       setPalRequests((prev) => prev.filter((req) => req.uid !== requester.uid));
@@ -75,7 +73,6 @@ const ViewPals = () => {
     currentUser: UserData,
     requester: OtherUser
   ) => {
-    console.log("Deleted");
     try {
       await deletePalRequest(currentUser, requester);
       setPalRequests((prev) => prev.filter((req) => req.uid !== requester.uid));

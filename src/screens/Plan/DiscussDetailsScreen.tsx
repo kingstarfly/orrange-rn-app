@@ -149,8 +149,6 @@ const DiscussDetailsScreen = () => {
   React.useEffect(() => {
     const part = participants?.find((p) => p.uid === authData?.userData?.uid);
     setCurrentParticipant(part);
-
-    console.log(part);
   }, [participants, authData?.userData?.uid]);
 
   const handleSuggestionOnPress = async (suggestionId: string) => {
@@ -235,7 +233,6 @@ const DiscussDetailsScreen = () => {
       {
         text: "Leave",
         onPress: async () => {
-          console.log("Leave clicked");
           try {
             await leaveMeetup(authData.userData.uid, meetupId);
           } catch (error) {

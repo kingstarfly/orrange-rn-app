@@ -39,8 +39,6 @@ const MeetupDetails = () => {
     >();
 
   const handleConfirm = async () => {
-    console.log("RESET");
-
     if (name.length < 4) {
       Alert.alert(
         "",

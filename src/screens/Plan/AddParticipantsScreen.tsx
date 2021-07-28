@@ -69,7 +69,6 @@ const AddParticipantsScreen = () => {
     const c = await getPendingParticipants(meetupId);
     const d = await getPals(userUid);
 
-    // TODO: Do not show already added pals (participants or pending participants).
     const excludeUids = [...b.map((e) => e.uid), ...c.map((e) => e.uid)];
     const palsToShow = d.filter((pal) => {
       // If pal.uid is in excludeUids, return false
@@ -80,10 +79,6 @@ const AddParticipantsScreen = () => {
         return true;
       }
     });
-    console.log("excludeUids: ", excludeUids);
-    console.log("getPals:", d);
-    console.log("palsToShow: ", palsToShow);
-
     setMeetingInfo(a);
     setPals(palsToShow);
 
